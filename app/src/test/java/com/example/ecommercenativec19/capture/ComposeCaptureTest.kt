@@ -41,9 +41,7 @@ import com.example.ecommercenativec19.feature.signin.SignInUiState
 import com.example.ecommercenativec19.feature.signup.SignUpScreen
 import com.example.ecommercenativec19.feature.signup.SignUpUiState
 import com.example.ecommercenativec19.feature.splash.SplashScreen
-import com.example.ecommercenativec19.feature.wishlist.WishlistSampleData
 import com.example.ecommercenativec19.feature.wishlist.WishlistScreen
-import com.example.ecommercenativec19.feature.wishlist.WishlistUiState
 import com.example.ecommercenativec19.navigation.AppScaffold
 import com.example.ecommercenativec19.ui.theme.AppTheme
 import coil3.annotation.ExperimentalCoilApi
@@ -132,7 +130,7 @@ class ComposeCaptureTest {
                 ProductDetailsScreen(ProductFixtures.productDetails, {}, {}, {}, {}, {}, {}, {})
             }
             Scene.Cart -> CartScreen(CartUiState(CartSampleData.items, CartSampleData.TOTAL_PRICE), {}, {}, {}, {}, {}, {}, {})
-            Scene.Wishlist -> WishlistScreen(WishlistUiState(items = WishlistSampleData.items), {}, {}, {}, {})
+            Scene.Wishlist -> WithFixtureImages { WishlistScreen(ProductFixtures.wishlist, {}, {}, {}, {}, {}, {}) }
             Scene.Account -> AccountScreen(
                 AccountUiState(AccountSampleData.WELCOME_NAME, AccountSampleData.HEADER_EMAIL, AccountSampleData.fields),
                 {}, {}, { _, _ -> },

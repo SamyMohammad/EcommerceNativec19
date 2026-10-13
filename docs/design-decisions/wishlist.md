@@ -4,7 +4,7 @@
 
 - Figma node id: `731:1294`; file key `dEhOfaWrXc8wRA6mdeMecc`; version-id `2409508187813363894`.
 - The version-id is owner-observed, NOT verified through the Figma MCP. Freshness is unverified.
-- Code: `feature/wishlist` (`WishlistScreen.kt`, `WishlistRoute.kt`, `WishlistViewModel.kt`, `WishlistUiState.kt`, `WishlistSampleData.kt`).
+- Code: `feature/wishlist` (`WishlistScreen.kt`, `WishlistRoute.kt`, `WishlistViewModel.kt`, `WishlistUiState.kt`); data and domain in `feature/wishlist/data` and `domain` (see `docs/api/wishlist.md`).
 
 ## Components used
 
@@ -19,8 +19,9 @@
 ## Deviations
 
 - The empty state text is an addition (the design shows none).
-- The heart toggles a local favorite flag; the row is not removed, so the toggle is reversible.
-- `extraGapBefore` 13dp in the sample data for the third row (the design leaves 37dp instead of 24dp there).
+- The heart removes the row (optimistically, via the Route API) and a failed request restores it; the design has no removal behavior.
+- Rows are uniform 24dp apart (the design leaves 37dp before the third row), and the variant dot and label are gone: the API has no variants.
+- The row image is the product `imageCover` URL, cropped to fill, instead of the design artwork.
 - Small touch targets: the "Add to Cart" button is 36dp tall and the heart is 30dp (design sizes kept; below the 48dp guideline).
 - The search field is local only; search icon and placeholder offsets (23.33dp / 6.17dp) are specific to this frame.
 - Heart and button sit 16dp from the end, so 8dp extra end padding is added to the row slots.
@@ -28,7 +29,7 @@
 
 ## Missing contracts
 
-- Wishlist data and persistence (three placeholder items), search, add to cart from the wishlist (the button is a no-op), removal.
+- Search and add to cart from the wishlist (the button is a no-op until the cart slice). Loading and error states are additions.
 
 ## Automated visual result
 

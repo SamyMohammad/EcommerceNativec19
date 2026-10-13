@@ -8,6 +8,8 @@ import com.example.ecommercenativec19.feature.categories.domain.GetCategoriesUse
 import com.example.ecommercenativec19.feature.products.domain.GetProductsUseCase
 import com.example.ecommercenativec19.feature.products.domain.ProductSort
 import com.example.ecommercenativec19.feature.products.ui.toCardUi
+import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
+import com.example.ecommercenativec19.feature.wishlist.domain.ToggleFavoriteUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,11 +20,14 @@ import kotlinx.coroutines.launch
 /**
  * Home composes existing use cases: one request for the categories grid plus one per product row. Each region is its
  * own coroutine (so they load in parallel) and has its own [LoadState] (so one failure stays local). The search text
- * and favorite hearts are UI-only: no search endpoint is used and favorites arrive with the wishlist API slice.
+ * is UI-only (no search endpoint is used). Hearts mirror the shared wishlist cache; a failed toggle is rolled back
+ * there, so the heart simply returns to its previous state.
  */
 class HomeViewModel(
     private val getCategories: GetCategoriesUseCase,
     private val getProducts: GetProductsUseCase,
+    private val observeFavoriteIds: ObserveFavoriteIdsUseCase,
+    private val toggleFavorite: ToggleFavoriteUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -31,6 +36,9 @@ class HomeViewModel(
     private val sectionJobs = mutableMapOf<HomeSection, Job>()
 
     init {
+        viewModelScope.launch {
+            observeFavoriteIds().collect { ids -> _uiState.update { it.copy(favoriteIds = ids) } }
+        }
         loadCategories()
         HomeSection.entries.forEach(::loadSection)
     }
@@ -40,11 +48,7 @@ class HomeViewModel(
     }
 
     fun onFavoriteToggle(productId: String) {
-        _uiState.update { state ->
-            val favorites =
-                if (productId in state.favoriteIds) state.favoriteIds - productId else state.favoriteIds + productId
-            state.copy(favoriteIds = favorites)
-        }
+        viewModelScope.launch { toggleFavorite(productId) }
     }
 
     fun onRetryCategories() {

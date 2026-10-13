@@ -35,7 +35,7 @@
 
 ## Missing contracts
 
-- Cart state (add to cart only navigates to Cart), price calculation, stock, favorites persistence, search.
+- Cart state (add to cart only navigates to Cart), price calculation, stock, search.
 
 ## Automated visual result
 

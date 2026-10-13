@@ -38,9 +38,10 @@ the public [Route E-commerce API](https://documenter.getpostman.com/view/5709532
 | **Home** | Done | **Route API** (categories grid + three product rows ranked by sales, recency and rating; promo banners are static artwork) |
 | **Categories** | Done | **Route API** (categories + sub-categories) |
 | **Product list, Product details** | Done | **Route API** (products by sub-category with load-more paging, product by id) |
-| Cart, Wishlist, Account | Done | Sample data |
+| **Wishlist** + every favorite heart | Done | **Route API** (`/wishlist`); one shared favorites cache feeds Home, Product list, Details and the Wishlist screen, with optimistic toggles |
+| Cart, Account | Done | Sample data |
 
-**Next slices:** cart and wishlist → account. Each slice is delivered as a small, reviewed PR that takes one feature through
+**Next slices:** cart → account. Each slice is delivered as a small, reviewed PR that takes one feature through
 data → domain → presentation, with tests.
 
 ## Tech stack
@@ -124,7 +125,8 @@ app/src/main/java/com/example/ecommercenativec19/
 │   ├── products/                # Shared product data + domain (ProductsApi, mapper, repository, use cases)
 │   ├── productlist/             # Sub-category product grid with load-more paging
 │   ├── productdetails/          # Product by id: carousel, quantity and total
-│   └── home/ cart/ wishlist/ account/ signin/ signup/ splash/
+│   ├── wishlist/                # Favorites source of truth (data + domain) and the Wishlist screen
+│   └── home/ cart/ account/ signin/ signup/ splash/
 ├── navigation/                  # NavKeys, AppNavigator (back stacks), NavDisplay, shared bottom bar
 └── ui/theme/                    # Hand-owned Material 3 theme: Color, Type, Shape, ExtendedTheme, Theme
 ```

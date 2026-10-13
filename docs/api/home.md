@@ -26,5 +26,5 @@ artwork (drawables), not API data.
 
 - Each region has its own `LoadState`; a failed request shows a retry in that region only and the others stay.
 - A product row that loads but is empty is hidden together with its title.
-- Product cards open Product details. Favorite hearts are local state until the wishlist slice.
+- Product cards open Product details. Favorite hearts come from the shared wishlist cache (see wishlist.md).
 - Cards use the taller design height (235) for every row because any product may carry an old price.

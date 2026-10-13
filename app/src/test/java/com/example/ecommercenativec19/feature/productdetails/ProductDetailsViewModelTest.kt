@@ -6,6 +6,9 @@ import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.feature.products.FakeProductsRepository
 import com.example.ecommercenativec19.feature.products.domain.GetProductDetailsUseCase
 import com.example.ecommercenativec19.feature.products.product
+import com.example.ecommercenativec19.feature.wishlist.FakeWishlistRepository
+import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
+import com.example.ecommercenativec19.feature.wishlist.domain.ToggleFavoriteUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -24,11 +27,13 @@ import org.junit.Test
 class ProductDetailsViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: FakeProductsRepository
+    private lateinit var wishlist: FakeWishlistRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeProductsRepository()
+        wishlist = FakeWishlistRepository()
     }
 
     @After
@@ -37,7 +42,12 @@ class ProductDetailsViewModelTest {
     }
 
     private fun viewModel(productId: String = "p1") =
-        ProductDetailsViewModel(productId, GetProductDetailsUseCase(repository))
+        ProductDetailsViewModel(
+            productId,
+            GetProductDetailsUseCase(repository),
+            ObserveFavoriteIdsUseCase(wishlist),
+            ToggleFavoriteUseCase(wishlist),
+        )
 
     private fun ProductDetailsUiState.loaded(): ProductDetailsUi = (product as LoadState.Content).data
 
@@ -171,13 +181,46 @@ class ProductDetailsViewModelTest {
     }
 
     @Test
-    fun `toggling favorite flips the flag`() = runTest(testDispatcher) {
-        val viewModel = viewModel()
+    fun `toggling favorite flips the flag for this product`() = runTest(testDispatcher) {
+        val viewModel = viewModel("p1")
         advanceUntilIdle()
 
         viewModel.onToggleFavorite()
+        advanceUntilIdle()
+        assertEquals(listOf("p1"), wishlist.toggleCalls)
         assertTrue(viewModel.uiState.value.isFavorite)
         viewModel.onToggleFavorite()
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.isFavorite)
+    }
+
+    @Test
+    fun `starts favorite when the product is already in the wishlist`() = runTest(testDispatcher) {
+        wishlist.setIds(setOf("p1", "other"))
+        val viewModel = viewModel("p1")
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.isFavorite)
+    }
+
+    @Test
+    fun `a favorite of another product does not fill this heart`() = runTest(testDispatcher) {
+        wishlist.setIds(setOf("other"))
+        val viewModel = viewModel("p1")
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.isFavorite)
+    }
+
+    @Test
+    fun `a failed toggle leaves the heart empty`() = runTest(testDispatcher) {
+        wishlist.toggleError = AppError.Network
+        val viewModel = viewModel("p1")
+        advanceUntilIdle()
+
+        viewModel.onToggleFavorite()
+        advanceUntilIdle()
+
         assertFalse(viewModel.uiState.value.isFavorite)
     }
 }

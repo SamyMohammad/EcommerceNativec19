@@ -6,6 +6,8 @@ import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.feature.products.domain.GetProductDetailsUseCase
 import com.example.ecommercenativec19.feature.products.domain.Product
+import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
+import com.example.ecommercenativec19.feature.wishlist.domain.ToggleFavoriteUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,10 +15,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/** Loads one product by id; favorite and quantity are UI-only state. */
+/**
+ * Loads one product by id. Quantity is UI-only state; the heart mirrors the shared wishlist cache, and a failed toggle
+ * is rolled back there.
+ */
 class ProductDetailsViewModel(
     private val productId: String,
     private val getProductDetails: GetProductDetailsUseCase,
+    private val observeFavoriteIds: ObserveFavoriteIdsUseCase,
+    private val toggleFavorite: ToggleFavoriteUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailsUiState())
     val uiState: StateFlow<ProductDetailsUiState> = _uiState.asStateFlow()
@@ -24,6 +31,9 @@ class ProductDetailsViewModel(
     private var loadJob: Job? = null
 
     init {
+        viewModelScope.launch {
+            observeFavoriteIds().collect { ids -> _uiState.update { it.copy(isFavorite = productId in ids) } }
+        }
         load()
     }
 
@@ -31,7 +41,9 @@ class ProductDetailsViewModel(
         if (_uiState.value.product is LoadState.Error) load()
     }
 
-    fun onToggleFavorite() = _uiState.update { it.copy(isFavorite = !it.isFavorite) }
+    fun onToggleFavorite() {
+        viewModelScope.launch { toggleFavorite(productId) }
+    }
 
     fun onIncrementQuantity() = _uiState.update { it.copy(quantity = it.quantity + 1) }
 

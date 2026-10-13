@@ -134,7 +134,7 @@ They are static composition locals because they never change at runtime. The tok
 Planned, in rough order. Each item is a small reviewed PR.
 
 - **Route API per feature**, replacing sample data. Done: categories, product list, product details (shared
-  `feature/products/`) and Home. Next: cart, wishlist and account.
+  `feature/products/`), Home and wishlist (section 10). Next: cart and account.
 - **Authentication.** Done: sign-in, sign-up, encrypted session, `token` header, sign-out on 401 (section 9). This
   is a deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart,
   wishlist and account endpoints require a token. Still no password reset, social login or profile editing.
@@ -190,3 +190,27 @@ user is past the auth screens (sign-out, or a 401 handled by `AuthInterceptor`),
 
 **Not covered by JVM tests.** The Keystore cipher needs a device; `DataStoreSessionRepositoryTest` uses a fake cipher
 and an in-memory DataStore (the file-backed one cannot rewrite its file on Windows hosts), plus one real-file smoke test.
+
+## 10. Favorites: one source of truth
+
+Before this slice each screen with a heart kept its own copy (Home, Product list and Details each held a local set),
+so a heart tapped on Details was empty again on Home. Now `WishlistRepository.favoriteIds: StateFlow<Set<String>>` is
+the only owner. Home, Product list, Details and the Wishlist screen observe it through `ObserveFavoriteIdsUseCase` and
+change it through `ToggleFavoriteUseCase`; none of them keeps a favorite flag of its own.
+
+- **Scope.** `WishlistRepositoryImpl` is an app-scoped singleton (`createdAtStart`, using the process-wide
+  `CoroutineScope` from `sessionModule`). A ViewModel-scoped cache would start empty on every screen.
+- **Lifecycle follows the session.** The repository observes `SessionRepository.state`: becoming `SignedIn` triggers one
+  `GET /wishlist` (so hearts are right before any screen asks); `SignedOut` clears the cache so the next account never
+  sees the previous one's favorites. A failed background load is silent; the Wishlist screen reloads on every visit.
+- **Optimistic toggle with rollback.** `toggle` flips the id immediately, sends POST or DELETE, and flips it back on
+  failure. The request runs `NonCancellable` so leaving the screen right after the tap cannot strand the cache in a
+  state the server never saw.
+- **Double taps.** One request per product at a time: a second tap on a product that still has a request in flight is
+  dropped (reported as success). Queuing instead would let two requests race on the server and leave two rollbacks
+  competing over one id. A version counter also stops a `GET` that started before a toggle from overwriting it.
+- **Wishlist screen.** It loads the full products once per visit and renders them filtered by `favoriteIds`, so
+  un-hearting a row removes it instantly and a failed request brings it back with no extra bookkeeping.
+- **Known gap.** A failed toggle is visible only as the heart flipping back; there is no snackbar yet.
+
+Details of the endpoints: [`docs/api/wishlist.md`](api/wishlist.md).

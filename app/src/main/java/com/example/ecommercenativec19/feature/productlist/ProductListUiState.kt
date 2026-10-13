@@ -9,7 +9,7 @@ enum class LoadMoreState { Idle, Loading, Error }
 data class ProductListUiState(
     val query: String = "",
     val products: LoadState<List<ProductCardUi>> = LoadState.Loading,
-    /** Local only until the wishlist API slice; kept apart from [products] so reloads do not wipe the hearts. */
+    /** Mirror of the shared wishlist cache; kept apart from [products] so reloads do not wipe the hearts. */
     val favoriteIds: Set<String> = emptySet(),
     val loadMore: LoadMoreState = LoadMoreState.Idle,
 )

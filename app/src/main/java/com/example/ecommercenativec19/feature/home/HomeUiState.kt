@@ -24,6 +24,6 @@ data class HomeUiState(
     val searchQuery: String = "",
     val categories: LoadState<List<HomeCategoryUi>> = LoadState.Loading,
     val sections: Map<HomeSection, LoadState<List<ProductCardUi>>> = HomeSection.entries.associateWith { LoadState.Loading },
-    /** Local only until the wishlist API slice; kept apart from [sections] so reloads do not wipe the hearts. */
+    /** Mirror of the shared wishlist cache; kept apart from [sections] so reloads do not wipe the hearts. */
     val favoriteIds: Set<String> = emptySet(),
 )

@@ -52,14 +52,14 @@ import org.koin.compose.koinInject
  * | `ProductListRoute` | `subCategoryId`, `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; product card -> Product details |
  * | `ProductDetailsRoute` | `productId`, `onBack()`, `onOpenCart()`, `onAddToCart()` | back arrow -> Product list; cart icon and "Add to cart" -> Cart |
  * | `CartRoute` | `onBack()` | back arrow -> previous screen (deviation: the prototype always leads to Home) |
- * | `WishlistRoute` | `onOpenCart()` | cart icon -> Cart |
+ * | `WishlistRoute` | `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; row -> Product details |
  * | `AccountRoute` | none | - |
  *
  * The bottom bar is shared ([AppScaffold]) and calls [AppNavigator.selectTab]; Product list highlights the
  * Categories tab.
  *
- * Prototype reactions that are local UI state, not navigation, and therefore NOT routed here: favorite heart
- * toggles (Home, Product list, Details, Wishlist), quantity plus/minus (Details, Cart), the details image
+ * Prototype reactions that are not navigation, and therefore NOT routed here: favorite heart
+ * toggles (Home, Product list, Details, Wishlist: they call the wishlist API, not navigation), quantity plus/minus (Details, Cart), the details image
  * carousel drag. Reactions whose destination is not one of the ten screens (Women's fashion -> 564:542,
  * Categories "Women's Fashion" tab -> 562:469) are intentionally not wired.
  *
@@ -143,7 +143,12 @@ fun AppNavDisplay(
                     )
                 }
                 entry<Cart> { CartRoute(onBack = { navigator.back() }) }
-                entry<Wishlist> { WishlistRoute(onOpenCart = { navigator.push(Cart) }) }
+                entry<Wishlist> {
+                    WishlistRoute(
+                        onOpenCart = { navigator.push(Cart) },
+                        onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
+                    )
+                }
                 entry<Account> { AccountRoute() }
             },
         )

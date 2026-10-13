@@ -9,6 +9,7 @@ import com.example.ecommercenativec19.feature.productdetails.ProductDetailsUi
 import com.example.ecommercenativec19.feature.productdetails.ProductDetailsUiState
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.feature.productlist.ProductListUiState
+import com.example.ecommercenativec19.feature.wishlist.WishlistUiState
 
 /**
  * Screenshot fixtures for the product screens. Image URLs are fake; the capture test maps each one to a bundled
@@ -44,13 +45,21 @@ internal object ProductFixtures {
         R.drawable.img_frame15_18681980, R.drawable.img_frame17_e0109d22, R.drawable.img_frame18_eb31deae,
     )
 
+    private val wishlistRows = listOf(
+        Triple("Nike Air Jordon", 1200 to 1500, R.drawable.img_frame65_2ac7cd2d),
+        Triple("Tall Cotton Dress", 600 to 750, R.drawable.img_frame66_4cff3886),
+        Triple("GUESS Women’s", 1200 to 1500, R.drawable.img_frame67_70608138),
+    )
+
+    private fun wishlistUrl(index: Int) = "fixture://wishlist-$index"
     private fun categoryUrl(name: String) = "fixture://category/$name"
     private fun homeCardUrl(index: Int) = "fixture://home-card-$index"
 
     private val drawables: Map<String, Int> =
         coverDrawables.toMap() + (DetailsImage to R.drawable.img_property1default1_995b0786) +
             categoryDrawables.associate { (name, drawable) -> categoryUrl(name) to drawable } +
-            homeCardDrawables.mapIndexed { index, drawable -> homeCardUrl(index) to drawable }
+            homeCardDrawables.mapIndexed { index, drawable -> homeCardUrl(index) to drawable } +
+            wishlistRows.mapIndexed { index, (_, _, drawable) -> wishlistUrl(index) to drawable }
 
     fun drawableFor(url: String): Int = drawables.getValue(url)
 
@@ -108,5 +117,20 @@ internal object ProductFixtures {
                 },
             )
         }.toMap(),
+    )
+
+    val wishlist = WishlistUiState(
+        items = LoadState.Content(
+            wishlistRows.mapIndexed { index, (title, prices, _) ->
+                ProductCardUi(
+                    id = "wishlist-$index",
+                    imageUrl = wishlistUrl(index),
+                    title = title,
+                    price = prices.first,
+                    oldPrice = prices.second,
+                    rating = 4.5,
+                )
+            },
+        ),
     )
 }

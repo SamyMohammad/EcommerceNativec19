@@ -13,6 +13,9 @@ import com.example.ecommercenativec19.feature.products.domain.ProductPage
 import com.example.ecommercenativec19.feature.products.domain.ProductSort
 import com.example.ecommercenativec19.feature.products.product
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
+import com.example.ecommercenativec19.feature.wishlist.FakeWishlistRepository
+import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
+import com.example.ecommercenativec19.feature.wishlist.domain.ToggleFavoriteUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -47,12 +50,14 @@ class HomeViewModelTest {
 
     private lateinit var categories: FakeCategoriesRepository
     private lateinit var products: FakeProductsRepository
+    private lateinit var wishlist: FakeWishlistRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         categories = FakeCategoriesRepository()
         products = FakeProductsRepository()
+        wishlist = FakeWishlistRepository()
         ProductSort.entries.forEach { products.sortResults[it] = page("${it.name}-1", "${it.name}-2") }
     }
 
@@ -61,7 +66,12 @@ class HomeViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun viewModel() = HomeViewModel(GetCategoriesUseCase(categories), GetProductsUseCase(products))
+    private fun viewModel() = HomeViewModel(
+        GetCategoriesUseCase(categories),
+        GetProductsUseCase(products),
+        ObserveFavoriteIdsUseCase(wishlist),
+        ToggleFavoriteUseCase(wishlist),
+    )
 
     private fun page(vararg ids: String) = AppResult.Success(ProductPage(ids.map { product(it) }, nextPage = null))
 
@@ -205,13 +215,39 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `favorite toggle adds then removes the product`() = runTest(testDispatcher) {
+    fun `favorite toggle goes through the shared wishlist`() = runTest(testDispatcher) {
         val viewModel = viewModel()
         advanceUntilIdle()
 
         viewModel.onFavoriteToggle("p1")
+        advanceUntilIdle()
+
+        assertEquals(listOf("p1"), wishlist.toggleCalls)
         assertTrue("p1" in viewModel.uiState.value.favoriteIds)
+    }
+
+    @Test
+    fun `hearts follow the shared favorites, including changes made elsewhere`() = runTest(testDispatcher) {
+        wishlist.setIds(setOf("p1"))
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        assertEquals(setOf("p1"), viewModel.uiState.value.favoriteIds)
+
+        wishlist.setIds(emptySet())
+        advanceUntilIdle()
+
+        assertFalse("p1" in viewModel.uiState.value.favoriteIds)
+    }
+
+    @Test
+    fun `a failed toggle leaves the heart as it was`() = runTest(testDispatcher) {
+        wishlist.toggleError = AppError.Network
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
         viewModel.onFavoriteToggle("p1")
+        advanceUntilIdle()
+
         assertFalse("p1" in viewModel.uiState.value.favoriteIds)
     }
 }

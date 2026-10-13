@@ -27,7 +27,7 @@
 
 ## Missing contracts
 
-- Search and filtering (the search field is local state), add to cart, favorites persistence.
+- Search and filtering (the search field is local state), add to cart.
 - Product details are the same for every id (see Product details).
 
 ## Automated visual result
