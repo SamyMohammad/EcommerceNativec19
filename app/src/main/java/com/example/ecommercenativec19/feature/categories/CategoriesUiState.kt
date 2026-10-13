@@ -1,37 +1,27 @@
 package com.example.ecommercenativec19.feature.categories
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.compose.ui.unit.Dp
-import com.example.ecommercenativec19.core.ui.FigmaImageCrop
+/** Load state of one independently loading region (the rail or the sub-category grid). */
+enum class LoadStatus { Loading, Error, Empty, Content }
 
-/**
- * One left-rail entry. [isGap] marks the empty slot the design leaves between "Beauty" and "Cameras" (an entry
- * without a label); it only reserves one row of space.
- */
+/** One left-rail entry. */
 data class RailCategory(
     val id: String,
-    @param:StringRes val label: Int?,
+    val label: String,
     val isSelected: Boolean = false,
 )
 
-/**
- * A sub-category tile of the selected category. [opensProductList]: the prototype links this tile to Product list.
- * [labelStart]: the design's x of the label's left edge inside the tile (null = centered).
- */
-data class SubCategory(
+/** A sub-category tile of the selected category. */
+data class SubCategoryItem(
     val id: String,
-    @param:StringRes val label: Int,
-    @param:DrawableRes val image: Int,
-    val imageCrop: FigmaImageCrop? = null,
-    val opensProductList: Boolean = false,
-    val labelStart: Dp? = null,
+    val label: String,
 )
 
-/** Everything the stateless Categories screen renders (content of the selected rail entry, Men's Fashion). */
+/** Everything the stateless Categories screen renders. Rail and grid load and fail independently. */
 data class CategoriesUiState(
     val searchQuery: String = "",
+    val railStatus: LoadStatus = LoadStatus.Loading,
     val railCategories: List<RailCategory> = emptyList(),
-    @param:StringRes val selectedTitle: Int? = null,
-    val subCategories: List<SubCategory> = emptyList(),
+    val contentStatus: LoadStatus = LoadStatus.Loading,
+    val selectedTitle: String? = null,
+    val subCategories: List<SubCategoryItem> = emptyList(),
 )

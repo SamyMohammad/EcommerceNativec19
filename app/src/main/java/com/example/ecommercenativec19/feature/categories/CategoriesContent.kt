@@ -30,7 +30,6 @@ import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.CategoryTile
 import com.example.ecommercenativec19.core.ui.CategoryTileStyle
-import com.example.ecommercenativec19.core.ui.FigmaCropImage
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.textLineBox
 import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
@@ -38,39 +37,42 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 /** Right-hand side: selected category title, its promo banner and the three-column sub-category grid. */
 @Composable
 internal fun CategoriesContent(
-    title: Int?,
-    subCategories: List<SubCategory>,
+    status: LoadStatus,
+    title: String?,
+    subCategories: List<SubCategoryItem>,
     onOpenProductList: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val tokens = LocalAppTokens.current
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-        if (title != null) {
-            Text(
-                text = stringResource(title),
-                style = tokens.typographySource15,
-                color = tokens.colorSource12,
-                modifier = Modifier.textLineBox(tokens.typographySource15),
-            )
-            SelectedCategoryBanner(Modifier.padding(top = TitleToBannerGap))
-        }
-        Column(
-            modifier = Modifier.padding(top = BannerToGridGap, bottom = BottomContentGap),
-            verticalArrangement = Arrangement.spacedBy(GridRowGap),
-        ) {
-            subCategories.chunked(GridColumns).forEach { row ->
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    row.forEachIndexed { index, sub ->
-                        // The design's tiles start at x 177 / 260 / 344: gaps of 13 and 14 (SpaceBetween would put the
-                        // middle tile on the half pixel 260.5).
-                        if (index > 0) Spacer(Modifier.width(if (index == 1) FirstTileGap else SecondTileGap))
-                        CategoryTile(
-                            label = stringResource(sub.label),
-                            image = { FigmaCropImage(sub.image, sub.imageCrop, Modifier.fillMaxSize()) },
-                            style = CategoryTileStyle.Square,
-                            onClick = if (sub.opensProductList) onOpenProductList else null,
-                            labelStart = sub.labelStart,
-                        )
+    StatusPane(status = status, onRetry = onRetry, modifier = modifier) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            if (title != null) {
+                Text(
+                    text = title,
+                    style = tokens.typographySource15,
+                    color = tokens.colorSource12,
+                    modifier = Modifier.textLineBox(tokens.typographySource15),
+                )
+                SelectedCategoryBanner(title, Modifier.padding(top = TitleToBannerGap))
+            }
+            Column(
+                modifier = Modifier.padding(top = BannerToGridGap, bottom = BottomContentGap),
+                verticalArrangement = Arrangement.spacedBy(GridRowGap),
+            ) {
+                subCategories.chunked(GridColumns).forEach { row ->
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        row.forEachIndexed { index, sub ->
+                            // The design's tiles start at x 177 / 260 / 344: gaps of 13 and 14 (SpaceBetween would put the
+                            // middle tile on the half pixel 260.5).
+                            if (index > 0) Spacer(Modifier.width(if (index == 1) FirstTileGap else SecondTileGap))
+                            CategoryTile(
+                                label = sub.label,
+                                image = { TilePlaceholder() },
+                                style = CategoryTileStyle.Square,
+                                onClick = onOpenProductList,
+                            )
+                        }
                     }
                 }
             }
@@ -78,9 +80,15 @@ internal fun CategoriesContent(
     }
 }
 
+/** The API gives sub-categories no image, so every tile shows a neutral block. */
+@Composable
+private fun TilePlaceholder() {
+    Box(Modifier.fillMaxSize().background(LocalAppTokens.current.colorSource22))
+}
+
 /** Faded photo banner with title and a "Shop Now" pill. The photo is directional artwork, so it stays LTR. */
 @Composable
-private fun SelectedCategoryBanner(modifier: Modifier = Modifier) {
+private fun SelectedCategoryBanner(title: String, modifier: Modifier = Modifier) {
     val tokens = LocalAppTokens.current
     val shape = RoundedCornerShape(tokens.radiusSource05)
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -95,7 +103,7 @@ private fun SelectedCategoryBanner(modifier: Modifier = Modifier) {
             CoverImage(painterResource(R.drawable.img_frame32_617edea3), null, Modifier.matchParentSize())
             // Design-absolute layout inside the 237 x 94 banner: title at y 8, "Shop Now" pill at y 56.
             LineBoxText(
-                text = stringResource(R.string.categories_banner_title),
+                text = title,
                 style = tokens.typographySource16,
                 color = tokens.colorSource12,
                 modifier = Modifier.padding(start = BannerPadding, top = BannerTop),

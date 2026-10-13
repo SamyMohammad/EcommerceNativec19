@@ -44,7 +44,7 @@ import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
  * | `SignInRoute` | `onSignIn()`, `onCreateAccount()` | Login -> Home; "Create Account" -> Sign up |
  * | `SignUpRoute` | `onSignUp()` | Sign up button -> Home |
  * | `HomeRoute` | `onTabSelected(AppTab)`, `onOpenCart()`, `onOpenCategories()` | cart icon -> Cart; "men's fashion" circle -> Categories; tabs |
- * | `CategoriesRoute` | `onTabSelected(AppTab)`, `onOpenCart()`, `onOpenProductList()` | cart icon -> Cart; "Footwear" tile -> Product list; tabs |
+ * | `CategoriesRoute` | `onTabSelected(AppTab)`, `onOpenCart()`, `onOpenProductList()` | cart icon -> Cart; any sub-category tile -> Product list; tabs |
  * | `ProductListRoute` | `onTabSelected(AppTab)`, `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; product card -> Product details; tabs |
  * | `ProductDetailsRoute` | `productId`, `onBack()`, `onOpenCart()`, `onAddToCart()` | back arrow -> Product list; cart icon and "Add to cart" -> Cart |
  * | `CartRoute` | `onBack()` | back arrow -> Home |

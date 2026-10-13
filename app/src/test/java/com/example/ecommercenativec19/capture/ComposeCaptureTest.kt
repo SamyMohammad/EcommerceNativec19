@@ -1,5 +1,6 @@
 package com.example.ecommercenativec19.capture
 
+import android.app.Application
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,7 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.feature.account.AccountRoute
 import com.example.ecommercenativec19.feature.cart.CartRoute
-import com.example.ecommercenativec19.feature.categories.CategoriesRoute
+import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
+import com.example.ecommercenativec19.feature.categories.CategoriesScreen
 import com.example.ecommercenativec19.feature.home.HomeRoute
 import com.example.ecommercenativec19.feature.productdetails.ProductDetailsRoute
 import com.example.ecommercenativec19.feature.productlist.ProductListRoute
@@ -69,7 +71,8 @@ private enum class Scene(val variant: String, val nodeId: String, val containsTe
 
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [36], qualifiers = "en-ldltr-w430dp-h932dp-notnight-mdpi")
+// Plain Application: avoids EcommerceApp.startKoin running once per Robolectric test (it would throw on the second).
+@Config(sdk = [36], application = Application::class, qualifiers = "en-ldltr-w430dp-h932dp-notnight-mdpi")
 class ComposeCaptureTest {
     @get:Rule val compose = createComposeRule()
 
@@ -91,7 +94,8 @@ class ComposeCaptureTest {
             Scene.SignIn -> SignInRoute(onSignIn = {}, onCreateAccount = {})
             Scene.SignUp -> SignUpRoute(onSignUp = {})
             Scene.Home -> HomeRoute(onTabSelected = {}, onOpenCart = {}, onOpenCategories = {})
-            Scene.Categories -> CategoriesRoute(onTabSelected = {}, onOpenCart = {}, onOpenProductList = {})
+            // The screen with sample state, not the Route: the Route needs Koin and the network.
+            Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {}, {})
             Scene.ProductList -> ProductListRoute(onTabSelected = {}, onOpenCart = {}, onOpenProduct = {})
             Scene.Details -> ProductDetailsRoute(productId = "1", onBack = {}, onOpenCart = {}, onAddToCart = {})
             Scene.Cart -> CartRoute(onBack = {})

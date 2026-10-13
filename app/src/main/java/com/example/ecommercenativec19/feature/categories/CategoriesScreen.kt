@@ -27,6 +27,8 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 fun CategoriesScreen(
     state: CategoriesUiState,
     onQueryChange: (String) -> Unit,
+    onCategorySelected: (String) -> Unit,
+    onRetry: () -> Unit,
     onTabSelected: (AppTab) -> Unit,
     onOpenCart: () -> Unit,
     onOpenProductList: () -> Unit,
@@ -48,13 +50,18 @@ fun CategoriesScreen(
                 .padding(start = AppDimens.ScreenHorizontal, end = AppDimens.ScreenHorizontal, top = HeaderToRailGap),
         ) {
             CategoriesRail(
+                status = state.railStatus,
                 categories = state.railCategories,
+                onCategorySelected = onCategorySelected,
+                onRetry = onRetry,
                 modifier = Modifier.width(RailWidth).fillMaxHeight().overflowBottom(RailUnderBarOverlap),
             )
             CategoriesContent(
+                status = state.contentStatus,
                 title = state.selectedTitle,
                 subCategories = state.subCategories,
                 onOpenProductList = onOpenProductList,
+                onRetry = onRetry,
                 modifier = Modifier.weight(1f).fillMaxHeight().padding(start = RailToContentGap),
             )
         }

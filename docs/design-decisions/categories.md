@@ -50,3 +50,10 @@
 ## Human visual review
 
 not_run
+
+## API integration (feat/categories-api)
+
+- Rail and grid now come from the Route API (`docs/api/categories.md`); `CategoriesSampleData.kt` remains for previews and screenshot tests only.
+- Sub-category tiles show a neutral placeholder: the API has no sub-category image.
+- Per-item design tweaks that only fitted the fixed Figma content (label offsets, image crops, the empty rail gap, "only Footwear opens Product list") were dropped: tiles are uniform and all open Product list.
+- The promo banner title follows the selected category; its photo stays the static Figma image until an image loader is added (category `image` URLs are available from the API).
