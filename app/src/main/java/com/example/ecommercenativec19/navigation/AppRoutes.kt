@@ -1,50 +1,66 @@
 package com.example.ecommercenativec19.navigation
 
-import android.net.Uri
+import androidx.navigation3.runtime.NavKey
 import com.example.ecommercenativec19.core.ui.AppTab
+import kotlinx.serialization.Serializable
 
-/** Route strings of the ten screens (Figma node ids in the comments, from interactions.json). */
-object AppRoutes {
-    const val ARG_PRODUCT_ID = "productId"
+// Navigation 3 keys of the ten screens (Figma node ids in the comments, from interactions.json). Keys are plain
+// serializable data so the back stacks survive configuration change and process death.
 
-    /** 1:2 */
-    const val Splash = "splash"
+/** 1:2 */
+@Serializable data object Splash : NavKey
 
-    /** 14:47 */
-    const val SignIn = "sign_in"
+/** 14:47 */
+@Serializable data object SignIn : NavKey
 
-    /** 9:97 */
-    const val SignUp = "sign_up"
+/** 9:97 */
+@Serializable data object SignUp : NavKey
 
-    /** 14:116 */
-    const val Home = "home"
+/** 14:116 */
+@Serializable data object Home : NavKey
 
-    /** 601:775 */
-    const val Categories = "categories"
+/** 601:775 */
+@Serializable data object Categories : NavKey
 
-    /** 726:650 */
-    const val ProductList = "product_list"
-
-    /** 620:1083; takes the product id as path argument. */
-    const val ProductDetails = "product_details/{$ARG_PRODUCT_ID}"
-
-    /** 604:890 */
-    const val Cart = "cart"
-
-    /** 731:1294 */
-    const val Wishlist = "wishlist"
-
-    /** 835:523 */
-    const val Account = "account"
-
-    fun productDetails(productId: String): String = "product_details/${Uri.encode(productId)}"
+/** 726:650; opened from a Categories sub-category tile, so it lives on the Categories tab stack. */
+@Serializable data class ProductList(val subCategoryId: String) : NavKey {
+    init {
+        require(subCategoryId.isNotBlank()) { "subCategoryId must not be blank" }
+    }
 }
 
-/** Route of the screen a bottom-navigation tab opens. */
-val AppTab.route: String
+/** 620:1083 */
+@Serializable data class ProductDetails(val productId: String) : NavKey {
+    init {
+        require(productId.isNotBlank()) { "productId must not be blank" }
+    }
+}
+
+/** 604:890 */
+@Serializable data object Cart : NavKey
+
+/** 731:1294 */
+@Serializable data object Wishlist : NavKey
+
+/** 835:523 */
+@Serializable data object Account : NavKey
+
+/** Root key of a bottom-navigation tab. */
+val AppTab.rootKey: NavKey
     get() = when (this) {
-        AppTab.Home -> AppRoutes.Home
-        AppTab.Categories -> AppRoutes.Categories
-        AppTab.Wishlist -> AppRoutes.Wishlist
-        AppTab.Account -> AppRoutes.Account
+        AppTab.Home -> Home
+        AppTab.Categories -> Categories
+        AppTab.Wishlist -> Wishlist
+        AppTab.Account -> Account
+    }
+
+/** Tab highlighted while this key is on top, or null when the screen shows no bottom bar. */
+val NavKey.bottomBarTab: AppTab?
+    get() = when (this) {
+        Home -> AppTab.Home
+        Categories -> AppTab.Categories
+        is ProductList -> AppTab.Categories
+        Wishlist -> AppTab.Wishlist
+        Account -> AppTab.Account
+        else -> null
     }

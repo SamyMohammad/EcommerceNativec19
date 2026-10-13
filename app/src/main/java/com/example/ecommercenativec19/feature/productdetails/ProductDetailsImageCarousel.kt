@@ -14,51 +14,41 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.FavoriteButton
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.core.ui.ProductImage
 
 /**
  * Bordered 300dp image carousel with the favorite circle (top-end) and page indicators (bottom-center): the active
- * page is a 30 x 7 primary pill, the others are 7dp white dots with a primary outline. [currentPage] seeds the
- * pager; swipes are reported through [onPageChanged].
+ * page is a 30 x 7 primary pill, the others are 7dp white dots with a primary outline. The page is UI-local
+ * (pager state): swiping does not touch the ViewModel, so only this carousel recomposes.
  */
 @Composable
 internal fun ProductDetailsImageCarousel(
-    images: List<Int>,
-    currentPage: Int,
-    onPageChanged: (Int) -> Unit,
+    images: List<String>,
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource02)
-    val pagerState = rememberPagerState(initialPage = currentPage.coerceIn(0, images.lastIndex)) { images.size }
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect(onPageChanged)
-    }
+    val shape = MaterialTheme.shapes.medium
+    val pagerState = rememberPagerState { images.size }
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(CarouselHeight)
             .clip(shape)
-            .border(1.dp, tokens.colorSource14, shape),
+            .border(1.dp, MaterialTheme.colorScheme.outline, shape),
     ) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-            CoverImage(
-                painter = painterResource(images[page]),
+            ProductImage(
+                url = images[page],
                 contentDescription = stringResource(R.string.details_image_description, page + 1, images.size),
                 modifier = Modifier.fillMaxSize(),
             )
@@ -85,15 +75,15 @@ internal fun ProductDetailsImageCarousel(
                     Box(
                         Modifier
                             .size(width = ActiveIndicatorWidth, height = IndicatorSize)
-                            .background(tokens.colorSource00, RoundedCornerShape(tokens.radiusSource08)),
+                            .background(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge),
                     )
                 } else {
                     Box(
                         Modifier
                             .width(IndicatorSize)
                             .height(IndicatorSize)
-                            .background(tokens.colorSource02, CircleShape)
-                            .border(1.dp, tokens.colorSource00, CircleShape),
+                            .background(MaterialTheme.colorScheme.surface, CircleShape)
+                            .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape),
                     )
                 }
             }

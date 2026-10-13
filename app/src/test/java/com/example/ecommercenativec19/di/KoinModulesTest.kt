@@ -2,6 +2,7 @@ package com.example.ecommercenativec19.di
 
 import android.content.Context
 import com.example.ecommercenativec19.feature.productdetails.ProductDetailsViewModel
+import com.example.ecommercenativec19.feature.productlist.ProductListViewModel
 import org.junit.Test
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module
@@ -17,7 +18,10 @@ class KoinModulesTest {
         module { includes(appModules) }.verify(
             // Provided at runtime by androidContext(); not a definition Koin can see statically.
             extraTypes = listOf(Context::class),
-            injections = injectedParameters(definition<ProductDetailsViewModel>(String::class)),
+            injections = injectedParameters(
+                definition<ProductDetailsViewModel>(String::class),
+                definition<ProductListViewModel>(String::class),
+            ),
         )
     }
 }

@@ -8,4 +8,10 @@
     <string name="account_label_address">Your Address</string>
     <string name="account_edit_field">Edit %1$s</string>
     <string name="account_edit_done">Finish editing %1$s</string>
+    <string name="account_sign_out">Sign out</string>
+    <string name="account_password_dialog_title">Change password</string>
+    <string name="account_password_current">Current password</string>
+    <string name="account_password_new">New password</string>
+    <string name="account_password_save">Save</string>
+    <string name="account_password_cancel">Cancel</string>
 </resources>

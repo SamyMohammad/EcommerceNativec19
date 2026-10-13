@@ -4,29 +4,28 @@
 
 - Figma node id: `620:1083`; file key `dEhOfaWrXc8wRA6mdeMecc`; version-id `2409508187813363894`.
 - The version-id is owner-observed, NOT verified through the Figma MCP. Freshness is unverified.
-- Code: `feature/productdetails` (`ProductDetailsScreen.kt`, `ProductDetailsImageCarousel.kt`, `ProductDetailsOptions.kt`, `ProductDetailsRoute.kt`, `ProductDetailsViewModel.kt`, `ProductDetailsSampleData.kt`).
+- Code: `feature/productdetails` (`ProductDetailsScreen.kt`, `ProductDetailsImageCarousel.kt`, `ProductDetailsRoute.kt`, `ProductDetailsViewModel.kt`).
+- Data: the product comes from the Route API (`feature/products`, see `docs/api/products.md`); screenshot fixtures live in `src/test/.../capture/ProductFixtures.kt`..
 
 ## Components used
 
-- `core/ui`: `ScreenTitleBar`, `FavoriteButton`, `QuantitySelector`, `AppButton` (`Primary`, with leading cart icon), `CoverImage`, `centeredBorder`, `textLineBox`.
-- Local: `ProductDetailsImageCarousel` (Compose `HorizontalPager` with indicators), `ProductSizeOptions`, `ProductColorOptions`.
-- Options use `selectable(role = RadioButton)`.
+- `core/ui`: `ScreenTitleBar`, `FavoriteButton`, `QuantitySelector`, `AppButton` (`Primary`, with leading cart icon), `ProductImage` (Coil `AsyncImage`), `StatusPane`, `centeredBorder`, `textLineBox`.
+- Local: `ProductDetailsImageCarousel` (Compose `HorizontalPager` with indicators).
 
 ## Material defaults / token mapping
 
 - Text `typographySource00` (title, price, headings), `typographySource15` (sold pill), `typographySource07` (rating, description, sizes), colors `colorSource12` / `colorSource21`.
 - Carousel: radius `radiusSource02`, border `colorSource14`; active indicator pill `colorSource00` with `radiusSource08`.
 - Sold pill radius `radiusSource00`, stroke `colorSource14`.
-- Colour swatches `colorSource24` to `colorSource28`; selected size circle `colorSource00`.
 - Material3 `Text`; `AppButton` uses `Surface`.
 
 ## Deviations
 
 - The "Add to cart" row is a footer pinned below the scroll area, not an in-flow button.
-- The carousel repeats the same exported image three times (the design shows three indicators but exports one photo).
-- Total price is static; it does not follow quantity.
+- The carousel shows the product's own gallery (1 to 10 images), so the indicator count follows the data.
+- Total price is unit price times quantity, computed from state.
+- **Size and color pickers were removed**: the API has no variants (`availableColors` is never populated), so the screen shows no option the data cannot back. The sections below the description are therefore gone and the layout after it differs from the Figma frame.
 - Quantity floor of 1 is an assumption (the design shows no limit).
-- Size and color options are 43x48dp touch targets around 35dp circles.
 - "Read More" is non-interactive text inside the description.
 - The search icon in the title bar has no action.
 - The multi-line description is tuned 1dp up and 2dp shorter below to match the design position in the Robolectric capture. This may differ on a real device.
@@ -36,7 +35,7 @@
 
 ## Missing contracts
 
-- Product data (every product id shows the same placeholder), cart state (add to cart only navigates to Cart), price calculation, stock, favorites persistence, search.
+- Cart state (add to cart only navigates to Cart), price calculation, stock, search.
 
 ## Automated visual result
 

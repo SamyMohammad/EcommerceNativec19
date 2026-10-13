@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
@@ -29,12 +29,15 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedColors
+import com.example.ecommercenativec19.ui.theme.extendedTypography
 
 /**
  * Sign in / Sign up text field: label (Medium 18, white) above a 64dp white rounded field.
@@ -43,6 +46,7 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
  * Text direction follows the layout direction (start aligned); placeholder/typed text use the design's Light 18.
  * [trailingIcon] is an optional slot at the end of the field (e.g. [PasswordVisibilityToggle]); the slot is
  * given the design's 16dp end margin minus the touch inset, so pass a 48dp-target icon.
+ * [errorText], when set, is announced and shown under the field with [AuthErrorText].
  */
 @Composable
 fun AuthTextField(
@@ -55,16 +59,16 @@ fun AuthTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: (@Composable () -> Unit)? = null,
+    errorText: String? = null,
 ) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource02)
+    val shape = MaterialTheme.shapes.medium
     Column(modifier) {
         Text(
             text = label,
-            style = tokens.typographySource00,
-            color = tokens.colorSource02,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
             maxLines = 1,
-            modifier = Modifier.textLineBox(tokens.typographySource00),
+            modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
         )
         Spacer(Modifier.height(AuthLabelToFieldGap))
         BasicTextField(
@@ -74,10 +78,10 @@ fun AuthTextField(
                 .fillMaxWidth()
                 .height(AppDimens.AuthFieldHeight)
                 .clip(shape)
-                .background(tokens.colorSource02)
+                .background(MaterialTheme.colorScheme.surface)
                 .semantics { contentDescription = label },
-            textStyle = tokens.typographySource01.copy(color = tokens.colorSource08),
-            cursorBrush = SolidColor(tokens.colorSource00),
+            textStyle = MaterialTheme.extendedTypography.fieldInput.copy(color = MaterialTheme.extendedColors.inputText),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             singleLine = true,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -100,8 +104,8 @@ fun AuthTextField(
                         if (value.isEmpty()) {
                             Text(
                                 text = placeholder,
-                                style = tokens.typographySource01,
-                                color = tokens.colorSource03,
+                                style = MaterialTheme.extendedTypography.fieldInput,
+                                color = MaterialTheme.extendedColors.inputPlaceholder,
                                 maxLines = 1,
                             )
                         }
@@ -111,7 +115,22 @@ fun AuthTextField(
                 }
             },
         )
+        if (errorText != null) {
+            Spacer(Modifier.height(AuthErrorGap))
+            AuthErrorText(errorText)
+        }
     }
+}
+
+/** Validation or submit failure on the primary-color auth background; announced politely by screen readers. */
+@Composable
+fun AuthErrorText(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onPrimary,
+        modifier = modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite },
+    )
 }
 
 /**
@@ -149,3 +168,5 @@ fun PasswordVisibilityToggle(
 
 /** Label bottom (y 351) to field top (y 375) in the sign in / sign up frames. */
 private val AuthLabelToFieldGap = 24.dp
+
+private val AuthErrorGap = 6.dp

@@ -1,19 +1,15 @@
 package com.example.ecommercenativec19.feature.productlist
 
-import androidx.annotation.DrawableRes
+import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
-/** One card of the product list. Texts are already formatted for display (no price math happens in the UI). */
-data class ProductListItem(
-    val id: String,
-    @param:DrawableRes val imageRes: Int,
-    val title: String,
-    val price: String,
-    val oldPrice: String?,
-    val rating: String,
-    val isFavorite: Boolean = false,
-)
+/** State of the "load more" footer below an already visible list. */
+enum class LoadMoreState { Idle, Loading, Error }
 
 data class ProductListUiState(
     val query: String = "",
-    val products: List<ProductListItem> = emptyList(),
+    val products: LoadState<List<ProductCardUi>> = LoadState.Loading,
+    /** Mirror of the shared wishlist cache; kept apart from [products] so reloads do not wipe the hearts. */
+    val favoriteIds: Set<String> = emptySet(),
+    val loadMore: LoadMoreState = LoadMoreState.Idle,
 )

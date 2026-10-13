@@ -1,7 +1,7 @@
 package com.example.ecommercenativec19.feature.wishlist
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -24,61 +22,50 @@ import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppButton
 import com.example.ecommercenativec19.core.ui.AppButtonStyle
 import com.example.ecommercenativec19.core.ui.AppDimens
-import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.core.ui.BottomNavigationBar
-import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.FavoriteButton
-import com.example.ecommercenativec19.core.ui.FractionalCropImage
+import com.example.ecommercenativec19.core.ui.ProductImage
 import com.example.ecommercenativec19.core.ui.ProductRowCard
 import com.example.ecommercenativec19.core.ui.SearchHeader
-import com.example.ecommercenativec19.core.ui.tokenColor
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.core.ui.StatusPane
+import com.example.ecommercenativec19.core.ui.formatOldPrice
+import com.example.ecommercenativec19.core.ui.formatPrice
+import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
-/** Stateless Wishlist: search header, product rows with favorite heart and "Add to Cart", bottom bar. */
+/** Stateless Wishlist: search header, product rows with favorite heart and "Add to Cart". */
 @Composable
 fun WishlistScreen(
     state: WishlistUiState,
     onQueryChange: (String) -> Unit,
     onToggleFavorite: (String) -> Unit,
+    onProductClick: (String) -> Unit,
     onAddToCart: (String) -> Unit,
     onOpenCart: () -> Unit,
-    onTabSelected: (AppTab) -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Scaffold(
         modifier = modifier,
-        containerColor = tokens.colorSource02,
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = { BottomNavigationBar(selectedTab = AppTab.Wishlist, onTabSelected = onTabSelected) },
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(bottom = RowGap),
-            verticalArrangement = Arrangement.spacedBy(RowGap),
-        ) {
-            item {
-                // The header carries its own 16dp margins and status-bar inset.
-                SearchHeader(
-                    query = state.query,
-                    onQueryChange = onQueryChange,
-                    onCartClick = onOpenCart,
-                )
-            }
-            if (state.items.isEmpty()) {
-                item {
-                    // Deviation: the design shows no empty state; this is a minimal accessible one.
-                    Box(Modifier.fillMaxWidth().padding(horizontal = AppDimens.ScreenHorizontal), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = stringResource(R.string.wishlist_empty),
-                            style = tokens.typographySource00,
-                            color = tokens.colorSource21,
-                        )
+        Column(Modifier.fillMaxSize().padding(padding)) {
+            // The header carries its own 16dp margins and status-bar inset.
+            SearchHeader(query = state.query, onQueryChange = onQueryChange, onCartClick = onOpenCart)
+            StatusPane(
+                state = state.items,
+                onRetry = onRetry,
+                emptyText = stringResource(R.string.wishlist_empty),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+            ) { items ->
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(top = RowGap, bottom = RowGap),
+                    verticalArrangement = Arrangement.spacedBy(RowGap),
+                ) {
+                    items(items, key = { it.id }) { item ->
+                        WishlistRow(item, onToggleFavorite, onProductClick, onAddToCart)
                     }
                 }
-            }
-            items(state.items, key = { it.id }) { item ->
-                WishlistRow(item, onToggleFavorite, onAddToCart)
             }
         }
     }
@@ -86,39 +73,22 @@ fun WishlistScreen(
 
 @Composable
 private fun WishlistRow(
-    item: WishlistItemUi,
+    item: ProductCardUi,
     onToggleFavorite: (String) -> Unit,
+    onProductClick: (String) -> Unit,
     onAddToCart: (String) -> Unit,
 ) {
     val addToCartDescription = stringResource(R.string.wishlist_add_to_cart_description, item.title)
     ProductRowCard(
-        modifier = Modifier.padding(start = AppDimens.ScreenHorizontal, end = AppDimens.ScreenHorizontal, top = item.extraGapBefore),
+        modifier = Modifier.padding(horizontal = AppDimens.ScreenHorizontal),
         title = item.title,
-        price = item.price,
-        oldPrice = item.oldPrice,
-        colorDot = item.dot.tokenColor(),
-        variantColor = LocalAppTokens.current.colorSource12,
-        variantLabel = item.variantLabel,
-        image = {
-            val painter = painterResource(item.image)
-            val crop = item.crop
-            if (crop == null) {
-                CoverImage(painter, null, Modifier.fillMaxSize())
-            } else {
-                FractionalCropImage(
-                    painter = painter,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    heightFraction = crop.heightFraction,
-                    offsetXFraction = crop.offsetXFraction,
-                    offsetYFraction = crop.offsetYFraction,
-                )
-            }
-        },
+        price = formatPrice(item.price),
+        oldPrice = item.oldPrice?.let { formatOldPrice(it) },
+        image = { ProductImage(url = item.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
         // The design places the heart and the button 16dp from the end (the row's corner slot gives 8).
         topEnd = {
             FavoriteButton(
-                isFavorite = item.isFavorite,
+                isFavorite = true,
                 onClick = { onToggleFavorite(item.id) },
                 modifier = Modifier.padding(end = SlotExtraEnd),
             )
@@ -134,10 +104,10 @@ private fun WishlistRow(
                     .semantics { contentDescription = addToCartDescription },
             )
         },
+        onClick = { onProductClick(item.id) },
     )
 }
 
 private val RowGap = 24.dp
 private val SlotExtraEnd = 8.dp
 private val AddToCartWidth = 100.dp
-

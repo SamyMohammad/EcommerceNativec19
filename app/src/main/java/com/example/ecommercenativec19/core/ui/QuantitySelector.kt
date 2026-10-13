@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Primary-colored 122 x 42 pill with minus, the quantity (Medium 18, white) and plus. Used by Product details and
@@ -30,12 +29,11 @@ fun QuantitySelector(
     onDecrement: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Row(
         modifier = modifier
             .size(width = 122.dp, height = 42.dp)
-            .clip(RoundedCornerShape(tokens.radiusSource00))
-            .background(tokens.colorSource00)
+            .clip(MaterialTheme.shapes.large)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(horizontal = EdgePadding),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -49,10 +47,10 @@ fun QuantitySelector(
         )
         Text(
             text = quantity.toString(),
-            style = tokens.typographySource00,
-            color = tokens.colorSource02,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.textLineBox(tokens.typographySource00),
+            modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
         )
         AppIconButton(
             painter = painterResource(R.drawable.ic_icon_plus_circle_6a221117),

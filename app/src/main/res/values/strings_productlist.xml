@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Product list screen strings. Product titles come from the API. -->
+<resources>
+    <string name="productlist_empty">No products here yet</string>
+</resources>

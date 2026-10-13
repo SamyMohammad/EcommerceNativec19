@@ -4,7 +4,7 @@
 
 - Figma node id: `726:650`; file key `dEhOfaWrXc8wRA6mdeMecc`; version-id `2409508187813363894`.
 - The version-id is owner-observed, NOT verified through the Figma MCP. Freshness is unverified.
-- Code: `feature/productlist` (`ProductListScreen.kt`, `ProductListRoute.kt`, `ProductListSampleData.kt`, `ProductListViewModel.kt`).
+- Code: `feature/productlist` (`ProductListScreen.kt`, `ProductListRoute.kt`, `ProductListViewModel.kt`).
 
 ## Components used
 
@@ -27,7 +27,7 @@
 
 ## Missing contracts
 
-- Product data layer (six placeholder products in `ProductListSampleData.kt`, opaque string ids), search and filtering, add to cart, favorites persistence.
+- Search and filtering (the search field is local state), add to cart.
 - Product details are the same for every id (see Product details).
 
 ## Automated visual result
@@ -44,3 +44,7 @@
 ## Human visual review
 
 not_run
+
+## Data
+
+- Products of the tapped sub-category come from the Route API (`feature/products`, see `docs/api/products.md`) and load page by page when the grid nears its end. Loading, empty and error states use the shared `StatusPane`. Screenshot fixtures live in `src/test/.../capture/ProductFixtures.kt`.

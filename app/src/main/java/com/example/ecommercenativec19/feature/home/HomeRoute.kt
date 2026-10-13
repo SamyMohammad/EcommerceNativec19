@@ -4,15 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.ecommercenativec19.core.ui.AppTab
 import org.koin.androidx.compose.koinViewModel
 
-/** Home entry point. Callback contract: see AppNavHost (tabs, cart icon, "men's fashion" circle -> Categories). */
+/** Home entry point. Callback contract: see AppNavDisplay (cart icon, category tile -> Categories, product card -> Details). */
 @Composable
 fun HomeRoute(
-    onTabSelected: (AppTab) -> Unit,
     onOpenCart: () -> Unit,
     onOpenCategories: () -> Unit,
+    onOpenProduct: (productId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: HomeViewModel = koinViewModel()
@@ -21,9 +20,12 @@ fun HomeRoute(
         state = state,
         onQueryChange = viewModel::onSearchQueryChange,
         onFavoriteClick = viewModel::onFavoriteToggle,
-        onTabSelected = onTabSelected,
+        onAddToCart = viewModel::onAddToCart,
+        onProductClick = onOpenProduct,
         onOpenCart = onOpenCart,
         onOpenCategories = onOpenCategories,
+        onRetryCategories = viewModel::onRetryCategories,
+        onRetrySection = viewModel::onRetrySection,
         modifier = modifier,
     )
 }

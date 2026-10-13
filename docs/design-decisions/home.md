@@ -22,7 +22,7 @@
 ## Deviations
 
 - The promo banner is a single static slide plus the exported 3-dot artwork. The design shows a 3-dot indicator but no content for slides 2 and 3, so there is no carousel or pager.
-- Controls without a prototype reaction are non-interactive: "view all", banner "Shop Now", product cards. The card "+" button has an empty callback. Only the "men's fashion" circle (to Categories), the favorite hearts (local toggle), the cart icon and the tabs react.
+- Controls without a prototype reaction are non-interactive: "view all", banner "Shop Now", product cards. The card "+" button has an empty callback. Only the "men's fashion" circle (to Categories), the favorite hearts (Route API wishlist, optimistic), the cart icon and the tabs react.
 - Banners are forced left-to-right (artwork-bound), also in RTL locales.
 - Banner texts use 22sp and 30sp while the token line height is 18sp; `textLineBox` keeps the 18sp line box and the glyphs may overflow it.
 - Category grid scrolls horizontally with the 4th column cut at the screen edge as in the design. Photo widths/offsets of a few tiles are hand-placed from the frame.

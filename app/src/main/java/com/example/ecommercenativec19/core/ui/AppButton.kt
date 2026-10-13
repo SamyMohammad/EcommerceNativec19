@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
@@ -19,8 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.ecommercenativec19.ui.theme.generated.AppTokens
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedTypography
 
 /**
  * Button variants that appear in the design. Height, radius, colors and text style come from the style; the width
@@ -45,23 +47,37 @@ enum class AppButtonStyle(
     PrimarySmall(30.dp, 0.dp),
 }
 
-private fun AppButtonStyle.container(t: AppTokens): Color = if (this == AppButtonStyle.OnPrimary) t.colorSource02 else t.colorSource00
-private fun AppButtonStyle.content(t: AppTokens): Color = if (this == AppButtonStyle.OnPrimary) t.colorSource00 else t.colorSource02
-private fun AppButtonStyle.radius(t: AppTokens): Dp = when (this) {
-    AppButtonStyle.OnPrimary, AppButtonStyle.PrimaryCompact -> t.radiusSource02
-    AppButtonStyle.Primary -> t.radiusSource00
-    AppButtonStyle.PrimarySmall -> t.radiusSource05
+@Composable
+@ReadOnlyComposable
+private fun AppButtonStyle.container(): Color =
+    if (this == AppButtonStyle.OnPrimary) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary
+
+@Composable
+@ReadOnlyComposable
+private fun AppButtonStyle.content(): Color =
+    if (this == AppButtonStyle.OnPrimary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
+
+@Composable
+@ReadOnlyComposable
+private fun AppButtonStyle.shape(): CornerBasedShape = when (this) {
+    AppButtonStyle.OnPrimary, AppButtonStyle.PrimaryCompact -> MaterialTheme.shapes.medium
+    AppButtonStyle.Primary -> MaterialTheme.shapes.large
+    AppButtonStyle.PrimarySmall -> MaterialTheme.shapes.small
 }
-private fun AppButtonStyle.textStyle(t: AppTokens): TextStyle = when (this) {
-    AppButtonStyle.OnPrimary -> t.typographySource02
-    AppButtonStyle.Primary -> t.typographySource10
-    AppButtonStyle.PrimaryCompact -> t.typographySource15
-    AppButtonStyle.PrimarySmall -> t.typographySource11
+
+@Composable
+@ReadOnlyComposable
+private fun AppButtonStyle.textStyle(): TextStyle = when (this) {
+    AppButtonStyle.OnPrimary -> MaterialTheme.extendedTypography.authButton
+    AppButtonStyle.Primary -> MaterialTheme.typography.titleLarge
+    AppButtonStyle.PrimaryCompact -> MaterialTheme.typography.labelLarge
+    AppButtonStyle.PrimarySmall -> MaterialTheme.typography.bodySmall
 }
 
 /**
  * Stateless button. The label is centered; [leadingIcon] / [trailingIcon] (24dp, decorative) are pinned to the
  * start/end edge at the style's icon inset, as in "Add to cart" (cart icon) and "Check Out" (arrow icon).
+ * A disabled button (for example while a request is in flight) ignores taps and is dimmed.
  */
 @Composable
 fun AppButton(
@@ -71,20 +87,21 @@ fun AppButton(
     style: AppButtonStyle = AppButtonStyle.Primary,
     leadingIcon: Painter? = null,
     trailingIcon: Painter? = null,
+    enabled: Boolean = true,
 ) {
-    val tokens = LocalAppTokens.current
     Surface(
         onClick = onClick,
-        modifier = modifier.height(style.height),
-        shape = RoundedCornerShape(style.radius(tokens)),
-        color = style.container(tokens),
-        contentColor = style.content(tokens),
+        enabled = enabled,
+        modifier = modifier.height(style.height).alpha(if (enabled) 1f else DisabledAlpha),
+        shape = style.shape(),
+        color = style.container(),
+        contentColor = style.content(),
     ) {
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Text(
                 text = text,
-                style = style.textStyle(tokens),
-                color = style.content(tokens),
+                style = style.textStyle(),
+                color = style.content(),
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -117,3 +134,5 @@ fun AppButton(
         }
     }
 }
+
+private const val DisabledAlpha = 0.6f

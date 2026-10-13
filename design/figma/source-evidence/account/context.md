@@ -45,14 +45,14 @@ export default function Account() {
         </div>
       </div>
       <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-[109px] not-italic text-[#06004f] text-[18px] text-center top-[96px] tracking-[-0.165px] whitespace-nowrap" data-node-id="881:756">
-        Welcome, Mohamed
+        Welcome, Jane
       </p>
       <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-[104px] not-italic text-[14px] text-[rgba(6,0,79,0.6)] text-center top-[122px] tracking-[-0.165px] whitespace-nowrap" data-node-id="881:758">
-        mohamed.N@gmail.com
+        jane.doe@example.com
       </p>
       <div className="absolute border border-[rgba(0,65,130,0.3)] border-solid h-[54px] left-[16px] overflow-clip rounded-[15px] top-[550px] w-[398px]" data-node-id="882:759">
         <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-[54.5px] not-italic text-[#06004f] text-[14px] text-center top-[17px] tracking-[-0.165px] whitespace-nowrap" data-node-id="882:761">
-          01122118855
+          01000000000
         </p>
         <div className="absolute left-[357px] size-[24px] top-[14px]" data-node-id="884:764" data-name="edit (1) 1">
           <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEdit11} />
@@ -60,7 +60,7 @@ export default function Account() {
       </div>
       <div className="absolute border border-[rgba(0,65,130,0.3)] border-solid h-[54px] left-[16px] overflow-clip rounded-[15px] top-[662px] w-[398px]" data-node-id="884:766">
         <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-[94px] not-italic text-[#06004f] text-[14px] text-center top-[17px] tracking-[-0.165px] whitespace-nowrap" data-node-id="884:768">
-          6th October, street 11.....
+          123 Example Street, Cairo
         </p>
         <div className="absolute left-[357px] size-[24px] top-[14px]" data-node-id="884:771" data-name="edit (1) 2">
           <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEdit11} />
@@ -88,7 +88,7 @@ export default function Account() {
       </p>
       <div className="absolute border border-[rgba(0,65,130,0.3)] border-solid h-[54px] left-[16px] overflow-clip rounded-[15px] top-[326px] w-[398px]" data-node-id="884:775">
         <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-[103px] not-italic text-[#06004f] text-[14px] text-center top-[17px] tracking-[-0.165px] whitespace-nowrap" data-node-id="884:776">
-          mohamed.N@gmail.com
+          jane.doe@example.com
         </p>
         <div className="absolute left-[357px] size-[24px] top-[14px]" data-node-id="884:779" data-name="edit (1) 3">
           <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEdit11} />
@@ -99,7 +99,7 @@ export default function Account() {
       </p>
       <div className="absolute border border-[rgba(0,65,130,0.3)] border-solid h-[54px] left-[16px] overflow-clip rounded-[15px] top-[214px] w-[398px]" data-node-id="884:783">
         <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-[108px] not-italic text-[#06004f] text-[14px] text-center top-[17px] tracking-[-0.165px] whitespace-nowrap" data-node-id="884:784">
-          Mohamed Mohamed Nabil
+          Jane Doe
         </p>
         <div className="absolute left-[357px] size-[24px] top-[14px]" data-node-id="884:787" data-name="edit (1) 4">
           <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEdit11} />

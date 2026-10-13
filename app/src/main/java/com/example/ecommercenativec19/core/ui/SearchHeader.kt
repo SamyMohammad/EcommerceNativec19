@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +27,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedColors
+import com.example.ecommercenativec19.ui.theme.extendedShapes
+import com.example.ecommercenativec19.ui.theme.extendedTypography
 
 /**
  * Top-left logo row shared by Home, Categories, Product list, Wishlist and Account: below the status bar inset,
@@ -103,17 +105,16 @@ private fun SearchField(
     iconToText: Dp,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource06)
+    val shape = MaterialTheme.extendedShapes.searchField
     BasicTextField(
         value = query,
         onValueChange = onQueryChange,
         modifier = modifier
             .height(AppDimens.SearchBarHeight)
-            .background(tokens.colorSource20, shape)
-            .border(1.dp, tokens.colorSource00, shape),
-        textStyle = tokens.typographySource14.copy(color = tokens.colorSource12),
-        cursorBrush = SolidColor(tokens.colorSource00),
+            .background(MaterialTheme.extendedColors.searchFieldContainer, shape)
+            .border(1.dp, MaterialTheme.colorScheme.primary, shape),
+        textStyle = MaterialTheme.extendedTypography.searchInput.copy(color = MaterialTheme.colorScheme.onSurface),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch?.invoke() }),
@@ -135,10 +136,10 @@ private fun SearchField(
                     if (query.isEmpty()) {
                         Text(
                             text = stringResource(R.string.core_search_placeholder),
-                            style = tokens.typographySource14,
-                            color = tokens.colorSource21,
+                            style = MaterialTheme.extendedTypography.searchInput,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
-                            modifier = Modifier.textLineBox(tokens.typographySource14),
+                            modifier = Modifier.textLineBox(MaterialTheme.extendedTypography.searchInput),
                         )
                     }
                     innerTextField()

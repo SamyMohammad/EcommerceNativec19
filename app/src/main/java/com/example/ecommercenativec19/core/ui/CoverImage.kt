@@ -53,39 +53,3 @@ fun CoverImage(
             },
     )
 }
-
-/**
- * Same placement as [FigmaCroppedImage] (the image is stretched to `widthFraction x heightFraction` of the box and
- * placed at (`offsetXFraction`, `offsetYFraction`) of the box size, clipped to the box) but without rounding the
- * size and offset to whole pixels, which is what the design (Figma / browser) does. [modifier] must give the box a
- * bounded size.
- */
-@Composable
-fun FractionalCropImage(
-    painter: Painter,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    widthFraction: Float = 1f,
-    heightFraction: Float = 1f,
-    offsetXFraction: Float = 0f,
-    offsetYFraction: Float = 0f,
-) {
-    val semanticsModifier = if (contentDescription != null) {
-        Modifier.semantics {
-            this.contentDescription = contentDescription
-            role = Role.Image
-        }
-    } else {
-        Modifier
-    }
-    Spacer(
-        modifier
-            .then(semanticsModifier)
-            .clipToBounds()
-            .drawBehind {
-                translate(size.width * offsetXFraction, size.height * offsetYFraction) {
-                    with(painter) { draw(Size(size.width * widthFraction, size.height * heightFraction)) }
-                }
-            },
-    )
-}

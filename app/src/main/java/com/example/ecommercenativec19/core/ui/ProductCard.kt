@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.ZeroCornerSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,8 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
+import com.example.ecommercenativec19.ui.theme.extendedColors
 import kotlin.math.roundToInt
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** The two product card scales in the design. */
 enum class ProductCardSize(
@@ -64,7 +66,7 @@ enum class ProductCardRatingPosition { AbovePrice, BelowPrice }
  *
  * Stateless. Strings are passed already formatted (`"EGP 1,200"`, `"2000 EGP"`), [rating] is just the number
  * (`"4.8"`; shown as "Review (4.8)" + star). [image] draws inside the image area (use `Image(contentScale = Crop)`
- * or [FigmaCroppedImage]). The card has no fixed height: pass `Modifier.height(...)` (211 / 235 / 237 in the
+ * or [FigmaCropImage]). The card has no fixed height: pass `Modifier.height(...)` (211 / 235 / 237 in the
  * design) when rows must align; the add button is pinned to the bottom-end corner.
  */
 @Composable
@@ -82,14 +84,13 @@ fun ProductCard(
     ratingPosition: ProductCardRatingPosition = ProductCardRatingPosition.BelowPrice,
     onClick: (() -> Unit)? = null,
 ) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource02)
+    val shape = MaterialTheme.shapes.medium
     val clickModifier = if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier
     Box(
         modifier = modifier
             .clip(shape)
-            .background(tokens.colorSource02)
-            .border(size.borderWidth, tokens.colorSource14, shape)
+            .background(MaterialTheme.colorScheme.surface)
+            .border(size.borderWidth, MaterialTheme.colorScheme.outline, shape)
             .then(clickModifier),
     ) {
         Column(Modifier.fillMaxWidth()) {
@@ -97,7 +98,7 @@ fun ProductCard(
                 Modifier
                     .fillMaxWidth()
                     .height(size.imageHeight)
-                    .clip(RoundedCornerShape(topStart = tokens.radiusSource02, topEnd = tokens.radiusSource02)),
+                    .clip(MaterialTheme.shapes.medium.copy(bottomStart = ZeroCornerSize, bottomEnd = ZeroCornerSize)),
             ) {
                 image()
                 FavoriteButton(
@@ -119,12 +120,12 @@ fun ProductCard(
                 verticalArrangement = Arrangement.spacedBy(RowGap),
             ) {
                 if ('\n' in title) {
-                    LineBoxText(text = title, style = tokens.typographySource07, color = tokens.colorSource12)
+                    LineBoxText(text = title, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
                 } else {
                     Text(
                         text = title,
-                        style = tokens.typographySource07,
-                        color = tokens.colorSource12,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 2,
                         minLines = if (ratingPosition == ProductCardRatingPosition.BelowPrice) 2 else 1,
                         overflow = TextOverflow.Ellipsis,
@@ -134,21 +135,21 @@ fun ProductCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = price,
-                        style = if (size.largePrice) tokens.typographySource07 else tokens.typographySource11,
-                        color = tokens.colorSource12,
+                        style = if (size.largePrice) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         // The old price starts at the design's x, or after a minimum gap when the price is wider.
                         modifier = Modifier
                             .widthIn(min = size.oldPriceStart - size.textStart - OldPriceGap)
-                            .textLineBox(if (size.largePrice) tokens.typographySource07 else tokens.typographySource11),
+                            .textLineBox(if (size.largePrice) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall),
                     )
                     if (oldPrice != null) {
                         Spacer(Modifier.width(OldPriceGap))
-                        val strikeColor = tokens.colorSource19
+                        val strikeColor = MaterialTheme.extendedColors.oldPrice
                         Text(
                             text = oldPrice,
-                            style = tokens.typographySource13,
-                            color = tokens.colorSource19,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.extendedColors.oldPrice,
                             maxLines = 1,
                             // The design strikes the old price with a separate 1dp line (49dp wide) from the middle of
                             // the 18dp line box downward, which keeps it on whole pixels; a text decoration would
@@ -162,39 +163,53 @@ fun ProductCard(
                                         size = Size(this.size.width, thickness),
                                     )
                                 }
-                                .textLineBox(tokens.typographySource13),
+                                .textLineBox(MaterialTheme.typography.labelSmall),
                         )
                     }
                 }
                 if (ratingPosition == ProductCardRatingPosition.BelowPrice) RatingRow(rating, size)
             }
         }
+        AddButton(onClick = onAddClick, modifier = Modifier.align(Alignment.BottomEnd))
+    }
+}
+
+/**
+ * The 30dp icon keeps its design position (8dp from the card's end / bottom) while the click target is a centered
+ * 48dp square. Compose does not grow the click target of a 30dp node for accessibility, so the box is made 48dp and
+ * shifted by the difference to the inset instead.
+ */
+@Composable
+private fun AddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val outset = (AddButtonTouchSize - AddButtonSize) / 2
+    Box(
+        modifier = modifier
+            .offset(x = outset - AddButtonInset, y = outset - AddButtonInset)
+            .size(AddButtonTouchSize)
+            .clickable(role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
         Image(
             painter = painterResource(R.drawable.ic_icon_plus_circle_633de255),
             contentDescription = stringResource(R.string.core_add_to_cart),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = AddButtonInset, bottom = AddButtonInset)
-                .size(AddButtonSize)
-                .clickable(role = Role.Button, onClick = onAddClick),
+            modifier = Modifier.size(AddButtonSize),
         )
     }
 }
 
 @Composable
 private fun RatingRow(rating: String, size: ProductCardSize) {
-    val tokens = LocalAppTokens.current
     // The design top-aligns the 15dp star with the 18dp text line and pins it at [ProductCardSize.starStart]
     // (or after a minimum gap when the text is wider).
     Row(verticalAlignment = Alignment.Top) {
         Text(
             text = stringResource(R.string.core_review_rating, rating),
-            style = tokens.typographySource11,
-            color = tokens.colorSource12,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             modifier = Modifier
                 .widthIn(min = (size.starStart - size.textStart - StarGap).coerceAtLeast(0.dp))
-                .textLineBox(tokens.typographySource11),
+                .textLineBox(MaterialTheme.typography.bodySmall),
         )
         Spacer(Modifier.width(StarGap))
         Image(
@@ -217,4 +232,5 @@ private val StarSize = 15.dp
 
 /** The 30dp "+" button sits 8dp from the card's end and bottom edges. */
 private val AddButtonSize = 30.dp
+private val AddButtonTouchSize = 48.dp
 private val AddButtonInset = 8.dp

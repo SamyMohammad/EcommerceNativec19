@@ -16,26 +16,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppButton
+import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.AppDimens
+import com.example.ecommercenativec19.core.ui.ProductImage
 import com.example.ecommercenativec19.core.ui.ProductRowCard
 import com.example.ecommercenativec19.core.ui.QuantitySelector
 import com.example.ecommercenativec19.core.ui.ScreenTitleBar
+import com.example.ecommercenativec19.core.ui.StatusPane
+import com.example.ecommercenativec19.core.ui.formatPrice
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.core.ui.tokenColor
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
-/** Stateless Cart: title bar, product rows, and the footer with total price and "Check Out". */
+/** Stateless Cart: title bar, product rows, and the footer with the server's total price and "Check Out". */
 @Composable
 fun CartScreen(
     state: CartUiState,
@@ -46,9 +48,9 @@ fun CartScreen(
     onSearch: () -> Unit,
     onOpenCart: () -> Unit,
     onCheckOut: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Column(modifier.fillMaxSize()) {
         ScreenTitleBar(
             title = stringResource(R.string.cart_title),
@@ -57,28 +59,23 @@ fun CartScreen(
             onCartClick = onOpenCart,
         )
         Spacer(Modifier.height(ListTopGap))
-        Box(Modifier.weight(1f).fillMaxWidth()) {
-            if (state.items.isEmpty()) {
-                // Deviation: the design shows no empty state; this is a minimal accessible one.
-                Text(
-                    text = stringResource(R.string.cart_empty),
-                    style = tokens.typographySource00,
-                    color = tokens.colorSource21,
-                    modifier = Modifier.align(Alignment.Center).padding(horizontal = AppDimens.ScreenHorizontal),
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = AppDimens.ScreenHorizontal),
-                    verticalArrangement = Arrangement.spacedBy(RowGap),
-                ) {
-                    items(state.items, key = { it.id }) { item ->
-                        CartRow(item, onIncrement, onDecrement, onRemove)
-                    }
+        StatusPane(
+            state = state.items,
+            onRetry = onRetry,
+            emptyText = stringResource(R.string.cart_empty),
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+        ) { items ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = AppDimens.ScreenHorizontal),
+                verticalArrangement = Arrangement.spacedBy(RowGap),
+            ) {
+                items(items, key = { it.id }) { item ->
+                    CartRow(item, onIncrement, onDecrement, onRemove)
                 }
             }
         }
-        if (state.items.isNotEmpty()) {
+        if (state.items is LoadState.Content) {
             CartFooter(state.totalPrice, onCheckOut)
         }
     }
@@ -86,28 +83,18 @@ fun CartScreen(
 
 @Composable
 private fun CartRow(
-    item: CartItemUi,
+    item: CartLineUi,
     onIncrement: (String) -> Unit,
     onDecrement: (String) -> Unit,
     onRemove: (String) -> Unit,
 ) {
     ProductRowCard(
         title = item.title,
-        price = item.price,
-        colorDot = item.dot.tokenColor(),
+        price = formatPrice(item.linePrice),
         titleTop = 16.dp,
         variantTop = 47.dp,
         priceTop = 81.dp,
-        variantLabel = item.variantLabel,
-        variantDetail = item.variantDetail,
-        image = {
-            Image(
-                painter = painterResource(item.image),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-            )
-        },
+        image = { ProductImage(url = item.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
         topEnd = {
             // 48dp target whose icon stays at the design position (top-end corner); the target grows inward.
             Box(
@@ -134,8 +121,7 @@ private fun CartRow(
 }
 
 @Composable
-private fun CartFooter(totalPrice: String, onCheckOut: () -> Unit) {
-    val tokens = LocalAppTokens.current
+private fun CartFooter(totalPrice: Int, onCheckOut: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -147,15 +133,15 @@ private fun CartFooter(totalPrice: String, onCheckOut: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(TotalGap)) {
             Text(
                 text = stringResource(R.string.cart_total_price),
-                style = tokens.typographySource00,
-                color = tokens.colorSource21,
-                modifier = Modifier.textLineBox(tokens.typographySource00),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
             Text(
-                text = totalPrice,
-                style = tokens.typographySource00,
-                color = tokens.colorSource12,
-                modifier = Modifier.textLineBox(tokens.typographySource00),
+                text = formatPrice(totalPrice),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
         }
         Spacer(Modifier.weight(1f))

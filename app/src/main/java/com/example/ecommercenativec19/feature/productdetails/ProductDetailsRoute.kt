@@ -10,7 +10,8 @@ import org.koin.core.parameter.parametersOf
 /**
  * Product details entry point. [productId] comes from the nav route and is handed to the ViewModel through
  * Koin parameters (keyed by id so each product gets its own state). Back -> [onBack]; cart icon -> [onOpenCart];
- * "Add to cart" -> [onAddToCart] (no other effect is defined by the prototype).
+ * "Add to cart" adds the selected quantity, then calls [onAddToCart] (the prototype's
+ * transition to Cart; the add itself keeps running in the repository after the screen is left).
  */
 @Composable
 fun ProductDetailsRoute(
@@ -26,13 +27,14 @@ fun ProductDetailsRoute(
         state = state,
         onBack = onBack,
         onCartClick = onOpenCart,
-        onAddToCart = onAddToCart,
+        onAddToCart = {
+            viewModel.onAddToCart()
+            onAddToCart()
+        },
         onFavoriteClick = viewModel::onToggleFavorite,
-        onSizeSelected = viewModel::onSizeSelected,
-        onColorSelected = viewModel::onColorSelected,
         onIncrementQuantity = viewModel::onIncrementQuantity,
         onDecrementQuantity = viewModel::onDecrementQuantity,
-        onImagePageChanged = viewModel::onImagePageChanged,
+        onRetry = viewModel::onRetry,
         modifier = modifier,
     )
 }

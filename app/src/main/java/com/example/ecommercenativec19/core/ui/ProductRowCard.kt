@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Horizontal 398 x 113 product row shared by Cart and Wishlist: 120dp image on the start side, then title (Medium 18),
@@ -44,7 +43,7 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
  * [variantTop] and [priceTop] (top of each 18dp line box) are parameters; the defaults are the Wishlist values.
  * Text lines use [textLineBox] so each is exactly the design's 18dp tall.
  *
- * Stateless; text arrives formatted. [colorDot] is a theme color token (e.g. `colorSource29`).
+ * Stateless; text arrives formatted. [colorDot] is an optional variant color dot.
  */
 @Composable
 fun ProductRowCard(
@@ -64,17 +63,16 @@ fun ProductRowCard(
     bottomEnd: @Composable BoxScope.() -> Unit = {},
     onClick: (() -> Unit)? = null,
 ) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource02)
-    val variantTextColor = variantColor ?: tokens.colorSource21
+    val shape = MaterialTheme.shapes.medium
+    val variantTextColor = variantColor ?: MaterialTheme.colorScheme.onSurfaceVariant
     val clickModifier = if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(RowHeight)
             .clip(shape)
-            .background(tokens.colorSource02)
-            .border(1.dp, tokens.colorSource14, shape)
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outline, shape)
             .then(clickModifier),
     ) {
         Row(Modifier.fillMaxHeight()) {
@@ -83,7 +81,7 @@ fun ProductRowCard(
                     .width(ImageWidth)
                     .fillMaxHeight()
                     .clip(shape)
-                    .border(1.dp, tokens.colorSource14, shape),
+                    .border(1.dp, MaterialTheme.colorScheme.outline, shape),
                 content = image,
             )
             Column(
@@ -93,11 +91,11 @@ fun ProductRowCard(
             ) {
                 Text(
                     text = title,
-                    style = tokens.typographySource00,
-                    color = tokens.colorSource12,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.textLineBox(tokens.typographySource00).padding(end = TitleEndReserve),
+                    modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium).padding(end = TitleEndReserve),
                 )
                 Spacer(Modifier.height(variantTop - titleTop - LineHeight))
                 if (colorDot != null || variantLabel != null) {
@@ -109,10 +107,10 @@ fun ProductRowCard(
                         if (variantLabel != null) {
                             Text(
                                 text = variantLabel,
-                                style = tokens.typographySource07,
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = variantTextColor,
                                 maxLines = 1,
-                                modifier = Modifier.textLineBox(tokens.typographySource07),
+                                modifier = Modifier.textLineBox(MaterialTheme.typography.bodyMedium),
                             )
                         }
                         if (variantDetail != null) {
@@ -120,15 +118,15 @@ fun ProductRowCard(
                             Box(
                                 Modifier
                                     .size(width = DividerWidth, height = DividerHeight)
-                                    .background(tokens.colorSource30, RoundedCornerShape(tokens.radiusSource00)),
+                                    .background(MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.large),
                             )
                             Spacer(Modifier.width(DividerGap))
                             Text(
                                 text = variantDetail,
-                                style = tokens.typographySource07,
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = variantTextColor,
                                 maxLines = 1,
-                                modifier = Modifier.textLineBox(tokens.typographySource07),
+                                modifier = Modifier.textLineBox(MaterialTheme.typography.bodyMedium),
                             )
                         }
                     }
@@ -138,21 +136,21 @@ fun ProductRowCard(
                 Row(verticalAlignment = Alignment.Top) {
                     Text(
                         text = price,
-                        style = tokens.typographySource00,
-                        color = tokens.colorSource12,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
-                        modifier = Modifier.textLineBox(tokens.typographySource00),
+                        modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
                     )
                     if (oldPrice != null) {
                         Spacer(Modifier.width(OldPriceGap))
                         Text(
                             text = oldPrice,
-                            style = tokens.typographySource13,
-                            color = tokens.colorSource21,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textDecoration = TextDecoration.LineThrough,
                             maxLines = 1,
                             // The design sets the 11sp old price on the 18sp price's baseline: 2dp lower.
-                            modifier = Modifier.offset(y = OldPriceDrop).textLineBox(tokens.typographySource13),
+                            modifier = Modifier.offset(y = OldPriceDrop).textLineBox(MaterialTheme.typography.labelSmall),
                         )
                     }
                 }

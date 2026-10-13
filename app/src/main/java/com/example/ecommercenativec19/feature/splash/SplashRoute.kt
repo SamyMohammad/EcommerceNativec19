@@ -6,20 +6,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
 
 /**
- * Splash entry point. The prototype (interactions.json, node 1:2) navigates to Sign in AFTER_TIMEOUT 0.4s, so
- * [onFinished] is invoked once after [SPLASH_DELAY_MILLIS].
+ * Splash entry point. The prototype (interactions.json, node 1:2) navigates to Sign in AFTER_TIMEOUT 0.4s; with a
+ * stored session the app goes to Home instead. Exactly one of [onSignedIn] / [onSignedOut] is invoked, once, after
+ * [SPLASH_DELAY_MILLIS] and after the stored token has loaded.
  */
 @Composable
 fun SplashRoute(
-    onFinished: () -> Unit,
+    onSignedIn: () -> Unit,
+    onSignedOut: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: SplashViewModel = koinViewModel(),
 ) {
-    val currentOnFinished by rememberUpdatedState(onFinished)
+    val currentOnSignedIn by rememberUpdatedState(onSignedIn)
+    val currentOnSignedOut by rememberUpdatedState(onSignedOut)
     LaunchedEffect(Unit) {
         delay(SPLASH_DELAY_MILLIS)
-        currentOnFinished()
+        when (viewModel.awaitDestination()) {
+            SplashDestination.Home -> currentOnSignedIn()
+            SplashDestination.SignIn -> currentOnSignedOut()
+        }
     }
     SplashScreen(modifier)
 }

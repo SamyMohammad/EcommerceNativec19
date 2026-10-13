@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Home screen strings. Product / category names are design placeholder content (see HomeSampleData.kt). -->
+<!-- Home screen strings. Category and product names come from the API. -->
 <resources>
     <string name="home_banner_up_to">UP TO</string>
     <string name="home_banner_discount_value">25%</string>
@@ -8,30 +8,10 @@
     <string name="home_banner_cta">Shop Now</string>
     <string name="home_section_categories">Categories</string>
     <string name="home_view_all">view all</string>
-    <string name="home_section_appliance">Home Appliance</string>
+    <string name="home_section_best_sellers">Best Sellers</string>
     <string name="home_section_new_arrival">New Arrival</string>
-    <string name="home_section_smart_watch">Smart Watch</string>
+    <string name="home_section_top_rated">Top Rated</string>
+    <string name="home_categories_empty">No categories yet</string>
     <string name="home_footwear_label">FOOTWEAR</string>
     <string name="home_footwear_offer">up to 50% off</string>
-    <string name="home_price_egp">EGP %1$s</string>
-    <string name="home_old_price_egp">%1$s EGP</string>
-
-    <!-- Placeholder category names -->
-    <string name="home_category_womens_fashion">Women’s\nfashion</string>
-    <string name="home_category_mens_fashion">men’s\nfashion</string>
-    <string name="home_category_laptops">Laptops &amp;\nElectronics</string>
-    <string name="home_category_baby_toys">Baby &amp;\nToys</string>
-    <string name="home_category_beauty">Beauty</string>
-    <string name="home_category_headphones">Headphones</string>
-    <string name="home_category_skincare">Skincare</string>
-    <string name="home_category_cameras">Cameras</string>
-
-    <!-- Placeholder product names -->
-    <string name="home_product_washing_machine">Washing Machine</string>
-    <string name="home_product_new_cooker">New Cooker</string>
-    <string name="home_product_steam_iron">Steam Iron</string>
-    <string name="home_product_makeup_palette">Makeup Palleted</string>
-    <string name="home_product_makeup_brushes">Makeup Brushes</string>
-    <string name="home_product_red_rouge">Red Rouge</string>
-    <string name="home_product_xiaomi_watch">Xiaomi Redmi Watch 2 Lite 5ATM ....</string>
 </resources>

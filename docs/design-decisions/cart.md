@@ -4,22 +4,25 @@
 
 - Figma node id: `604:890`; file key `dEhOfaWrXc8wRA6mdeMecc`; version-id `2409508187813363894`.
 - The version-id is owner-observed, NOT verified through the Figma MCP. Freshness is unverified.
-- Code: `feature/cart` (`CartScreen.kt`, `CartRoute.kt`, `CartViewModel.kt`, `CartUiState.kt`, `CartSampleData.kt`).
+- Code: `feature/cart` (`CartScreen.kt`, `CartRoute.kt`, `CartViewModel.kt`, `CartUiState.kt`); data and domain in `feature/cart/data` and `domain` (see `docs/api/cart.md`, `docs/architecture.md` section 11).
 
 ## Components used
 
-- `core/ui`: `ScreenTitleBar`, `ProductRowCard` (398x113 row), `QuantitySelector`, `AppButton` (`Primary`, trailing arrow icon), `ProductVariantDot`, `textLineBox`.
+- `core/ui`: `ScreenTitleBar`, `ProductRowCard` (398x113 row), `QuantitySelector`, `AppButton` (`Primary`, trailing arrow icon), `ProductImage`, `StatusPane`, `formatPrice`, `textLineBox`.
 - Layout: `Column` with a `LazyColumn` of rows and a footer.
 
 ## Material defaults / token mapping
 
-- Texts `typographySource00`; label colour `colorSource21`, price colour `colorSource12`; variant dot colours from tokens (`colorSource29` / `31` / `32` / `33`).
+- Texts `typographySource00`; label colour `colorSource21`, price colour `colorSource12`.
 - "Check Out" button radius `radiusSource00` (20dp), 48dp tall, max 270dp wide.
 - Material3 `Text`; `AppButton` uses `Surface`.
 
 ## Deviations
 
-- The empty state text is an addition (the design shows none). The footer is hidden when the list is empty.
+- Loading, error (with retry) and empty states are additions (the design shows none). The footer is shown only when there are rows.
+- The row image is the product `imageCover`, cropped to fill; the variant dot, colour and size are gone (the API has no variants), so the row shows title, price and quantity only.
+- The row price is the line total (unit price x quantity) so rows add up to the footer total; the footer total is the server's `totalCartPrice`.
+- "Add to cart" on Details adds the selected quantity on top of what the cart already holds, then navigates to Cart (the prototype transition). The add keeps running if the user leaves; if it fails the Cart simply does not show the item. The "+" on Home / Product list and the Wishlist row button add one unit and stay on their screen.
 - The title bar search and cart icons do nothing (the cart icon is already on Cart).
 - The footer bottom margin is 98dp (button bottom y 834 to frame bottom 932).
 - The delete icon has a 48dp touch target growing inward, so the icon stays in the design position.
@@ -27,10 +30,10 @@
 
 ## Missing contracts
 
-- Cart data and persistence (one placeholder item), checkout ("Check Out" is a no-op), search.
-- The total price is not recomputed when quantity changes or rows are removed.
-- Quantity floor of 1 is an assumption; removal is by the delete icon only.
-- Back always leads to Home (prototype).
+- Checkout ("Check Out" is a no-op; payments are out of scope), search.
+- Decrementing the last unit removes the row (a count of 0 cannot exist in the API); removal is also available by the delete icon.
+- No maximum quantity (the API exposes stock only on some answers).
+- Back pops to the previous screen (the prototype always leads to Home).
 
 ## Automated visual result
 
@@ -39,8 +42,11 @@
 
 ## Unresolved / manual checks
 
-- The empty state and multiple rows were not compared against any design.
+- The empty state, loading, error and multiple rows were not compared against any design.
+- The compare above predates the Route API slice: the captured row now shows the product image fixture and no variant line, so the pixel result is no longer measured.
+- A failed count change or add has no message (the row snaps back / nothing happens).
 - Real-device effect of the 44dp top band.
+- **Cart price ignores discounts (known limitation).** An on-device check showed a cart line price equal to the product's list `price`, while the product screens show `priceAfterDiscount`. Evidence in the repo is partial: `docs/api/cart.md` captured only a non-discounted line (`price` 149, count 3, `totalCartPrice` 447) and documents the populated cart product as having no price fields, while `docs/api/products.md` shows discounted products with `price` 499 next to `priceAfterDiscount` 349. No captured cart payload contains a discounted product, so the discrepancy rests on the device observation. The app shows the server's line price and `totalCartPrice` as-is; it does not recompute totals from `priceAfterDiscount`.
 
 ## Human visual review
 

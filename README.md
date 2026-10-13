@@ -34,14 +34,15 @@ the public [Route E-commerce API](https://documenter.getpostman.com/view/5709532
 
 | Screen | UI | Data source |
 |---|---|---|
-| Splash, Sign in, Sign up | Done | Local state (auth not wired yet) |
-| Home | Done | Sample data |
+| Splash, Sign in, Sign up | Done | **Route API** (`/auth/signin`, `/auth/signup`); the token is stored encrypted and Splash restores the session |
+| **Home** | Done | **Route API** (categories grid + three product rows ranked by sales, recency and rating; promo banners are static artwork) |
 | **Categories** | Done | **Route API** (categories + sub-categories) |
-| Product list, Product details | Done | Sample data |
-| Cart, Wishlist, Account | Done | Sample data |
+| **Product list, Product details** | Done | **Route API** (products by sub-category with load-more paging, product by id) |
+| **Wishlist** + every favorite heart | Done | **Route API** (`/wishlist`); one shared favorites cache feeds Home, Product list, Details and the Wishlist screen, with optimistic toggles |
+| **Cart** + every "add to cart" button | Done | **Route API** (`/cart`); one shared cart cache with optimistic count changes and server totals; "Check Out" is a no-op (payments are out of scope) |
+| **Account** | Done | **Route API** (`/users/getMe`, `/users/updateMe`, `/users/changeMyPassword`, `/addresses`); inline edit per field, a change-password dialog and a Sign out button |
 
-**Next slices:** products (Home, Product list, Product details) → authentication (token storage) → cart and
-wishlist → account. Each slice is delivered as a small, reviewed PR that takes one feature through
+Every screen now runs on the Route API. Each slice was delivered as a small, reviewed PR that took one feature through
 data → domain → presentation, with tests.
 
 ## Tech stack
@@ -49,18 +50,20 @@ data → domain → presentation, with tests.
 | Concern | Choice | Notes |
 |---|---|---|
 | Language | Kotlin 2.2.10 | |
-| UI | Jetpack Compose (BOM 2026.02.01), Material 3 | No XML layouts, Fragments or ViewBinding |
+| UI | Jetpack Compose (BOM 2026.02.01), Material 3 | No XML layouts, Fragments or ViewBinding. Hand-owned light M3 theme with extended colors / typography / shapes in `ui/theme/` |
 | Presentation | `ViewModel` + immutable `UiState` + `StateFlow` | Collected with `collectAsStateWithLifecycle` |
 | Async | Kotlin coroutines and Flow | |
-| Navigation | Navigation Compose 2.9 | Single `NavHost` in `navigation/AppNavHost.kt` |
+| Navigation | Navigation 3 (1.2.0) | App-owned per-tab back stacks in `navigation/AppNavigator.kt`, `NavDisplay` in `navigation/AppNavDisplay.kt`, entry-scoped ViewModels |
 | DI | Koin 4.1.1 | Chosen over Hilt for simplicity and a future KMP path. All ViewModels come from per-feature Koin modules, checked by `KoinModulesTest`. 4.1.x because 4.2.x requires Kotlin 2.3 |
 | Networking | Retrofit 3, OkHttp 5, kotlinx.serialization 1.9 | Compile-time serialization, no reflection |
+| Session storage | Preferences DataStore 1.2.1, Android Keystore (AES-256/GCM) | The token is encrypted with a non-exportable Keystore key before it is written; `androidx.security:security-crypto` is deprecated, so the small `AndroidKeystoreTokenCipher` uses the platform API directly |
+| Images | Coil 3.3.0 (`coil-compose`, `coil-network-okhttp`) | Loader built in `EcommerceApp` on the app's OkHttpClient; no screen loads remote images yet. 3.3.x because 3.4+ requires Kotlin 2.3 |
 | Testing | JUnit 4, kotlinx-coroutines-test, Robolectric, Roborazzi | Hand-written fakes, no mocking library |
 | Build | AGP 9.4.1 (built-in Kotlin), Gradle 9.6, version catalog | `gradle/libs.versions.toml` |
 | SDK | `minSdk` 24, `targetSdk` / `compileSdk` 37 | |
 
-Dependencies are added only when a slice needs them. Image loading (Coil) and DataStore, for example, arrive with
-the products and authentication slices.
+Dependencies are added only when a slice needs them. DataStore, for example, arrived with
+the authentication slice.
 
 ## Architecture
 
@@ -105,34 +108,45 @@ For the reasoning behind these choices and the planned refactor roadmap, see
 
 ```
 app/src/main/java/com/example/ecommercenativec19/
-├── EcommerceApp.kt              # Application: starts Koin
+├── EcommerceApp.kt              # Application: starts Koin, builds the Coil image loader
 ├── di/                          # appModules: the single production Koin module list
 ├── MainActivity.kt              # Single activity, hosts the Compose tree
 ├── core/
 │   ├── common/                  # AppResult / AppError (pure Kotlin)
-│   ├── network/                 # Retrofit, OkHttp, Json, safeApiCall
-│   └── ui/                      # Reusable design-system composables
+│   ├── network/                 # Retrofit, OkHttp, Json, safeApiCall, AuthInterceptor, auth-safe logging
+│   ├── session/                 # SessionRepository: encrypted token in DataStore, in-memory SessionState cache
+│   └── ui/                      # Reusable design-system composables (ProductImage, StatusPane, price formatting)
 ├── feature/
 │   ├── categories/              # First slice wired to the API
 │   │   ├── data/                # CategoriesApi, DTOs, mapper, repository impl
 │   │   ├── domain/              # Models, repository interface, use cases
 │   │   ├── di/                  # Koin module
 │   │   └── Categories*.kt       # Route, Screen, ViewModel, UiState
-│   └── home/ cart/ wishlist/ account/ productlist/ productdetails/ signin/ signup/ splash/
-├── navigation/                  # AppNavHost: routes and transitions
-└── ui/theme/generated/          # Theme tokens generated from Figma
+│   ├── auth/                    # Sign-in / sign-up data + domain (AuthApi, repository, validation, use cases)
+│   ├── account/                 # Profile, edit, change password: data + domain and the Account screen
+│   ├── products/                # Shared product data + domain (ProductsApi, mapper, repository, use cases)
+│   ├── productlist/             # Sub-category product grid with load-more paging
+│   ├── productdetails/          # Product by id: carousel, quantity and total
+│   ├── wishlist/                # Favorites source of truth (data + domain) and the Wishlist screen
+│   ├── cart/                    # Cart source of truth (data + domain) and the Cart screen
+│   └── home/ signin/ signup/ splash/
+├── navigation/                  # NavKeys, AppNavigator (back stacks), NavDisplay, shared bottom bar
+└── ui/theme/                    # Hand-owned Material 3 theme: Color, Type, Shape, ExtendedTheme, Theme
 ```
 
 ## Networking and error handling
 
 - **Base URL:** `https://ecommerce.routemisr.com/`, exposed as `BuildConfig.BASE_URL` (set in `app/build.gradle.kts`).
 - **Auth:** authenticated endpoints expect a custom `token` request header, not `Authorization: Bearer`.
+  `AuthInterceptor` adds it from an in-memory session cache and clears the session on a 401 for a request that
+  carried a token. Sign-in and sign-up are documented in [`docs/api/auth.md`](docs/api/auth.md).
 - **Parsing:** `Json { ignoreUnknownKeys = true }`, and fields that are not guaranteed are nullable, so one
   malformed record cannot take a whole screen down.
 - **Errors:** `safeApiCall` maps `IOException → AppError.Network`, `HttpException → AppError.Server(code)`,
   `SerializationException → AppError.Parsing` and anything else to `AppError.Unknown`. It rethrows `CancellationException` to keep structured concurrency intact.
-- **Logging:** HTTP bodies are logged in debug builds only. The `token` and `Authorization` headers are redacted
-  from the log output.
+- **Logging:** HTTP bodies are logged in debug builds only, except for `/auth/` endpoints, which log headers only
+  (their bodies hold the password and the token). The `token` and `Authorization` headers are redacted from the
+  log output.
 - **API notes:** the Postman collection ships without example responses, so every endpoint the app uses is
   documented from live calls in [`docs/api/`](docs/api/), including server quirks. For example, the
   documented nested sub-categories endpoint ignores its category id, so the app uses the
@@ -154,6 +168,15 @@ cd EcommerceNativec19
 ./gradlew assembleDebug        # build
 ./gradlew installDebug         # install on a connected device / emulator
 ```
+
+Release builds have R8 code shrinking and resource shrinking enabled:
+
+```bash
+./gradlew assembleRelease      # unsigned APK in app/build/outputs/apk/release/ (no signing config is committed)
+```
+
+Keep rules and their reasons are in [docs/architecture.md](docs/architecture.md) section 13. GitHub Actions builds,
+tests and lints every pull request (`.github/workflows/android.yml`).
 
 No API key or secret is required: the Route API's catalogue endpoints are public. Never commit
 `local.properties`, keystores or tokens. The `.gitignore` already excludes `local.properties`, keystores

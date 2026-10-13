@@ -1,13 +1,17 @@
 package com.example.ecommercenativec19.capture
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -21,20 +25,29 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.feature.account.AccountRoute
-import com.example.ecommercenativec19.feature.cart.CartRoute
+import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.ui.AppTab
+import com.example.ecommercenativec19.feature.account.AccountScreen
+import com.example.ecommercenativec19.feature.account.AccountUiState
+import com.example.ecommercenativec19.feature.account.domain.AccountFixtures
+import com.example.ecommercenativec19.feature.cart.CartScreen
 import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
 import com.example.ecommercenativec19.feature.categories.CategoriesScreen
-import com.example.ecommercenativec19.feature.home.HomeRoute
-import com.example.ecommercenativec19.feature.productdetails.ProductDetailsRoute
-import com.example.ecommercenativec19.feature.productlist.ProductListRoute
-import com.example.ecommercenativec19.feature.signin.SignInRoute
-import com.example.ecommercenativec19.feature.signup.SignUpRoute
+import com.example.ecommercenativec19.feature.home.HomeScreen
+import com.example.ecommercenativec19.feature.productdetails.ProductDetailsScreen
+import com.example.ecommercenativec19.feature.productlist.ProductListScreen
+import com.example.ecommercenativec19.feature.signin.SignInScreen
+import com.example.ecommercenativec19.feature.signin.SignInUiState
+import com.example.ecommercenativec19.feature.signup.SignUpScreen
+import com.example.ecommercenativec19.feature.signup.SignUpUiState
 import com.example.ecommercenativec19.feature.splash.SplashScreen
-import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
-import com.example.ecommercenativec19.ui.theme.generated.AppTheme
-import com.example.ecommercenativec19.ui.theme.generated.AppThemeIdentity
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.feature.wishlist.WishlistScreen
+import com.example.ecommercenativec19.navigation.AppScaffold
+import com.example.ecommercenativec19.ui.theme.AppTheme
+import coil3.annotation.ExperimentalCoilApi
+import coil3.asImage
+import coil3.compose.AsyncImagePreviewHandler
+import coil3.compose.LocalAsyncImagePreviewHandler
 import com.github.takahirom.roborazzi.captureRoboImage
 import java.io.File
 import java.security.MessageDigest
@@ -89,19 +102,59 @@ class ComposeCaptureTest {
 
     @Composable
     private fun SceneContent(scene: Scene) {
+        // Tab screens no longer draw the bottom bar; the shell does, so render them inside it.
+        val tab = when (scene) {
+            Scene.Home -> AppTab.Home
+            Scene.Categories, Scene.ProductList -> AppTab.Categories
+            Scene.Wishlist -> AppTab.Wishlist
+            Scene.Account -> AppTab.Account
+            else -> null
+        }
+        AppScaffold(selectedTab = tab, onTabSelected = {}) { SceneBody(scene) }
+    }
+
+    @Composable
+    private fun SceneBody(scene: Scene) {
+        // Stateless screens with sample state, not the Routes: Routes resolve ViewModels through Koin, which is not
+        // started in this capture test.
         when (scene) {
             Scene.Splash -> SplashScreen()
-            Scene.SignIn -> SignInRoute(onSignIn = {}, onCreateAccount = {})
-            Scene.SignUp -> SignUpRoute(onSignUp = {})
-            Scene.Home -> HomeRoute(onTabSelected = {}, onOpenCart = {}, onOpenCategories = {})
-            // The screen with sample state, not the Route: the Route needs Koin and the network.
-            Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {}, {})
-            Scene.ProductList -> ProductListRoute(onTabSelected = {}, onOpenCart = {}, onOpenProduct = {})
-            Scene.Details -> ProductDetailsRoute(productId = "1", onBack = {}, onOpenCart = {}, onAddToCart = {})
-            Scene.Cart -> CartRoute(onBack = {})
-            Scene.Wishlist -> WishlistRoute(onTabSelected = {}, onOpenCart = {})
-            Scene.Account -> AccountRoute(onTabSelected = {})
+            Scene.SignIn -> SignInScreen(SignInUiState(), {}, {}, {}, {}, {})
+            Scene.SignUp -> SignUpScreen(SignUpUiState(), {}, {}, {}, {}, {}, {})
+            Scene.Home -> WithFixtureImages { HomeScreen(ProductFixtures.home, {}, {}, {}, {}, {}, {}, {}, {}) }
+            Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {})
+            Scene.ProductList -> WithFixtureImages {
+                ProductListScreen(ProductFixtures.productList, {}, {}, {}, {}, {}, {}, {})
+            }
+            Scene.Details -> WithFixtureImages {
+                ProductDetailsScreen(ProductFixtures.productDetails, {}, {}, {}, {}, {}, {}, {})
+            }
+            Scene.Cart -> WithFixtureImages { CartScreen(ProductFixtures.cart, {}, {}, {}, {}, {}, {}, {}, {}) }
+            Scene.Wishlist -> WithFixtureImages { WishlistScreen(ProductFixtures.wishlist, {}, {}, {}, {}, {}, {}) }
+            Scene.Account -> AccountScreen(
+                AccountUiState(profile = LoadState.Content(AccountFixtures.profile)),
+                {}, {}, {}, {}, {}, {}, {}, {}, {},
+            )
         }
+    }
+
+    /**
+     * Coil only consults its preview handler in inspection mode, so both are provided together: fixture URLs resolve to
+     * bundled drawables instead of the network.
+     */
+    @SuppressLint("LocalContextGetResourceValueCall") // fixed fixture drawables, no configuration-dependent resources
+    @OptIn(ExperimentalCoilApi::class)
+    @Composable
+    private fun WithFixtureImages(content: @Composable () -> Unit) {
+        val context = LocalContext.current
+        val handler = AsyncImagePreviewHandler { request ->
+            checkNotNull(context.getDrawable(ProductFixtures.drawableFor(request.data.toString()))).asImage()
+        }
+        CompositionLocalProvider(
+            LocalInspectionMode provides true,
+            LocalAsyncImagePreviewHandler provides handler,
+            content = content,
+        )
     }
 
     private fun hasText(node: SemanticsNode): Boolean =
@@ -128,9 +181,8 @@ class ComposeCaptureTest {
                         .put("direction", if (layoutDirection == LayoutDirection.Rtl) "rtl" else "ltr")
                         .put("theme", if (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) "dark" else "light")
                 }
-                AppTheme(dark = false) {
-                    val tokens = LocalAppTokens.current
-                    Box(Modifier.size(width.dp, height.dp).background(tokens.colorSource02).testTag("capture-frame")) {
+                AppTheme {
+                    Box(Modifier.size(width.dp, height.dp).background(MaterialTheme.colorScheme.background).testTag("capture-frame")) {
                         SceneContent(scene)
                     }
                 }
@@ -177,8 +229,6 @@ class ComposeCaptureTest {
             .put("animation", "settled").put("clockAutoAdvance", compose.mainClock.autoAdvance)
             .put("colorSpace", "srgb").put("platform", "android").put("renderer", "robolectric-native")
             .put("imageHash", sha256(image.readBytes()))
-            .put("themeIdentity", JSONObject().put("tokenHash", AppThemeIdentity.tokenHash)
-                .put("manifestHash", AppThemeIdentity.manifestHash).put("configHash", AppThemeIdentity.configHash))
             .put("versions", JSONObject().put("sdk", android.os.Build.VERSION.SDK_INT.toString())
                 .put("roborazzi", ROBORAZZI_VERSION).put("robolectric", ROBOLECTRIC_VERSION))
         File(folder, "capture-receipt.json").writeText(observed.toString(2) + "\n")

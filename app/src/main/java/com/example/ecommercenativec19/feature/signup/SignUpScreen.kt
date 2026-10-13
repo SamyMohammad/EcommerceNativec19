@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,10 +33,13 @@ import com.example.ecommercenativec19.core.ui.AppButtonStyle
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.AppLogo
 import com.example.ecommercenativec19.core.ui.AppLogoStyle
+import com.example.ecommercenativec19.core.ui.AuthErrorText
 import com.example.ecommercenativec19.core.ui.AuthTextField
 import com.example.ecommercenativec19.core.ui.LightStatusBarIconsEffect
 import com.example.ecommercenativec19.core.ui.PasswordVisibilityToggle
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.feature.auth.domain.AuthField
+import com.example.ecommercenativec19.feature.auth.ui.message
+import com.example.ecommercenativec19.feature.auth.ui.messageFor
 
 /**
  * Sign up (Figma node 9:97): primary-color full-bleed screen with the white logo, four labelled fields (full name,
@@ -55,13 +59,12 @@ fun SignUpScreen(
     onSignUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     LightStatusBarIconsEffect()
     val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(tokens.colorSource00)
+            .background(MaterialTheme.colorScheme.primary)
             .verticalScroll(rememberScrollState())
             .imePadding()
             .navigationBarsPadding()
@@ -76,6 +79,7 @@ fun SignUpScreen(
             value = state.fullName,
             onValueChange = onFullNameChange,
             placeholder = stringResource(R.string.signup_full_name_placeholder),
+            errorText = state.fieldErrors.messageFor(AuthField.Name),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
                 keyboardType = KeyboardType.Text,
@@ -88,6 +92,7 @@ fun SignUpScreen(
             value = state.mobileNumber,
             onValueChange = onMobileNumberChange,
             placeholder = stringResource(R.string.signup_mobile_placeholder),
+            errorText = state.fieldErrors.messageFor(AuthField.Phone),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
         )
         Spacer(Modifier.height(FieldGap))
@@ -96,6 +101,7 @@ fun SignUpScreen(
             value = state.email,
             onValueChange = onEmailChange,
             placeholder = stringResource(R.string.signup_email_placeholder),
+            errorText = state.fieldErrors.messageFor(AuthField.Email),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
         )
         Spacer(Modifier.height(FieldGap))
@@ -106,6 +112,7 @@ fun SignUpScreen(
             placeholder = stringResource(R.string.signup_password_placeholder),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { onSignUp() }),
+            errorText = state.fieldErrors.messageFor(AuthField.Password),
             visualTransformation = if (state.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 PasswordVisibilityToggle(
@@ -115,10 +122,15 @@ fun SignUpScreen(
             },
         )
         Spacer(Modifier.height(PasswordToButtonGap))
+        state.submitError?.let {
+            AuthErrorText(it.message())
+            Spacer(Modifier.height(SubmitErrorGap))
+        }
         AppButton(
             text = stringResource(R.string.signup_submit),
             onClick = onSignUp,
             style = AppButtonStyle.OnPrimary,
+            enabled = !state.isSubmitting,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(AppDimens.ScreenHorizontal))
@@ -133,6 +145,9 @@ private val LogoToFirstLabelGap = 47.dp
 
 /** Field bottom (309 / 447 / 585) -> next label top (341 / 479 / 617). */
 private val FieldGap = 32.dp
+
+/** Space between the submit error and the Sign up button. */
+private val SubmitErrorGap = 12.dp
 
 /** Password field bottom 723 -> "Sign up" button top 779. */
 private val PasswordToButtonGap = 56.dp
