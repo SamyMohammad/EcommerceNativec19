@@ -20,15 +20,6 @@ data class AppExtendedColors(
     val footwearBanner: Color,
     val oldPrice: Color,
     val searchFieldContainer: Color,
-    val swatchBlack: Color,
-    val swatchRed: Color,
-    val swatchBlue: Color,
-    val swatchGreen: Color,
-    val swatchCoral: Color,
-    val variantRust: Color,
-    val variantCharcoal: Color,
-    val variantAmber: Color,
-    val variantPeach: Color,
 )
 
 @Immutable
@@ -52,15 +43,6 @@ internal val AppExtendedColorValues = AppExtendedColors(
     footwearBanner = SkyBlue,
     oldPrice = PrimaryBlue.copy(alpha = 0.6f),
     searchFieldContainer = White.copy(alpha = 0.7f),
-    swatchBlack = SwatchBlack,
-    swatchRed = SwatchRed,
-    swatchBlue = SwatchBlue,
-    swatchGreen = SwatchGreen,
-    swatchCoral = SwatchCoral,
-    variantRust = DotRust,
-    variantCharcoal = DotCharcoal,
-    variantAmber = DotAmber,
-    variantPeach = DotPeach,
 )
 
 internal val LocalExtendedColors = staticCompositionLocalOf<AppExtendedColors> { error("AppTheme is required") }

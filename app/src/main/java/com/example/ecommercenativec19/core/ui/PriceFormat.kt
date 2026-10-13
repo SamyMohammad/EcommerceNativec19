@@ -2,6 +2,7 @@ package com.example.ecommercenativec19.core.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import com.example.ecommercenativec19.R
 import java.text.NumberFormat
@@ -24,6 +25,6 @@ fun formatRating(rating: Double): String = String.format(Locale.getDefault(), "%
 /** Grouped integer, e.g. 3,500. */
 @Composable
 fun formatAmount(amount: Int): String {
-    val locale = Locale.getDefault()
+    val locale = LocalConfiguration.current.locales[0]
     return remember(amount, locale) { NumberFormat.getIntegerInstance(locale).format(amount) }
 }

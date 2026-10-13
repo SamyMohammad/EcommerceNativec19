@@ -1,5 +1,6 @@
 package com.example.ecommercenativec19.capture
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -141,6 +142,7 @@ class ComposeCaptureTest {
      * Coil only consults its preview handler in inspection mode, so both are provided together: fixture URLs resolve to
      * bundled drawables instead of the network.
      */
+    @SuppressLint("LocalContextGetResourceValueCall") // fixed fixture drawables, no configuration-dependent resources
     @OptIn(ExperimentalCoilApi::class)
     @Composable
     private fun WithFixtureImages(content: @Composable () -> Unit) {

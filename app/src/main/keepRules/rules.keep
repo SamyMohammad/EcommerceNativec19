@@ -10,3 +10,15 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# --- Project rules (kept deliberately narrow; see docs/architecture.md, "Release build (R8)") ---
+#
+# Already covered by consumer rules shipped inside the libraries, so NOT repeated here:
+#   kotlinx.serialization (Companion/serializer()/$$serializer for @Serializable DTOs), Retrofit 3
+#   (service interfaces + suspend/generic signatures), OkHttp, Coil, Koin, DataStore.
+
+# Navigation 3 restores the back stack by serializing each NavKey polymorphically and re-resolving
+# its class by NAME with reflection after process death / rotation. If R8 renames or removes a
+# NavKey implementation, the saved name no longer resolves and restoration crashes. Only the few
+# route classes are affected; their serializers are retained by the kotlinx.serialization rules.
+-keep class * implements androidx.navigation3.runtime.NavKey

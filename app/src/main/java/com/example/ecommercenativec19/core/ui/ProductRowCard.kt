@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
  * [variantTop] and [priceTop] (top of each 18dp line box) are parameters; the defaults are the Wishlist values.
  * Text lines use [textLineBox] so each is exactly the design's 18dp tall.
  *
- * Stateless; text arrives formatted. [colorDot] is a theme color (see `ProductVariantDot.tokenColor`).
+ * Stateless; text arrives formatted. [colorDot] is an optional variant color dot.
  */
 @Composable
 fun ProductRowCard(

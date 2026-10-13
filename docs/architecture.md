@@ -94,8 +94,8 @@ app-owned state, not a framework object you query.
   a tab (Product list highlights Categories). Tab screens no longer know about the bar.
 
 **Tradeoffs:** Nav3 is new and has no built-in multi-stack or tab helper, so `AppNavigator` is ours to maintain.
-The Android `rememberNavBackStack` restores keys through reflection (`Class.forName`), so enabling R8 later needs
-keep rules for the key classes. Predictive back preview at a tab root shows the flattened stack's previous entry
+The Android `rememberNavBackStack` restores keys through reflection (`Class.forName`), so the release build keeps the
+key classes (section 13). Predictive back preview at a tab root shows the flattened stack's previous entry
 rather than "Home".
 
 ## 7. Networking
@@ -138,7 +138,8 @@ Planned, in rough order. Each item is a small reviewed PR.
 - **Authentication.** Done: sign-in, sign-up, encrypted session, `token` header, sign-out on 401 (section 9). This
   is a deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart,
   wishlist and account endpoints require a token. Profile editing and password change arrived with the account slice (section 12). Still no password reset or social login.
-- **Release hardening:** enable R8 (currently disabled for release builds) with the keep rules the stack needs (including the Navigation 3 key classes).
+- **Release hardening.** Done: R8 and resource shrinking on, keep rules, fixture-only drawables moved to
+  `src/debug`, GitHub Actions CI (section 13). The roadmap is complete.
 
 ## 9. Authentication and session
 
@@ -268,3 +269,25 @@ Details of the endpoints: [`docs/api/cart.md`](api/cart.md); screen notes: `docs
 - **Sign out** is `SignOutUseCase`; the signed-out session already resets navigation and wipes the wishlist and cart.
 - **Known gaps.** A request that is in flight with the old token while the password changes can get a 401 and sign the
   user out (narrow race). No snackbar for a failed save beyond the inline message.
+
+## 13. Release build (R8) and CI
+
+`release` uses AGP 9's `optimization { enable = true }` plus `isShrinkResources = true`; the unsigned APK went from
+about 12.0 MB (optimization off) to about 2.5 MB. AGP 9 reads keep rules from `app/src/main/keepRules/`, and the only
+project rule in `rules.keep` is:
+
+- `-keep class * implements androidx.navigation3.runtime.NavKey`. Navigation 3 restores the back stack by resolving each
+  key's class by name via reflection, so renaming or removing the route classes would crash restoration after process
+  death or rotation. It is limited to the handful of route classes, not a blanket rule.
+
+Everything else is covered by consumer rules that ship inside the libraries, so we deliberately add nothing for them:
+kotlinx.serialization keeps `Companion` / `serializer()` / `$$serializer` of `@Serializable` DTOs, and Retrofit keeps
+service interfaces with their generic and annotation metadata. Koin definitions are lambdas, so there is no reflection.
+After changing dependencies, rebuild with `./gradlew assembleRelease` and check `app/build/outputs/mapping/release/`
+(`mapping.txt`, `usage.txt`, `configuration.txt`).
+
+Images that only test fixtures use live in `app/src/debug/res/drawable-nodpi`, so unit tests still see them but the
+release APK does not ship them.
+
+CI (`.github/workflows/android.yml`) runs on pushes to `main` and on pull requests: `assembleDebug`,
+`testDebugUnitTest`, `lintDebug`, then `assembleRelease`, with read-only permissions and no secrets.

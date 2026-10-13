@@ -169,6 +169,15 @@ cd EcommerceNativec19
 ./gradlew installDebug         # install on a connected device / emulator
 ```
 
+Release builds have R8 code shrinking and resource shrinking enabled:
+
+```bash
+./gradlew assembleRelease      # unsigned APK in app/build/outputs/apk/release/ (no signing config is committed)
+```
+
+Keep rules and their reasons are in [docs/architecture.md](docs/architecture.md) section 13. GitHub Actions builds,
+tests and lints every pull request (`.github/workflows/android.yml`).
+
 No API key or secret is required: the Route API's catalogue endpoints are public. Never commit
 `local.properties`, keystores or tokens. The `.gitignore` already excludes `local.properties`, keystores
 (`*.jks`, `*.keystore`, `keystore.properties`), `.env*` files and `google-services.json`.
