@@ -31,6 +31,7 @@
 - **Password row opens a dialog** (current + new password) because the API needs the current password, which a single inline field cannot collect. Both fields are masked; no show/hide toggle.
 - Loading and error (retry) states are added; the design has only the loaded state.
 - The mobile placeholder in the screenshot is `01000000000` (the earlier sample used a `+20` format the API's own rule does not accept).
+- `design/figma/source-evidence/account/reference.png`: the personal data in the original export (name, e-mail, phone, address) was replaced with placeholders for privacy (`Jane Doe`, `jane.doe@example.com`, `01000000000`, `123 Example Street, Cairo`, Poppins at the original size and weight). It is not a Figma re-export; the layout is unchanged.
 - The edit icon target is 48dp; the field end padding is reduced by the 12dp touch inset.
 - Android native status bar instead of the iOS band (see README).
 

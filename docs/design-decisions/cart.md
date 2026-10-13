@@ -46,6 +46,7 @@
 - The compare above predates the Route API slice: the captured row now shows the product image fixture and no variant line, so the pixel result is no longer measured.
 - A failed count change or add has no message (the row snaps back / nothing happens).
 - Real-device effect of the 44dp top band.
+- **Cart price ignores discounts (known limitation).** An on-device check showed a cart line price equal to the product's list `price`, while the product screens show `priceAfterDiscount`. Evidence in the repo is partial: `docs/api/cart.md` captured only a non-discounted line (`price` 149, count 3, `totalCartPrice` 447) and documents the populated cart product as having no price fields, while `docs/api/products.md` shows discounted products with `price` 499 next to `priceAfterDiscount` 349. No captured cart payload contains a discounted product, so the discrepancy rests on the device observation. The app shows the server's line price and `totalCartPrice` as-is; it does not recompute totals from `priceAfterDiscount`.
 
 ## Human visual review
 
