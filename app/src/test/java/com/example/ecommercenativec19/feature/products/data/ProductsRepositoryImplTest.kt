@@ -5,6 +5,7 @@ import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.network.ItemResponse
 import com.example.ecommercenativec19.core.network.ListResponse
 import com.example.ecommercenativec19.core.network.PageMetadataDto
+import com.example.ecommercenativec19.feature.products.domain.ProductSort
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -23,6 +24,7 @@ class ProductsRepositoryImplTest {
 
         var lastCategoryId: String? = "unset"
         var lastSubCategoryId: String? = "unset"
+        var lastSort: String? = "unset"
         var lastPage: Int? = null
         var lastLimit: Int? = null
         var lastProductId: String? = null
@@ -30,11 +32,13 @@ class ProductsRepositoryImplTest {
         override suspend fun getProducts(
             categoryId: String?,
             subCategoryId: String?,
+            sort: String?,
             page: Int,
             limit: Int,
         ): ListResponse<ProductDto> {
             lastCategoryId = categoryId
             lastSubCategoryId = subCategoryId
+            lastSort = sort
             lastPage = page
             lastLimit = limit
             failure?.let { throw it }
@@ -101,6 +105,26 @@ class ProductsRepositoryImplTest {
         repository.getProducts(categoryId = null, subCategoryId = "sub-2", page = 1)
 
         assertEquals(null, api.lastCategoryId)
+    }
+
+    @Test
+    fun `getProducts translates each sort to the api's descending sort key`() = runTest {
+        val expected = mapOf(
+            ProductSort.BestSelling to "-sold",
+            ProductSort.Newest to "-createdAt",
+            ProductSort.TopRated to "-ratingsAverage",
+        )
+        expected.forEach { (sort, key) ->
+            repository.getProducts(null, null, 1, sort)
+            assertEquals(key, api.lastSort)
+        }
+    }
+
+    @Test
+    fun `getProducts sends no sort by default`() = runTest {
+        repository.getProducts(null, "sub", 1)
+
+        assertEquals(null, api.lastSort)
     }
 
     @Test

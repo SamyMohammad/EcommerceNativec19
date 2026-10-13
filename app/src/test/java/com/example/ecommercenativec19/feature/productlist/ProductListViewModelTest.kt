@@ -3,6 +3,7 @@ package com.example.ecommercenativec19.feature.productlist
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.feature.products.FakeProductsRepository
 import com.example.ecommercenativec19.feature.products.domain.GetProductsUseCase
 import com.example.ecommercenativec19.feature.products.domain.ProductPage

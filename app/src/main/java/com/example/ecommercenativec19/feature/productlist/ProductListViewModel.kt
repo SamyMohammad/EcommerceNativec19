@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.feature.products.domain.GetProductsUseCase
-import com.example.ecommercenativec19.feature.products.domain.Product
+import com.example.ecommercenativec19.feature.products.ui.toCardUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -93,12 +93,3 @@ class ProductListViewModel(
         }
     }
 }
-
-private fun Product.toCardUi() = ProductCardUi(
-    id = id,
-    imageUrl = imageUrl,
-    title = title,
-    price = currentPrice,
-    oldPrice = if (priceAfterDiscount != null) price else null,
-    rating = rating,
-)

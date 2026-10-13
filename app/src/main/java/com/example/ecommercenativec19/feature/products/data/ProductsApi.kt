@@ -12,6 +12,7 @@ interface ProductsApi {
     suspend fun getProducts(
         @Query("category") categoryId: String?,
         @Query("subcategory") subCategoryId: String?,
+        @Query("sort") sort: String?,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
     ): ListResponse<ProductDto>

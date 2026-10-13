@@ -125,8 +125,8 @@ They are static composition locals because they never change at runtime. The tok
 
 Planned, in rough order. Each item is a small reviewed PR.
 
-- **Route API per feature**, replacing sample data. Done: categories, product list and product details (shared
-  `feature/products/`). Next: Home on the products API, then cart, wishlist and account.
+- **Route API per feature**, replacing sample data. Done: categories, product list, product details (shared
+  `feature/products/`) and Home. Next: cart, wishlist and account.
 - **Authentication** via DataStore token storage and an OkHttp interceptor that adds the `token` header. This is a
   deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart, wishlist
   and account endpoints require a token.

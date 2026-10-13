@@ -27,3 +27,6 @@ data class ProductPage(
     val items: List<Product>,
     val nextPage: Int?,
 )
+
+/** The orderings the app asks the API for. Each one is a ranking, so the first items are the "best" ones. */
+enum class ProductSort { BestSelling, Newest, TopRated }

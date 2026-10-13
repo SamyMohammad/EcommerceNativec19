@@ -41,7 +41,7 @@ import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
  * | `SplashRoute` | `onFinished()` | AFTER_TIMEOUT 0.4s -> Sign in (Splash is removed from the back stack) |
  * | `SignInRoute` | `onSignIn()`, `onCreateAccount()` | Login -> Home; "Create Account" -> Sign up |
  * | `SignUpRoute` | `onSignUp()` | Sign up button -> Home |
- * | `HomeRoute` | `onOpenCart()`, `onOpenCategories()` | cart icon -> Cart; "men's fashion" circle -> Categories |
+ * | `HomeRoute` | `onOpenCart()`, `onOpenCategories()`, `onOpenProduct(productId)` | cart icon -> Cart; any category circle -> Categories; product card -> Product details |
  * | `CategoriesRoute` | `onOpenCart()`, `onOpenProductList(subCategoryId)` | cart icon -> Cart; any sub-category tile -> Product list of that sub-category |
  * | `ProductListRoute` | `subCategoryId`, `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; product card -> Product details |
  * | `ProductDetailsRoute` | `productId`, `onBack()`, `onOpenCart()`, `onAddToCart()` | back arrow -> Product list; cart icon and "Add to cart" -> Cart |
@@ -102,6 +102,7 @@ fun AppNavDisplay(
                     HomeRoute(
                         onOpenCart = { navigator.push(Cart) },
                         onOpenCategories = { navigator.selectTab(AppTab.Categories) },
+                        onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
                     )
                 }
                 entry<Categories> {

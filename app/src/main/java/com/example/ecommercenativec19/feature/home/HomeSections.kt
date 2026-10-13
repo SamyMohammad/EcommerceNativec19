@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -20,18 +19,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.CategoryTile
 import com.example.ecommercenativec19.core.ui.CategoryTileStyle
-import com.example.ecommercenativec19.core.ui.FigmaCropImage
-import com.example.ecommercenativec19.core.ui.FigmaImageCrop
 import com.example.ecommercenativec19.core.ui.ProductCard
 import com.example.ecommercenativec19.core.ui.ProductCardRatingPosition
+import com.example.ecommercenativec19.core.ui.ProductImage
+import com.example.ecommercenativec19.core.ui.formatOldPrice
+import com.example.ecommercenativec19.core.ui.formatPrice
+import com.example.ecommercenativec19.core.ui.formatRating
+import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.core.ui.ProductCardSize
 import com.example.ecommercenativec19.core.ui.textLineBox
 
@@ -68,12 +66,12 @@ internal fun HomeSectionHeader(
 }
 
 /**
- * Two-row category grid that scrolls horizontally (the design shows the fourth column cut by the screen edge).
- * [categories] is column-major (pairs of top/bottom tiles).
+ * Two-row category grid that scrolls horizontally (the design shows the last column cut by the screen edge).
+ * Tiles fill the rows column by column: (1st, 2nd), (3rd, 4th), ... Every tile opens the Categories tab.
  */
 @Composable
 internal fun HomeCategoriesGrid(
-    categories: List<HomeCategory>,
+    categories: List<HomeCategoryUi>,
     onOpenCategories: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -83,29 +81,18 @@ internal fun HomeCategoriesGrid(
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = AppDimens.ScreenHorizontal),
+        horizontalArrangement = Arrangement.spacedBy(GridGap),
     ) {
-        columns.forEachIndexed { columnIndex, column ->
-            if (columnIndex > 0) Spacer(Modifier.width(column.first().columnGap))
+        columns.forEach { column ->
             Column(verticalArrangement = Arrangement.spacedBy(GridGap)) {
                 column.forEachIndexed { index, category ->
                     CategoryTile(
-                        label = stringResource(category.label),
-                        image = {
-                            // A custom photo width stretches the (square) photo like the design does.
-                            FigmaCropImage(
-                                painterResource(category.image),
-                                contentDescription = null,
-                                crop = if (category.imageWidth != null) FigmaImageCrop() else null,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        },
-                        // Top-row labels take two lines in the design; keep both rows aligned across columns.
+                        label = category.name,
+                        image = { ProductImage(url = category.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
+                        // Names take two lines in the design; keep both rows aligned across columns.
                         modifier = if (index == 0) Modifier.heightIn(min = TopTileMinHeight) else Modifier,
                         style = CategoryTileStyle.Circle,
-                        onClick = if (category.linksToCategories) onOpenCategories else null,
-                        imageWidth = category.imageWidth ?: CategoryTileStyle.Circle.imageSize,
-                        imageOffsetX = category.imageOffsetX,
-                        labelOffsetX = category.labelOffsetX,
+                        onClick = onOpenCategories,
                     )
                 }
             }
@@ -116,11 +103,10 @@ internal fun HomeCategoriesGrid(
 /** Horizontally scrolling row of Home product cards (158dp wide, 16dp apart, cut at the screen edge). */
 @Composable
 internal fun HomeProductRow(
-    products: List<HomeProduct>,
+    products: List<ProductCardUi>,
     favoriteIds: Set<String>,
+    onProductClick: (String) -> Unit,
     onFavoriteClick: (String) -> Unit,
-    ratingPosition: ProductCardRatingPosition,
-    minCardHeight: Dp,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
@@ -128,20 +114,22 @@ internal fun HomeProductRow(
         contentPadding = PaddingValues(horizontal = AppDimens.ScreenHorizontal),
         horizontalArrangement = Arrangement.spacedBy(CardGap),
     ) {
-        items(products, key = { it.id }) { product ->
+        items(products, key = { it.id }, contentType = { "product" }) { product ->
             ProductCard(
-                title = stringResource(product.title),
-                price = stringResource(R.string.home_price_egp, product.price),
-                oldPrice = product.oldPrice?.let { stringResource(R.string.home_old_price_egp, it) },
-                rating = product.rating,
+                title = product.title,
+                price = formatPrice(product.price),
+                oldPrice = product.oldPrice?.let { formatOldPrice(it) },
+                rating = formatRating(product.rating),
                 isFavorite = product.id in favoriteIds,
                 onFavoriteClick = { onFavoriteClick(product.id) },
                 // Prototype: the "+" add button has no documented behavior (no cart state contract).
                 onAddClick = {},
-                image = { FigmaCropImage(painterResource(product.image), null, product.imageCrop, Modifier.fillMaxSize()) },
-                modifier = Modifier.width(CardWidth).heightIn(min = minCardHeight),
+                onClick = { onProductClick(product.id) },
+                image = { ProductImage(url = product.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
+                // Any API product may be discounted, so every card gets the taller (old price) design height.
+                modifier = Modifier.width(CardWidth).heightIn(min = HomeCardHeight),
                 size = ProductCardSize.Compact,
-                ratingPosition = ratingPosition,
+                ratingPosition = ProductCardRatingPosition.BelowPrice,
             )
         }
     }
@@ -151,8 +139,8 @@ private val GridGap = 16.dp
 private val CardGap = 16.dp
 private val CardWidth = 158.dp
 
-/** 100dp circle + 8dp gap + two 18dp label lines. */
-private val TopTileMinHeight = 144.dp
+/** 100dp circle + 8dp gap + two label lines (about 19dp each at the 14sp body style). */
+private val TopTileMinHeight = 146.dp
 
 /** Title to content gap (title bottom y 242 -> content y 258). */
 private val TitleToContentGap = 16.dp

@@ -1,48 +1,29 @@
 package com.example.ecommercenativec19.feature.home
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.example.ecommercenativec19.core.ui.FigmaImageCrop
+import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
-/**
- * A circular category tile of the Home categories grid. [linksToCategories]: the prototype opens Categories from it.
- * The design places a few tiles by hand: [columnGap] is the space before this tile's column (taken from the column's
- * top tile), [imageWidth] / [imageOffsetX] / [labelOffsetX] its photo width, photo offset and label offset.
- */
-data class HomeCategory(
+/** A circular tile of the Home categories grid. */
+data class HomeCategoryUi(
     val id: String,
-    @param:StringRes val label: Int,
-    @param:DrawableRes val image: Int,
-    val linksToCategories: Boolean = false,
-    val columnGap: Dp = 16.dp,
-    val imageWidth: Dp? = null,
-    val imageOffsetX: Dp = 0.dp,
-    val labelOffsetX: Dp = 0.dp,
+    val name: String,
+    val imageUrl: String?,
 )
 
 /**
- * Product card content. [price] / [oldPrice] are amounts only ("9000"); the currency wording is a string resource.
- * [rating] is the number shown in "Review (4.8)".
+ * The product rows below the categories, in display order. The API has no "home feed" endpoint, so each row is the
+ * same product list under a different ranking (see docs/api/home.md).
  */
-data class HomeProduct(
-    val id: String,
-    @param:StringRes val title: Int,
-    val price: String,
-    val rating: String,
-    @param:DrawableRes val image: Int,
-    val oldPrice: String? = null,
-    val imageCrop: FigmaImageCrop? = null,
-)
+enum class HomeSection { BestSellers, NewArrival, TopRated }
 
-/** Everything the stateless Home screen renders. */
+/**
+ * Everything the stateless Home screen renders. The categories grid and every product row load independently, so
+ * one failing request shows its own retry and leaves the other regions alone.
+ */
 data class HomeUiState(
     val searchQuery: String = "",
-    /** Column-major: consecutive pairs form one column (top, bottom) of the two-row categories grid. */
-    val categories: List<HomeCategory> = emptyList(),
-    val applianceProducts: List<HomeProduct> = emptyList(),
-    val newArrivalProducts: List<HomeProduct> = emptyList(),
-    val smartWatchProducts: List<HomeProduct> = emptyList(),
+    val categories: LoadState<List<HomeCategoryUi>> = LoadState.Loading,
+    val sections: Map<HomeSection, LoadState<List<ProductCardUi>>> = HomeSection.entries.associateWith { LoadState.Loading },
+    /** Local only until the wishlist API slice; kept apart from [sections] so reloads do not wipe the hearts. */
     val favoriteIds: Set<String> = emptySet(),
 )

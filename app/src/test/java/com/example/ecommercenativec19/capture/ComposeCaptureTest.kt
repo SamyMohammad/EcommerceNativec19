@@ -33,9 +33,7 @@ import com.example.ecommercenativec19.feature.cart.CartScreen
 import com.example.ecommercenativec19.feature.cart.CartUiState
 import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
 import com.example.ecommercenativec19.feature.categories.CategoriesScreen
-import com.example.ecommercenativec19.feature.home.HomeSampleData
 import com.example.ecommercenativec19.feature.home.HomeScreen
-import com.example.ecommercenativec19.feature.home.HomeUiState
 import com.example.ecommercenativec19.feature.productdetails.ProductDetailsScreen
 import com.example.ecommercenativec19.feature.productlist.ProductListScreen
 import com.example.ecommercenativec19.feature.signin.SignInScreen
@@ -125,15 +123,7 @@ class ComposeCaptureTest {
             Scene.Splash -> SplashScreen()
             Scene.SignIn -> SignInScreen(SignInUiState(), {}, {}, {}, {}, {})
             Scene.SignUp -> SignUpScreen(SignUpUiState(), {}, {}, {}, {}, {}, {})
-            Scene.Home -> HomeScreen(
-                HomeUiState(
-                    categories = HomeSampleData.categories,
-                    applianceProducts = HomeSampleData.applianceProducts,
-                    newArrivalProducts = HomeSampleData.newArrivalProducts,
-                    smartWatchProducts = HomeSampleData.smartWatchProducts,
-                ),
-                {}, {}, {}, {},
-            )
+            Scene.Home -> WithFixtureImages { HomeScreen(ProductFixtures.home, {}, {}, {}, {}, {}, {}, {}) }
             Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {})
             Scene.ProductList -> WithFixtureImages {
                 ProductListScreen(ProductFixtures.productList, {}, {}, {}, {}, {}, {}, {})

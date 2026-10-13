@@ -35,12 +35,12 @@ the public [Route E-commerce API](https://documenter.getpostman.com/view/5709532
 | Screen | UI | Data source |
 |---|---|---|
 | Splash, Sign in, Sign up | Done | Local state (auth not wired yet) |
-| Home | Done | Sample data |
+| **Home** | Done | **Route API** (categories grid + three product rows ranked by sales, recency and rating; promo banners are static artwork) |
 | **Categories** | Done | **Route API** (categories + sub-categories) |
 | **Product list, Product details** | Done | **Route API** (products by sub-category with load-more paging, product by id) |
 | Cart, Wishlist, Account | Done | Sample data |
 
-**Next slices:** Home on the products API → authentication (token storage) → cart and
+**Next slices:** authentication (token storage) → cart and
 wishlist → account. Each slice is delivered as a small, reviewed PR that takes one feature through
 data → domain → presentation, with tests.
 

@@ -1,18 +1,7 @@
 package com.example.ecommercenativec19.feature.productlist
 
 import com.example.ecommercenativec19.core.common.LoadState
-
-/** One card of the product list. Prices are whole EGP; the UI formats them. */
-data class ProductCardUi(
-    val id: String,
-    val imageUrl: String?,
-    val title: String,
-    /** What the customer pays. */
-    val price: Int,
-    /** The undiscounted price, set only for discounted products. */
-    val oldPrice: Int?,
-    val rating: Double,
-)
+import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
 /** State of the "load more" footer below an already visible list. */
 enum class LoadMoreState { Idle, Loading, Error }

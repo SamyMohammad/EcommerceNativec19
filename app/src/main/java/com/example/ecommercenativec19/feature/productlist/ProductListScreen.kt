@@ -37,6 +37,7 @@ import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.formatOldPrice
 import com.example.ecommercenativec19.core.ui.formatPrice
 import com.example.ecommercenativec19.core.ui.formatRating
+import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
 /** Stateless Product list: search header, two-column grid of [ProductCard]s. */
 @Composable

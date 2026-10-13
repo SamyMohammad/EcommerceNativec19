@@ -6,11 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 
-/** Home entry point. Callback contract: see AppNavDisplay (cart icon, "men's fashion" circle -> Categories). */
+/** Home entry point. Callback contract: see AppNavDisplay (cart icon, category tile -> Categories, product card -> Details). */
 @Composable
 fun HomeRoute(
     onOpenCart: () -> Unit,
     onOpenCategories: () -> Unit,
+    onOpenProduct: (productId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: HomeViewModel = koinViewModel()
@@ -19,8 +20,11 @@ fun HomeRoute(
         state = state,
         onQueryChange = viewModel::onSearchQueryChange,
         onFavoriteClick = viewModel::onFavoriteToggle,
+        onProductClick = onOpenProduct,
         onOpenCart = onOpenCart,
         onOpenCategories = onOpenCategories,
+        onRetryCategories = viewModel::onRetryCategories,
+        onRetrySection = viewModel::onRetrySection,
         modifier = modifier,
     )
 }
