@@ -98,6 +98,9 @@ Rules this codebase holds itself to:
 - **Single module, modular packages.** `:app` is one Gradle module, but each `feature/<name>` keeps `data/`,
   `domain/` and `di/` sub-packages, so it can be extracted into its own module when that pays off.
 
+For the reasoning behind these choices and the planned refactor roadmap, see
+[`docs/architecture.md`](docs/architecture.md).
+
 ## Package structure
 
 ```
@@ -121,14 +124,14 @@ app/src/main/java/com/example/ecommercenativec19/
 
 ## Networking and error handling
 
-- **Base URL:** `https://ecommerce.routemisr.com/` (in `core/network/NetworkModule.kt`).
+- **Base URL:** `https://ecommerce.routemisr.com/`, exposed as `BuildConfig.BASE_URL` (set in `app/build.gradle.kts`).
 - **Auth:** authenticated endpoints expect a custom `token` request header, not `Authorization: Bearer`.
 - **Parsing:** `Json { ignoreUnknownKeys = true }`, and fields that are not guaranteed are nullable, so one
   malformed record cannot take a whole screen down.
 - **Errors:** `safeApiCall` maps `IOException → AppError.Network`, `HttpException → AppError.Server(code)` and
   anything else to `AppError.Unknown`. It rethrows `CancellationException` to keep structured concurrency intact.
-- **Logging:** HTTP bodies are logged in debug builds only. Credential headers are redacted once authentication
-  lands.
+- **Logging:** HTTP bodies are logged in debug builds only. The `token` and `Authorization` headers are redacted
+  from the log output.
 - **API notes:** the Postman collection ships without example responses, so every endpoint the app uses is
   documented from live calls in [`docs/api/`](docs/api/), including server quirks. For example, the
   documented nested sub-categories endpoint ignores its category id, so the app uses the
@@ -152,7 +155,8 @@ cd EcommerceNativec19
 ```
 
 No API key or secret is required: the Route API's catalogue endpoints are public. Never commit
-`local.properties`, keystores or tokens. The `.gitignore` already excludes them.
+`local.properties`, keystores or tokens. The `.gitignore` already excludes `local.properties`, keystores
+(`*.jks`, `*.keystore`, `keystore.properties`), `.env*` files and `google-services.json`.
 
 ## Testing
 
@@ -177,6 +181,7 @@ network.
 
 | Path | What it holds |
 |---|---|
+| [`docs/architecture.md`](docs/architecture.md) | Architecture rationale (layers, state, errors, Koin, navigation) and refactor roadmap |
 | [`docs/api/`](docs/api/) | Request and response shapes captured from the live API, plus known quirks |
 | [`docs/design-decisions/`](docs/design-decisions/README.md) | Per-screen Figma → Compose decisions, deviations and visual-check results |
 | [`design/figma/`](design/figma/) | Figma reference frames, compose config and asset import tools |

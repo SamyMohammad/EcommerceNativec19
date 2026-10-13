@@ -14,6 +14,6 @@ class AccountViewModelTest {
         assertNull(vm.state.value.editing)
         val byType = vm.state.value.fields.associateBy { it.type }
         assertEquals("0100", byType.getValue(AccountFieldType.Mobile).value)
-        assertEquals("Mohamed Mohamed Nabil", byType.getValue(AccountFieldType.FullName).value)
+        assertEquals("Jane Doe", byType.getValue(AccountFieldType.FullName).value)
     }
 }

@@ -31,3 +31,11 @@ design/figma/source-evidence/budget.sqlite3
 
 /.idea/
 .claude/settings.local.json
+
+# Secrets / signing
+*.jks
+*.keystore
+keystore.properties
+.env
+.env.*
+google-services.json
