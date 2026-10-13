@@ -20,6 +20,7 @@ fun HomeRoute(
         state = state,
         onQueryChange = viewModel::onSearchQueryChange,
         onFavoriteClick = viewModel::onFavoriteToggle,
+        onAddToCart = viewModel::onAddToCart,
         onProductClick = onOpenProduct,
         onOpenCart = onOpenCart,
         onOpenCategories = onOpenCategories,

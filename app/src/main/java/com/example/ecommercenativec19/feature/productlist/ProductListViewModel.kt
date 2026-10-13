@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.products.domain.GetProductsUseCase
 import com.example.ecommercenativec19.feature.products.ui.toCardUi
 import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
@@ -24,6 +25,7 @@ class ProductListViewModel(
     private val getProducts: GetProductsUseCase,
     private val observeFavoriteIds: ObserveFavoriteIdsUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
+    private val addToCart: AddToCartUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductListUiState())
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
@@ -46,6 +48,11 @@ class ProductListViewModel(
 
     fun onToggleFavorite(productId: String) {
         viewModelScope.launch { toggleFavorite(productId) }
+    }
+
+    fun onAddToCart(productId: String) {
+        // A failed add leaves the cart as it was; no extra error UI in this slice.
+        viewModelScope.launch { addToCart(productId) }
     }
 
     /** Retries a failed first page. A failed "load more" is retried through [onLoadMore]. */

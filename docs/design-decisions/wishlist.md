@@ -29,7 +29,7 @@
 
 ## Missing contracts
 
-- Search and add to cart from the wishlist (the button is a no-op until the cart slice). Loading and error states are additions.
+- Search from the wishlist. "Add to Cart" adds one unit through the cart API and stays on the screen (no confirmation message). Loading and error states are additions.
 
 ## Automated visual result
 

@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val productListModule = module {
     // The sub-category id comes from the navigation key as a Koin parameter.
-    viewModel { params -> ProductListViewModel(subCategoryId = params.get(), getProducts = get(), observeFavoriteIds = get(), toggleFavorite = get()) }
+    viewModel { params -> ProductListViewModel(subCategoryId = params.get(), getProducts = get(), observeFavoriteIds = get(), toggleFavorite = get(), addToCart = get()) }
 }

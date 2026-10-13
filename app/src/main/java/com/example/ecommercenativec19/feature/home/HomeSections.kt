@@ -107,6 +107,7 @@ internal fun HomeProductRow(
     favoriteIds: Set<String>,
     onProductClick: (String) -> Unit,
     onFavoriteClick: (String) -> Unit,
+    onAddClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
@@ -122,8 +123,7 @@ internal fun HomeProductRow(
                 rating = formatRating(product.rating),
                 isFavorite = product.id in favoriteIds,
                 onFavoriteClick = { onFavoriteClick(product.id) },
-                // Prototype: the "+" add button has no documented behavior (no cart state contract).
-                onAddClick = {},
+                onAddClick = { onAddClick(product.id) },
                 onClick = { onProductClick(product.id) },
                 image = { ProductImage(url = product.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
                 // Any API product may be discounted, so every card gets the taller (old price) design height.

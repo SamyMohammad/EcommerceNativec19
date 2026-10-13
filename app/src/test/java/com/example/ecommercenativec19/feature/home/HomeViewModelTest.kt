@@ -1,5 +1,7 @@
 package com.example.ecommercenativec19.feature.home
 
+import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
+import com.example.ecommercenativec19.feature.cart.FakeCartRepository
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
@@ -51,6 +53,7 @@ class HomeViewModelTest {
     private lateinit var categories: FakeCategoriesRepository
     private lateinit var products: FakeProductsRepository
     private lateinit var wishlist: FakeWishlistRepository
+    private lateinit var cart: FakeCartRepository
 
     @Before
     fun setUp() {
@@ -58,6 +61,7 @@ class HomeViewModelTest {
         categories = FakeCategoriesRepository()
         products = FakeProductsRepository()
         wishlist = FakeWishlistRepository()
+        cart = FakeCartRepository()
         ProductSort.entries.forEach { products.sortResults[it] = page("${it.name}-1", "${it.name}-2") }
     }
 
@@ -71,6 +75,7 @@ class HomeViewModelTest {
         GetProductsUseCase(products),
         ObserveFavoriteIdsUseCase(wishlist),
         ToggleFavoriteUseCase(wishlist),
+        AddToCartUseCase(cart),
     )
 
     private fun page(vararg ids: String) = AppResult.Success(ProductPage(ids.map { product(it) }, nextPage = null))
@@ -249,5 +254,16 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         assertFalse("p1" in viewModel.uiState.value.favoriteIds)
+    }
+
+    @Test
+    fun `the add button puts one unit of that product in the cart`() = runTest(testDispatcher) {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        viewModel.onAddToCart("p1")
+        advanceUntilIdle()
+
+        assertEquals(listOf("p1" to 1), cart.addCalls)
     }
 }

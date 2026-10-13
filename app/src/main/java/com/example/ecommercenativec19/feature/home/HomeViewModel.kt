@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.categories.domain.GetCategoriesUseCase
 import com.example.ecommercenativec19.feature.products.domain.GetProductsUseCase
 import com.example.ecommercenativec19.feature.products.domain.ProductSort
@@ -21,13 +22,14 @@ import kotlinx.coroutines.launch
  * Home composes existing use cases: one request for the categories grid plus one per product row. Each region is its
  * own coroutine (so they load in parallel) and has its own [LoadState] (so one failure stays local). The search text
  * is UI-only (no search endpoint is used). Hearts mirror the shared wishlist cache; a failed toggle is rolled back
- * there, so the heart simply returns to its previous state.
+ * there, so the heart simply returns to its previous state. The card "+" adds one unit to the shared cart.
  */
 class HomeViewModel(
     private val getCategories: GetCategoriesUseCase,
     private val getProducts: GetProductsUseCase,
     private val observeFavoriteIds: ObserveFavoriteIdsUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
+    private val addToCart: AddToCartUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -49,6 +51,11 @@ class HomeViewModel(
 
     fun onFavoriteToggle(productId: String) {
         viewModelScope.launch { toggleFavorite(productId) }
+    }
+
+    fun onAddToCart(productId: String) {
+        // A failed add leaves the cart as it was; no extra error UI in this slice.
+        viewModelScope.launch { addToCart(productId) }
     }
 
     fun onRetryCategories() {

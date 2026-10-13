@@ -30,6 +30,7 @@ fun HomeScreen(
     state: HomeUiState,
     onQueryChange: (String) -> Unit,
     onFavoriteClick: (String) -> Unit,
+    onAddToCart: (String) -> Unit,
     onProductClick: (String) -> Unit,
     onOpenCart: () -> Unit,
     onOpenCategories: () -> Unit,
@@ -81,6 +82,7 @@ fun HomeScreen(
                             favoriteIds = state.favoriteIds,
                             onProductClick = onProductClick,
                             onFavoriteClick = onFavoriteClick,
+                            onAddClick = onAddToCart,
                         )
                     }
                 }

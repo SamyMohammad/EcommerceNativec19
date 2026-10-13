@@ -2,6 +2,8 @@ package com.example.ecommercenativec19.capture
 
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.cart.CartLineUi
+import com.example.ecommercenativec19.feature.cart.CartUiState
 import com.example.ecommercenativec19.feature.home.HomeCategoryUi
 import com.example.ecommercenativec19.feature.home.HomeSection
 import com.example.ecommercenativec19.feature.home.HomeUiState
@@ -27,6 +29,7 @@ internal object ProductFixtures {
         "fixture://product-6" to R.drawable.img_frame72_d0f73343,
     )
     private const val DetailsImage = "fixture://details"
+    private const val CartImage = "fixture://cart-1"
 
     private val categoryDrawables = listOf(
         "Women's Fashion" to R.drawable.img_ellipse14_74a31094,
@@ -57,6 +60,7 @@ internal object ProductFixtures {
 
     private val drawables: Map<String, Int> =
         coverDrawables.toMap() + (DetailsImage to R.drawable.img_property1default1_995b0786) +
+            (CartImage to R.drawable.img_frame69_80e90f22) +
             categoryDrawables.associate { (name, drawable) -> categoryUrl(name) to drawable } +
             homeCardDrawables.mapIndexed { index, drawable -> homeCardUrl(index) to drawable } +
             wishlistRows.mapIndexed { index, (_, _, drawable) -> wishlistUrl(index) to drawable }
@@ -117,6 +121,14 @@ internal object ProductFixtures {
                 },
             )
         }.toMap(),
+    )
+
+    /** The design's single row; the total is what the server would send for it. */
+    val cart = CartUiState(
+        items = LoadState.Content(
+            listOf(CartLineUi(id = "cart-1", title = "Nike Air Jordon", imageUrl = CartImage, linePrice = 3500, quantity = 1)),
+        ),
+        totalPrice = 3500,
     )
 
     val wishlist = WishlistUiState(

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.feature.products.ui.toCardUi
 import com.example.ecommercenativec19.feature.wishlist.domain.GetWishlistUseCase
@@ -27,6 +28,7 @@ class WishlistViewModel(
     private val getWishlist: GetWishlistUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
     observeFavoriteIds: ObserveFavoriteIdsUseCase,
+    private val addToCart: AddToCartUseCase,
 ) : ViewModel() {
     private val query = MutableStateFlow("")
     private val loaded = MutableStateFlow<LoadState<List<ProductCardUi>>>(LoadState.Loading)
@@ -53,6 +55,11 @@ class WishlistViewModel(
     fun onToggleFavorite(productId: String) {
         // A failed request is rolled back by the repository, which re-shows the row; no extra error UI in this slice.
         viewModelScope.launch { toggleFavorite(productId) }
+    }
+
+    fun onAddToCart(productId: String) {
+        // A failed add leaves the cart as it was; no extra error UI in this slice.
+        viewModelScope.launch { addToCart(productId) }
     }
 
     private fun load(keepContent: Boolean) {

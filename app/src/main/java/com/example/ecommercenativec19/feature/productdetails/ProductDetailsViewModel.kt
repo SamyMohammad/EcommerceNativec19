@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.products.domain.GetProductDetailsUseCase
 import com.example.ecommercenativec19.feature.products.domain.Product
 import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
@@ -24,6 +25,7 @@ class ProductDetailsViewModel(
     private val getProductDetails: GetProductDetailsUseCase,
     private val observeFavoriteIds: ObserveFavoriteIdsUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
+    private val addToCart: AddToCartUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailsUiState())
     val uiState: StateFlow<ProductDetailsUiState> = _uiState.asStateFlow()
@@ -43,6 +45,13 @@ class ProductDetailsViewModel(
 
     fun onToggleFavorite() {
         viewModelScope.launch { toggleFavorite(productId) }
+    }
+
+    /** Adds the selected quantity on top of whatever the cart already holds for this product. */
+    fun onAddToCart() {
+        val quantity = _uiState.value.quantity
+        // A failed add leaves the cart as it was; no extra error UI in this slice.
+        viewModelScope.launch { addToCart(productId, quantity) }
     }
 
     fun onIncrementQuantity() = _uiState.update { it.copy(quantity = it.quantity + 1) }

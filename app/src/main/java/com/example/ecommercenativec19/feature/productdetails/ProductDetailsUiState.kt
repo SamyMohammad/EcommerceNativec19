@@ -16,8 +16,7 @@ data class ProductDetailsUi(
 )
 
 /**
- * Everything Product details renders. [quantity] is UI-only ("Add to cart" has no behavior beyond navigation until
- * the cart slice); [isFavorite] mirrors the shared wishlist cache.
+ * Everything Product details renders. [quantity] is UI-only until "Add to cart" sends it; [isFavorite] mirrors the shared wishlist cache.
  */
 data class ProductDetailsUiState(
     val product: LoadState<ProductDetailsUi> = LoadState.Loading,

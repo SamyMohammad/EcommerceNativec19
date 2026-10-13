@@ -1,5 +1,7 @@
 package com.example.ecommercenativec19.feature.wishlist
 
+import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
+import com.example.ecommercenativec19.feature.cart.FakeCartRepository
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
@@ -26,11 +28,13 @@ import org.junit.Test
 class WishlistViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var wishlist: FakeWishlistRepository
+    private lateinit var cart: FakeCartRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         wishlist = FakeWishlistRepository()
+        cart = FakeCartRepository()
     }
 
     @After
@@ -42,6 +46,7 @@ class WishlistViewModelTest {
         GetWishlistUseCase(wishlist),
         ToggleFavoriteUseCase(wishlist),
         ObserveFavoriteIdsUseCase(wishlist),
+        AddToCartUseCase(cart),
     )
 
     /** `state` is a WhileSubscribed StateFlow, so something must collect it, as the Route does. */
@@ -190,5 +195,19 @@ class WishlistViewModelTest {
         advanceUntilIdle()
 
         assertEquals("shoe", viewModel.state.value.query)
+    }
+
+    @Test
+    fun `add to cart puts one unit of that product in the cart and keeps the row`() = runTest(testDispatcher) {
+        givenWishlist("a", "b")
+        val viewModel = subscribed(viewModel())
+        viewModel.onEnter()
+        advanceUntilIdle()
+
+        viewModel.onAddToCart("a")
+        advanceUntilIdle()
+
+        assertEquals(listOf("a" to 1), cart.addCalls)
+        assertEquals(listOf("a", "b"), viewModel.state.value.ids())
     }
 }

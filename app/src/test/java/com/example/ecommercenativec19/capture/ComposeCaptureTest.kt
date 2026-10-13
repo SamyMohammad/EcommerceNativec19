@@ -28,9 +28,7 @@ import com.example.ecommercenativec19.core.ui.AppTab
 import com.example.ecommercenativec19.feature.account.AccountSampleData
 import com.example.ecommercenativec19.feature.account.AccountScreen
 import com.example.ecommercenativec19.feature.account.AccountUiState
-import com.example.ecommercenativec19.feature.cart.CartSampleData
 import com.example.ecommercenativec19.feature.cart.CartScreen
-import com.example.ecommercenativec19.feature.cart.CartUiState
 import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
 import com.example.ecommercenativec19.feature.categories.CategoriesScreen
 import com.example.ecommercenativec19.feature.home.HomeScreen
@@ -121,7 +119,7 @@ class ComposeCaptureTest {
             Scene.Splash -> SplashScreen()
             Scene.SignIn -> SignInScreen(SignInUiState(), {}, {}, {}, {}, {})
             Scene.SignUp -> SignUpScreen(SignUpUiState(), {}, {}, {}, {}, {}, {})
-            Scene.Home -> WithFixtureImages { HomeScreen(ProductFixtures.home, {}, {}, {}, {}, {}, {}, {}) }
+            Scene.Home -> WithFixtureImages { HomeScreen(ProductFixtures.home, {}, {}, {}, {}, {}, {}, {}, {}) }
             Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {})
             Scene.ProductList -> WithFixtureImages {
                 ProductListScreen(ProductFixtures.productList, {}, {}, {}, {}, {}, {}, {})
@@ -129,7 +127,7 @@ class ComposeCaptureTest {
             Scene.Details -> WithFixtureImages {
                 ProductDetailsScreen(ProductFixtures.productDetails, {}, {}, {}, {}, {}, {}, {})
             }
-            Scene.Cart -> CartScreen(CartUiState(CartSampleData.items, CartSampleData.TOTAL_PRICE), {}, {}, {}, {}, {}, {}, {})
+            Scene.Cart -> WithFixtureImages { CartScreen(ProductFixtures.cart, {}, {}, {}, {}, {}, {}, {}, {}) }
             Scene.Wishlist -> WithFixtureImages { WishlistScreen(ProductFixtures.wishlist, {}, {}, {}, {}, {}, {}) }
             Scene.Account -> AccountScreen(
                 AccountUiState(AccountSampleData.WELCOME_NAME, AccountSampleData.HEADER_EMAIL, AccountSampleData.fields),

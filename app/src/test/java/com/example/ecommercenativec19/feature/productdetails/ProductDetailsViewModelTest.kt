@@ -1,5 +1,7 @@
 package com.example.ecommercenativec19.feature.productdetails
 
+import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
+import com.example.ecommercenativec19.feature.cart.FakeCartRepository
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.common.LoadState
@@ -28,12 +30,14 @@ class ProductDetailsViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: FakeProductsRepository
     private lateinit var wishlist: FakeWishlistRepository
+    private lateinit var cart: FakeCartRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeProductsRepository()
         wishlist = FakeWishlistRepository()
+        cart = FakeCartRepository()
     }
 
     @After
@@ -47,6 +51,7 @@ class ProductDetailsViewModelTest {
             GetProductDetailsUseCase(repository),
             ObserveFavoriteIdsUseCase(wishlist),
             ToggleFavoriteUseCase(wishlist),
+            AddToCartUseCase(cart),
         )
 
     private fun ProductDetailsUiState.loaded(): ProductDetailsUi = (product as LoadState.Content).data
@@ -222,5 +227,18 @@ class ProductDetailsViewModelTest {
         advanceUntilIdle()
 
         assertFalse(viewModel.uiState.value.isFavorite)
+    }
+
+    @Test
+    fun `add to cart sends the selected quantity for this product`() = runTest(testDispatcher) {
+        val viewModel = viewModel("p9")
+        advanceUntilIdle()
+        viewModel.onIncrementQuantity()
+        viewModel.onIncrementQuantity()
+
+        viewModel.onAddToCart()
+        advanceUntilIdle()
+
+        assertEquals(listOf("p9" to 3), cart.addCalls)
     }
 }

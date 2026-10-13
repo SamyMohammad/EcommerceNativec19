@@ -134,7 +134,7 @@ They are static composition locals because they never change at runtime. The tok
 Planned, in rough order. Each item is a small reviewed PR.
 
 - **Route API per feature**, replacing sample data. Done: categories, product list, product details (shared
-  `feature/products/`), Home and wishlist (section 10). Next: cart and account.
+  `feature/products/`), Home and wishlist (section 10), cart (section 11). Next: account.
 - **Authentication.** Done: sign-in, sign-up, encrypted session, `token` header, sign-out on 401 (section 9). This
   is a deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart,
   wishlist and account endpoints require a token. Still no password reset, social login or profile editing.
@@ -214,3 +214,30 @@ change it through `ToggleFavoriteUseCase`; none of them keeps a favorite flag of
 - **Known gap.** A failed toggle is visible only as the heart flipping back; there is no snackbar yet.
 
 Details of the endpoints: [`docs/api/wishlist.md`](api/wishlist.md).
+
+## 11. Cart: server totals, optimistic counts
+
+`CartRepository.cart: StateFlow<Cart?>` is the only owner of cart data (null = not loaded / signed out). Details,
+Home, Product list and Wishlist put products in through `AddToCartUseCase`; the Cart screen observes it
+(`ObserveCartUseCase`), refreshes on every visit (`RefreshCartUseCase`) and changes it through
+`UpdateCartItemCountUseCase` (a count below 1 means remove) and `RemoveFromCartUseCase`. Same scope and session
+lifecycle as the wishlist (section 10): app-scoped, `createdAtStart`, loaded on sign-in, wiped on sign-out.
+
+- **The server owns the numbers.** Every endpoint answers with the whole cart, and that answer replaces the cache. The
+  app sums prices itself only while a tap is unconfirmed.
+- **Display = confirmed + pending.** The repository keeps `confirmed` (the last server cart) and `pending` (counts the
+  user asked for, 0 = remove) and renders `cart` from the two. A server answer replaces `confirmed` without undoing
+  taps on other products, and a rollback is just dropping a pending entry.
+- **Coalesce, don't drop.** Unlike a heart, a quantity tap means "one more": ten quick taps are 10, so dropping taps
+  while a request is out would lose nine. One worker per product sends the latest pending count, then checks whether
+  the user asked for something newer meanwhile and sends that. Only the first caller waits for the network; the rest
+  return success at once. A failure rolls the product back to its confirmed count (including the coalesced taps).
+- **Add is not optimistic.** `POST /cart` adds one unit and answers with bare product ids, so the new line has no
+  title or image yet. Add is POST, then PUT (when more than one unit was wanted) or GET, and the populated answer
+  replaces the cache. A per-product `Mutex` stops an add and a count worker from overlapping on the wire.
+- **Stale responses.** An epoch (bumped when the session changes) discards answers that belong to a previous account;
+  a mutation counter stops a `GET` that started before a change from overwriting it. Requests run `NonCancellable`.
+- **Known gaps.** A failed change is visible only as the row snapping back (no snackbar); a failed "add" shows nothing;
+  if the second step of an add fails the cache is resynced with a background GET.
+
+Details of the endpoints: [`docs/api/cart.md`](api/cart.md); screen notes: `docs/design-decisions/cart.md`.

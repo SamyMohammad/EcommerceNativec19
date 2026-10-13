@@ -9,7 +9,7 @@ import org.koin.core.parameter.parametersOf
 
 /**
  * Product list entry point for one sub-category. Card click -> [onOpenProduct] with the opaque product id. The card
- * "+" button has no documented behavior in the prototype, so it does nothing yet.
+ * "+" button adds one unit to the cart and stays on the list.
  */
 @Composable
 fun ProductListRoute(
@@ -26,7 +26,7 @@ fun ProductListRoute(
         onCartClick = onOpenCart,
         onProductClick = onOpenProduct,
         onFavoriteClick = viewModel::onToggleFavorite,
-        onAddClick = { /* No behavior defined by the prototype. */ },
+        onAddClick = viewModel::onAddToCart,
         onRetry = viewModel::onRetry,
         onLoadMore = viewModel::onLoadMore,
         modifier = modifier,

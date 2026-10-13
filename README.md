@@ -39,9 +39,10 @@ the public [Route E-commerce API](https://documenter.getpostman.com/view/5709532
 | **Categories** | Done | **Route API** (categories + sub-categories) |
 | **Product list, Product details** | Done | **Route API** (products by sub-category with load-more paging, product by id) |
 | **Wishlist** + every favorite heart | Done | **Route API** (`/wishlist`); one shared favorites cache feeds Home, Product list, Details and the Wishlist screen, with optimistic toggles |
-| Cart, Account | Done | Sample data |
+| **Cart** + every "add to cart" button | Done | **Route API** (`/cart`); one shared cart cache with optimistic count changes and server totals; "Check Out" is a no-op (payments are out of scope) |
+| Account | Done | Sample data |
 
-**Next slices:** cart → account. Each slice is delivered as a small, reviewed PR that takes one feature through
+**Next slice:** account. Each slice is delivered as a small, reviewed PR that takes one feature through
 data → domain → presentation, with tests.
 
 ## Tech stack
@@ -126,7 +127,8 @@ app/src/main/java/com/example/ecommercenativec19/
 │   ├── productlist/             # Sub-category product grid with load-more paging
 │   ├── productdetails/          # Product by id: carousel, quantity and total
 │   ├── wishlist/                # Favorites source of truth (data + domain) and the Wishlist screen
-│   └── home/ cart/ account/ signin/ signup/ splash/
+│   ├── cart/                    # Cart source of truth (data + domain) and the Cart screen
+│   └── home/ account/ signin/ signup/ splash/
 ├── navigation/                  # NavKeys, AppNavigator (back stacks), NavDisplay, shared bottom bar
 └── ui/theme/                    # Hand-owned Material 3 theme: Color, Type, Shape, ExtendedTheme, Theme
 ```

@@ -8,8 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 
 /**
- * Wishlist entry point. Row tap -> [onOpenProduct]. The row "Add to Cart" buttons do nothing until the cart slice:
- * the prototype's only documented "add to cart" effect is Details -> Cart.
+ * Wishlist entry point. Row tap -> [onOpenProduct]. The row "Add to Cart" button adds one unit to the cart and stays here.
  */
 @Composable
 fun WishlistRoute(
@@ -26,7 +25,7 @@ fun WishlistRoute(
         onQueryChange = viewModel::onQueryChange,
         onToggleFavorite = viewModel::onToggleFavorite,
         onProductClick = onOpenProduct,
-        onAddToCart = {},
+        onAddToCart = viewModel::onAddToCart,
         onOpenCart = onOpenCart,
         onRetry = viewModel::onRetry,
         modifier = modifier,

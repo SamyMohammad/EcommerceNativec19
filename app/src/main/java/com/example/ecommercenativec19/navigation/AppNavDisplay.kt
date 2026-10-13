@@ -59,7 +59,7 @@ import org.koin.compose.koinInject
  * Categories tab.
  *
  * Prototype reactions that are not navigation, and therefore NOT routed here: favorite heart
- * toggles (Home, Product list, Details, Wishlist: they call the wishlist API, not navigation), quantity plus/minus (Details, Cart), the details image
+ * toggles (Home, Product list, Details, Wishlist: they call the wishlist API, not navigation), card "+" buttons (cart API), quantity plus/minus (Details, Cart), the details image
  * carousel drag. Reactions whose destination is not one of the ten screens (Women's fashion -> 564:542,
  * Categories "Women's Fashion" tab -> 562:469) are intentionally not wired.
  *
@@ -69,8 +69,9 @@ import org.koin.compose.koinInject
  * request), [AppNavigator.signOut] returns to Sign in.
  *
  * ## Missing contracts (nothing is invented here)
- * - "Check Out" (Cart), "Add to cart" side effects (Details), search and list data have no behavior in the
- *   prototype; the only documented effect of "Add to cart" is the transition to Cart.
+ * - "Check Out" (Cart) and search have no behavior (payments are out of scope). "Add to cart" (Details) adds the
+ *   selected quantity through the cart API and then follows the prototype's transition to Cart; the "+" on Home and
+ *   Product list and the Wishlist row button add one unit and stay on their screen.
  * - Product and sub-category ids are opaque strings from the API.
  *
  * ## Transitions
