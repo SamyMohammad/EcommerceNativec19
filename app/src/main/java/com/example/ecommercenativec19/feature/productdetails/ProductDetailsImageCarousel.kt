@@ -16,8 +16,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,23 +28,18 @@ import com.example.ecommercenativec19.core.ui.FavoriteButton
 
 /**
  * Bordered 300dp image carousel with the favorite circle (top-end) and page indicators (bottom-center): the active
- * page is a 30 x 7 primary pill, the others are 7dp white dots with a primary outline. [currentPage] seeds the
- * pager; swipes are reported through [onPageChanged].
+ * page is a 30 x 7 primary pill, the others are 7dp white dots with a primary outline. The page is UI-local
+ * (pager state): swiping does not touch the ViewModel, so only this carousel recomposes.
  */
 @Composable
 internal fun ProductDetailsImageCarousel(
     images: List<Int>,
-    currentPage: Int,
-    onPageChanged: (Int) -> Unit,
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val shape = MaterialTheme.shapes.medium
-    val pagerState = rememberPagerState(initialPage = currentPage.coerceIn(0, images.lastIndex)) { images.size }
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect(onPageChanged)
-    }
+    val pagerState = rememberPagerState { images.size }
     Box(
         modifier = modifier
             .fillMaxWidth()

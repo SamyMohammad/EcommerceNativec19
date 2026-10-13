@@ -24,7 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.ui.FigmaCroppedImage
+import com.example.ecommercenativec19.core.ui.FigmaCropImage
+import com.example.ecommercenativec19.core.ui.FigmaImageCrop
 import com.example.ecommercenativec19.core.ui.LightStatusBarIconsEffect
 import com.example.ecommercenativec19.ui.theme.extendedColors
 
@@ -42,7 +43,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary)) {
         SplashGlow(Modifier.align(Alignment.TopCenter).offset(y = -GlowOverflowTop))
         SplashGlow(Modifier.align(Alignment.BottomCenter).offset(y = GlowOverflowBottom))
-        FigmaCroppedImage(
+        FigmaCropImage(
             painter = painterResource(R.drawable.img_24151328542545920446362786228006272036394703n1_91fa108e),
             contentDescription = stringResource(R.string.core_logo_description),
             modifier = Modifier
@@ -50,8 +51,8 @@ fun SplashScreen(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(horizontal = LogoMargin)
                 .aspectRatio(LogoWidth / LogoHeight),
-            heightFraction = LogoHeightFraction,
-            offsetYFraction = LogoOffsetYFraction,
+            crop = FigmaImageCrop(heightFraction = LogoHeightFraction, offsetYFraction = LogoOffsetYFraction),
+            snapToPixels = true,
         )
     }
 }

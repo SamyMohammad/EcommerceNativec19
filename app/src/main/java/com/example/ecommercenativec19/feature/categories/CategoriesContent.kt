@@ -1,19 +1,17 @@
 package com.example.ecommercenativec19.feature.categories
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,34 +42,39 @@ internal fun CategoriesContent(
     modifier: Modifier = Modifier,
 ) {
     StatusPane(state = state, onRetry = onRetry, modifier = modifier) { subCategories ->
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(GridColumns),
+            contentPadding = PaddingValues(bottom = BottomContentGap),
+        ) {
             if (title != null) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.textLineBox(MaterialTheme.typography.labelLarge),
-                )
-                SelectedCategoryBanner(title, Modifier.padding(top = TitleToBannerGap))
+                item(key = "title", span = { GridItemSpan(maxLineSpan) }, contentType = "title") {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.textLineBox(MaterialTheme.typography.labelLarge),
+                    )
+                }
+                item(key = "banner", span = { GridItemSpan(maxLineSpan) }, contentType = "banner") {
+                    SelectedCategoryBanner(title, Modifier.padding(top = TitleToBannerGap))
+                }
             }
-            Column(
-                modifier = Modifier.padding(top = BannerToGridGap, bottom = BottomContentGap),
-                verticalArrangement = Arrangement.spacedBy(GridRowGap),
-            ) {
-                subCategories.chunked(GridColumns).forEach { row ->
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        row.forEachIndexed { index, sub ->
-                            // The design's tiles start at x 177 / 260 / 344: gaps of 13 and 14 (SpaceBetween would put the
-                            // middle tile on the half pixel 260.5).
-                            if (index > 0) Spacer(Modifier.width(if (index == 1) FirstTileGap else SecondTileGap))
-                            CategoryTile(
-                                label = sub.label,
-                                image = { TilePlaceholder() },
-                                style = CategoryTileStyle.Square,
-                                onClick = onOpenProductList,
-                            )
-                        }
-                    }
+            itemsIndexed(subCategories, key = { _, sub -> sub.id }, contentType = { _, _ -> "tile" }) { index, sub ->
+                // The design's tiles start at x 177 / 260 / 344 (gaps of 13 and 14). The grid cells are equal, so each
+                // 70dp tile is nudged inside its cell to land on those x positions.
+                // The Box hands the tile loose constraints; a grid cell is fixed-width and would stretch the 70dp tile.
+                Box(
+                    Modifier.padding(
+                        start = TileStartInCell[index % GridColumns],
+                        top = if (index < GridColumns) BannerToGridGap else GridRowGap,
+                    ),
+                ) {
+                    CategoryTile(
+                        label = sub.label,
+                        image = { TilePlaceholder() },
+                        style = CategoryTileStyle.Square,
+                        onClick = onOpenProductList,
+                    )
                 }
             }
         }
@@ -139,5 +142,5 @@ private val ShopNowTextStart = 14.dp
 private val ShopNowWidth = 97.dp
 private val ShopNowHeight = 30.dp
 
-private val FirstTileGap = 13.dp
-private val SecondTileGap = 14.dp
+/** Cells are 79dp wide (237 / 3), tiles 70dp: start offsets that put the tiles at x 0 / 83 / 167 of the 237dp content. */
+private val TileStartInCell = listOf(0.dp, 4.dp, 9.dp)

@@ -55,12 +55,13 @@ data → domain → presentation, with tests.
 | Navigation | Navigation 3 (1.2.0) | App-owned per-tab back stacks in `navigation/AppNavigator.kt`, `NavDisplay` in `navigation/AppNavDisplay.kt`, entry-scoped ViewModels |
 | DI | Koin 4.1.1 | Chosen over Hilt for simplicity and a future KMP path. All ViewModels come from per-feature Koin modules, checked by `KoinModulesTest`. 4.1.x because 4.2.x requires Kotlin 2.3 |
 | Networking | Retrofit 3, OkHttp 5, kotlinx.serialization 1.9 | Compile-time serialization, no reflection |
+| Images | Coil 3.3.0 (`coil-compose`, `coil-network-okhttp`) | Loader built in `EcommerceApp` on the app's OkHttpClient; no screen loads remote images yet. 3.3.x because 3.4+ requires Kotlin 2.3 |
 | Testing | JUnit 4, kotlinx-coroutines-test, Robolectric, Roborazzi | Hand-written fakes, no mocking library |
 | Build | AGP 9.4.1 (built-in Kotlin), Gradle 9.6, version catalog | `gradle/libs.versions.toml` |
 | SDK | `minSdk` 24, `targetSdk` / `compileSdk` 37 | |
 
-Dependencies are added only when a slice needs them. Image loading (Coil) and DataStore, for example, arrive with
-the products and authentication slices.
+Dependencies are added only when a slice needs them. DataStore, for example, arrives with
+the authentication slice.
 
 ## Architecture
 
@@ -105,7 +106,7 @@ For the reasoning behind these choices and the planned refactor roadmap, see
 
 ```
 app/src/main/java/com/example/ecommercenativec19/
-├── EcommerceApp.kt              # Application: starts Koin
+├── EcommerceApp.kt              # Application: starts Koin, builds the Coil image loader
 ├── di/                          # appModules: the single production Koin module list
 ├── MainActivity.kt              # Single activity, hosts the Compose tree
 ├── core/

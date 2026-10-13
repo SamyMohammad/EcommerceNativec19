@@ -44,16 +44,16 @@ fun HomeScreen(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             contentPadding = PaddingValues(top = BannerTopGap, bottom = BottomContentGap),
         ) {
-            item { PromoBanner(Modifier.padding(horizontal = AppDimens.ScreenHorizontal)) }
-            item {
+            item(key = "promo", contentType = "banner") { PromoBanner(Modifier.padding(horizontal = AppDimens.ScreenHorizontal)) }
+            item(key = "categories-header", contentType = "header") {
                 HomeSectionHeader(
                     title = stringResource(R.string.home_section_categories),
                     trailing = stringResource(R.string.home_view_all),
                 )
             }
-            item { HomeCategoriesGrid(state.categories, onOpenCategories) }
-            item { HomeSectionHeader(stringResource(R.string.home_section_appliance)) }
-            item {
+            item(key = "categories", contentType = "categories") { HomeCategoriesGrid(state.categories, onOpenCategories) }
+            item(key = "appliance-header", contentType = "header") { HomeSectionHeader(stringResource(R.string.home_section_appliance)) }
+            item(key = "appliance", contentType = "products") {
                 HomeProductRow(
                     products = state.applianceProducts,
                     favoriteIds = state.favoriteIds,
@@ -62,7 +62,7 @@ fun HomeScreen(
                     minCardHeight = CompactCardHeight,
                 )
             }
-            item {
+            item(key = "footwear", contentType = "banner") {
                 FootwearBanner(
                     Modifier.padding(
                         top = SectionGap,
@@ -71,8 +71,8 @@ fun HomeScreen(
                     ),
                 )
             }
-            item { HomeSectionHeader(stringResource(R.string.home_section_new_arrival)) }
-            item {
+            item(key = "new-arrival-header", contentType = "header") { HomeSectionHeader(stringResource(R.string.home_section_new_arrival)) }
+            item(key = "new-arrival", contentType = "products") {
                 HomeProductRow(
                     products = state.newArrivalProducts,
                     favoriteIds = state.favoriteIds,
@@ -81,8 +81,8 @@ fun HomeScreen(
                     minCardHeight = CompactCardHeight,
                 )
             }
-            item { HomeSectionHeader(stringResource(R.string.home_section_smart_watch)) }
-            item {
+            item(key = "smart-watch-header", contentType = "header") { HomeSectionHeader(stringResource(R.string.home_section_smart_watch)) }
+            item(key = "smart-watch", contentType = "products") {
                 HomeProductRow(
                     products = state.smartWatchProducts,
                     favoriteIds = state.favoriteIds,

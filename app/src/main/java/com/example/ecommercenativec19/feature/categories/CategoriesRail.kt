@@ -3,16 +3,15 @@ package com.example.ecommercenativec19.feature.categories
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,8 +42,8 @@ internal fun CategoriesRail(
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .border(1.dp, MaterialTheme.colorScheme.outline, shape),
     ) { categories ->
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()).selectableGroup()) {
-            categories.forEach { category ->
+        LazyColumn(modifier = Modifier.selectableGroup()) {
+            items(categories, key = { it.id }) { category ->
                 if (category.isSelected) {
                     SelectedRailItem(category.label, onClick = { onCategorySelected(category.id) })
                 } else {

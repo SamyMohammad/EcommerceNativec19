@@ -17,8 +17,10 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -75,13 +77,14 @@ internal fun HomeCategoriesGrid(
     onOpenCategories: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val columns = remember(categories) { categories.chunked(2) }
     Row(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = AppDimens.ScreenHorizontal),
     ) {
-        categories.chunked(2).forEachIndexed { columnIndex, column ->
+        columns.forEachIndexed { columnIndex, column ->
             if (columnIndex > 0) Spacer(Modifier.width(column.first().columnGap))
             Column(verticalArrangement = Arrangement.spacedBy(GridGap)) {
                 column.forEachIndexed { index, category ->
@@ -90,7 +93,8 @@ internal fun HomeCategoriesGrid(
                         image = {
                             // A custom photo width stretches the (square) photo like the design does.
                             FigmaCropImage(
-                                category.image,
+                                painterResource(category.image),
+                                contentDescription = null,
                                 crop = if (category.imageWidth != null) FigmaImageCrop() else null,
                                 modifier = Modifier.fillMaxSize(),
                             )
@@ -134,7 +138,7 @@ internal fun HomeProductRow(
                 onFavoriteClick = { onFavoriteClick(product.id) },
                 // Prototype: the "+" add button has no documented behavior (no cart state contract).
                 onAddClick = {},
-                image = { FigmaCropImage(product.image, product.imageCrop, Modifier.fillMaxSize()) },
+                image = { FigmaCropImage(painterResource(product.image), null, product.imageCrop, Modifier.fillMaxSize()) },
                 modifier = Modifier.width(CardWidth).heightIn(min = minCardHeight),
                 size = ProductCardSize.Compact,
                 ratingPosition = ratingPosition,

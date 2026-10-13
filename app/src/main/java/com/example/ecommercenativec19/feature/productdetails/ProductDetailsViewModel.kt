@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- * UI-only state of Product details (favorite, size, color, quantity, carousel page). [initialState] defaults to the
+ * UI-only state of Product details (favorite, size, color, quantity). [initialState] defaults to the
  * design placeholder for [productId]; "Add to cart" has no behavior here beyond the navigation callback.
  */
 class ProductDetailsViewModel(
@@ -27,8 +27,6 @@ class ProductDetailsViewModel(
 
     /** The design shows no limits; the quantity just never drops below 1 so the pill cannot show 0 or negatives. */
     fun onDecrementQuantity() = _uiState.update { it.copy(quantity = (it.quantity - 1).coerceAtLeast(MinQuantity)) }
-
-    fun onImagePageChanged(page: Int) = _uiState.update { it.copy(imagePage = page) }
 
     private companion object {
         const val MinQuantity = 1

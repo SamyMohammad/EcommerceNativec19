@@ -36,7 +36,7 @@ enum class CategoryTileStyle(internal val imageSize: Dp) {
 
 /**
  * Category image with its label underneath (8dp gap), centered. The tile is as wide as its image; long labels wrap
- * to two lines. [image] fills the image area (`Image(contentScale = Crop)` / [FigmaCroppedImage]).
+ * to two lines. [image] fills the image area (`Image(contentScale = Crop)` / [FigmaCropImage]).
  * Clickable (button role) only when [onClick] is non-null.
  *
  * Optional design-placement overrides (the Home frame places a few photos/labels by hand): [imageWidth] is the

@@ -29,16 +29,14 @@ class ProductDetailsViewModelTest {
     }
 
     @Test
-    fun selectionsFavoriteAndPageAreStored() {
+    fun selectionsAndFavoriteAreStored() {
         val vm = viewModel()
         vm.onSizeSelected("38")
         vm.onColorSelected(ProductColor.Blue)
         vm.onToggleFavorite()
-        vm.onImagePageChanged(2)
         val state = vm.uiState.value
         assertEquals("38", state.selectedSize)
         assertEquals(ProductColor.Blue, state.selectedColor)
         assertTrue(state.isFavorite)
-        assertEquals(2, state.imagePage)
     }
 }

@@ -32,7 +32,6 @@ fun ProductDetailsRoute(
         onColorSelected = viewModel::onColorSelected,
         onIncrementQuantity = viewModel::onIncrementQuantity,
         onDecrementQuantity = viewModel::onDecrementQuantity,
-        onImagePageChanged = viewModel::onImagePageChanged,
         modifier = modifier,
     )
 }

@@ -107,6 +107,10 @@ rather than "Home".
 - Debug builds log request and response bodies; release builds log nothing. The `token` and `Authorization`
   headers are redacted so credentials never reach Logcat.
 - `Json { ignoreUnknownKeys = true }` and nullable DTO fields for anything the API does not guarantee.
+- Image loading: Coil 3 (`SingletonImageLoader.Factory` on `EcommerceApp`) fetches through the same Koin-provided
+  `OkHttpClient`, so image requests share the API client's timeouts, logging and connection pool. Screens adopt
+  `AsyncImage` as the API slices bring real image URLs; bundled artwork stays in `drawable-nodpi` as WebP, sized to
+  at most 3x its largest displayed size.
 
 ## Theme
 
@@ -121,7 +125,6 @@ They are static composition locals because they never change at runtime. The tok
 
 Planned, in rough order. Each item is a small reviewed PR.
 
-- **Coil 3 and image performance** (sizing, caching) once products show real images.
 - **Route API per feature**, replacing sample data: products, then cart, wishlist and account.
 - **Authentication** via DataStore token storage and an OkHttp interceptor that adds the `token` header. This is a
   deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart, wishlist

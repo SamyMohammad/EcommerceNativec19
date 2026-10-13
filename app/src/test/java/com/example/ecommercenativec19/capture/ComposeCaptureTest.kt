@@ -23,17 +23,30 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.feature.account.AccountRoute
-import com.example.ecommercenativec19.feature.cart.CartRoute
+import com.example.ecommercenativec19.feature.account.AccountSampleData
+import com.example.ecommercenativec19.feature.account.AccountScreen
+import com.example.ecommercenativec19.feature.account.AccountUiState
+import com.example.ecommercenativec19.feature.cart.CartSampleData
+import com.example.ecommercenativec19.feature.cart.CartScreen
+import com.example.ecommercenativec19.feature.cart.CartUiState
 import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
 import com.example.ecommercenativec19.feature.categories.CategoriesScreen
-import com.example.ecommercenativec19.feature.home.HomeRoute
-import com.example.ecommercenativec19.feature.productdetails.ProductDetailsRoute
-import com.example.ecommercenativec19.feature.productlist.ProductListRoute
-import com.example.ecommercenativec19.feature.signin.SignInRoute
-import com.example.ecommercenativec19.feature.signup.SignUpRoute
+import com.example.ecommercenativec19.feature.home.HomeSampleData
+import com.example.ecommercenativec19.feature.home.HomeScreen
+import com.example.ecommercenativec19.feature.home.HomeUiState
+import com.example.ecommercenativec19.feature.productdetails.ProductDetailsSampleData
+import com.example.ecommercenativec19.feature.productdetails.ProductDetailsScreen
+import com.example.ecommercenativec19.feature.productlist.ProductListSampleData
+import com.example.ecommercenativec19.feature.productlist.ProductListScreen
+import com.example.ecommercenativec19.feature.productlist.ProductListUiState
+import com.example.ecommercenativec19.feature.signin.SignInScreen
+import com.example.ecommercenativec19.feature.signin.SignInUiState
+import com.example.ecommercenativec19.feature.signup.SignUpScreen
+import com.example.ecommercenativec19.feature.signup.SignUpUiState
 import com.example.ecommercenativec19.feature.splash.SplashScreen
-import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
+import com.example.ecommercenativec19.feature.wishlist.WishlistSampleData
+import com.example.ecommercenativec19.feature.wishlist.WishlistScreen
+import com.example.ecommercenativec19.feature.wishlist.WishlistUiState
 import com.example.ecommercenativec19.navigation.AppScaffold
 import com.example.ecommercenativec19.ui.theme.AppTheme
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -103,18 +116,32 @@ class ComposeCaptureTest {
 
     @Composable
     private fun SceneBody(scene: Scene) {
+        // Stateless screens with sample state, not the Routes: Routes resolve ViewModels through Koin, which is not
+        // started in this capture test.
         when (scene) {
             Scene.Splash -> SplashScreen()
-            Scene.SignIn -> SignInRoute(onSignIn = {}, onCreateAccount = {})
-            Scene.SignUp -> SignUpRoute(onSignUp = {})
-            Scene.Home -> HomeRoute(onOpenCart = {}, onOpenCategories = {})
-            // The screen with sample state, not the Route: the Route needs Koin and the network.
+            Scene.SignIn -> SignInScreen(SignInUiState(), {}, {}, {}, {}, {})
+            Scene.SignUp -> SignUpScreen(SignUpUiState(), {}, {}, {}, {}, {}, {})
+            Scene.Home -> HomeScreen(
+                HomeUiState(
+                    categories = HomeSampleData.categories,
+                    applianceProducts = HomeSampleData.applianceProducts,
+                    newArrivalProducts = HomeSampleData.newArrivalProducts,
+                    smartWatchProducts = HomeSampleData.smartWatchProducts,
+                ),
+                {}, {}, {}, {},
+            )
             Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {})
-            Scene.ProductList -> ProductListRoute(onOpenCart = {}, onOpenProduct = {})
-            Scene.Details -> ProductDetailsRoute(productId = "1", onBack = {}, onOpenCart = {}, onAddToCart = {})
-            Scene.Cart -> CartRoute(onBack = {})
-            Scene.Wishlist -> WishlistRoute(onOpenCart = {})
-            Scene.Account -> AccountRoute()
+            Scene.ProductList -> ProductListScreen(ProductListUiState(products = ProductListSampleData.items), {}, {}, {}, {}, {})
+            Scene.Details -> ProductDetailsScreen(
+                ProductDetailsSampleData.forProductId("1"), {}, {}, {}, {}, {}, {}, {}, {},
+            )
+            Scene.Cart -> CartScreen(CartUiState(CartSampleData.items, CartSampleData.TOTAL_PRICE), {}, {}, {}, {}, {}, {}, {})
+            Scene.Wishlist -> WishlistScreen(WishlistUiState(items = WishlistSampleData.items), {}, {}, {}, {})
+            Scene.Account -> AccountScreen(
+                AccountUiState(AccountSampleData.WELCOME_NAME, AccountSampleData.HEADER_EMAIL, AccountSampleData.fields),
+                {}, {}, { _, _ -> },
+            )
         }
     }
 

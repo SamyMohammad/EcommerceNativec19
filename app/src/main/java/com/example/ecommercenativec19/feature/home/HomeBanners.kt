@@ -30,7 +30,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.CoverImage
-import com.example.ecommercenativec19.core.ui.FractionalCropImage
+import com.example.ecommercenativec19.core.ui.FigmaCropImage
+import com.example.ecommercenativec19.core.ui.FigmaImageCrop
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.textLineBox
 import com.example.ecommercenativec19.ui.theme.extendedColors
@@ -126,26 +127,30 @@ internal fun FootwearBanner(modifier: Modifier = Modifier) {
                 .background(MaterialTheme.extendedColors.footwearBanner)
                 .border(1.dp, MaterialTheme.colorScheme.outline, shape),
         ) {
-            FractionalCropImage(
+            FigmaCropImage(
                 painter = painterResource(R.drawable.img_frame16_89c069cc),
                 contentDescription = null,
+                crop = FigmaImageCrop(
+                    widthFraction = 1.0158f,
+                    heightFraction = 1.999f,
+                    offsetXFraction = -0.0019f,
+                    offsetYFraction = -0.5198f,
+                ),
                 modifier = Modifier.align(Alignment.TopEnd).size(width = FootwearArtWidth, height = FootwearHeight),
-                widthFraction = 1.0158f,
-                heightFraction = 1.999f,
-                offsetXFraction = -0.0019f,
-                offsetYFraction = -0.5198f,
             )
-            FractionalCropImage(
+            FigmaCropImage(
                 painter = painterResource(R.drawable.img_unsplash_h60pi_pe_h8iq_b9a6ad77),
                 contentDescription = null,
+                crop = FigmaImageCrop(
+                    widthFraction = 1.5663f,
+                    heightFraction = 1.525f,
+                    offsetXFraction = -0.3719f,
+                    offsetYFraction = -0.2125f,
+                ),
                 modifier = Modifier
                     .offset(x = ShoeX, y = ShoeY)
                     .size(width = ShoeWidth, height = ShoeHeight)
                     .rotate(ShoeRotation),
-                widthFraction = 1.5663f,
-                heightFraction = 1.525f,
-                offsetXFraction = -0.3719f,
-                offsetYFraction = -0.2125f,
             )
             Column(
                 modifier = Modifier

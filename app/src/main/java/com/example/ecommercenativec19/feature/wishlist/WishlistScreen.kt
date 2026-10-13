@@ -25,9 +25,8 @@ import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppButton
 import com.example.ecommercenativec19.core.ui.AppButtonStyle
 import com.example.ecommercenativec19.core.ui.AppDimens
-import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.FavoriteButton
-import com.example.ecommercenativec19.core.ui.FractionalCropImage
+import com.example.ecommercenativec19.core.ui.FigmaCropImage
 import com.example.ecommercenativec19.core.ui.ProductRowCard
 import com.example.ecommercenativec19.core.ui.SearchHeader
 import com.example.ecommercenativec19.core.ui.tokenColor
@@ -95,20 +94,7 @@ private fun WishlistRow(
         variantColor = MaterialTheme.colorScheme.onSurface,
         variantLabel = item.variantLabel,
         image = {
-            val painter = painterResource(item.image)
-            val crop = item.crop
-            if (crop == null) {
-                CoverImage(painter, null, Modifier.fillMaxSize())
-            } else {
-                FractionalCropImage(
-                    painter = painter,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    heightFraction = crop.heightFraction,
-                    offsetXFraction = crop.offsetXFraction,
-                    offsetYFraction = crop.offsetYFraction,
-                )
-            }
+            FigmaCropImage(painterResource(item.image), null, item.crop, Modifier.fillMaxSize())
         },
         // The design places the heart and the button 16dp from the end (the row's corner slot gives 8).
         topEnd = {

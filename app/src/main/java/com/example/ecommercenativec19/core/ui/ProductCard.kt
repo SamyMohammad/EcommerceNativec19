@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -65,7 +66,7 @@ enum class ProductCardRatingPosition { AbovePrice, BelowPrice }
  *
  * Stateless. Strings are passed already formatted (`"EGP 1,200"`, `"2000 EGP"`), [rating] is just the number
  * (`"4.8"`; shown as "Review (4.8)" + star). [image] draws inside the image area (use `Image(contentScale = Crop)`
- * or [FigmaCroppedImage]). The card has no fixed height: pass `Modifier.height(...)` (211 / 235 / 237 in the
+ * or [FigmaCropImage]). The card has no fixed height: pass `Modifier.height(...)` (211 / 235 / 237 in the
  * design) when rows must align; the add button is pinned to the bottom-end corner.
  */
 @Composable
@@ -169,14 +170,29 @@ fun ProductCard(
                 if (ratingPosition == ProductCardRatingPosition.BelowPrice) RatingRow(rating, size)
             }
         }
+        AddButton(onClick = onAddClick, modifier = Modifier.align(Alignment.BottomEnd))
+    }
+}
+
+/**
+ * The 30dp icon keeps its design position (8dp from the card's end / bottom) while the click target is a centered
+ * 48dp square. Compose does not grow the click target of a 30dp node for accessibility, so the box is made 48dp and
+ * shifted by the difference to the inset instead.
+ */
+@Composable
+private fun AddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val outset = (AddButtonTouchSize - AddButtonSize) / 2
+    Box(
+        modifier = modifier
+            .offset(x = outset - AddButtonInset, y = outset - AddButtonInset)
+            .size(AddButtonTouchSize)
+            .clickable(role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
         Image(
             painter = painterResource(R.drawable.ic_icon_plus_circle_633de255),
             contentDescription = stringResource(R.string.core_add_to_cart),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = AddButtonInset, bottom = AddButtonInset)
-                .size(AddButtonSize)
-                .clickable(role = Role.Button, onClick = onAddClick),
+            modifier = Modifier.size(AddButtonSize),
         )
     }
 }
@@ -216,4 +232,5 @@ private val StarSize = 15.dp
 
 /** The 30dp "+" button sits 8dp from the card's end and bottom edges. */
 private val AddButtonSize = 30.dp
+private val AddButtonTouchSize = 48.dp
 private val AddButtonInset = 8.dp

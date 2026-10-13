@@ -2,6 +2,7 @@ package com.example.ecommercenativec19.feature.wishlist
 
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
+import com.example.ecommercenativec19.core.ui.FigmaImageCrop
 import com.example.ecommercenativec19.core.ui.ProductVariantDot
 
 /**
@@ -26,7 +27,7 @@ internal object WishlistSampleData {
             price = "EGP 600",
             oldPrice = "EGP 750",
             image = R.drawable.img_frame66_4cff3886,
-            crop = ImageCrop(heightFraction = 1.284f, offsetXFraction = 0.006f, offsetYFraction = -0.178f),
+            crop = FigmaImageCrop(heightFraction = 1.284f, offsetXFraction = 0.006f, offsetYFraction = -0.178f),
             dot = ProductVariantDot.Amber,
             variantLabel = "Orange color",
         ),
@@ -36,7 +37,7 @@ internal object WishlistSampleData {
             price = "EGP 1,200",
             oldPrice = "EGP 1,500",
             image = R.drawable.img_frame67_70608138,
-            crop = ImageCrop(heightFraction = 1.4159f, offsetXFraction = -0.0056f, offsetYFraction = 0.0124f),
+            crop = FigmaImageCrop(heightFraction = 1.4159f, offsetXFraction = -0.0056f, offsetYFraction = 0.0124f),
             dot = ProductVariantDot.Peach,
             variantLabel = "Gold Watch",
             extraGapBefore = 13.dp,

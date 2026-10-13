@@ -51,7 +51,6 @@ fun ProductDetailsScreen(
     onColorSelected: (ProductColor) -> Unit,
     onIncrementQuantity: () -> Unit,
     onDecrementQuantity: () -> Unit,
-    onImagePageChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier.fillMaxSize()) {
@@ -72,8 +71,6 @@ fun ProductDetailsScreen(
         ) {
             ProductDetailsImageCarousel(
                 images = state.images,
-                currentPage = state.imagePage,
-                onPageChanged = onImagePageChanged,
                 isFavorite = state.isFavorite,
                 onFavoriteClick = onFavoriteClick,
                 modifier = Modifier.padding(horizontal = AppDimens.ScreenHorizontal),

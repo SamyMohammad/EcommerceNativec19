@@ -5,7 +5,7 @@ enum class ProductColor { Black, Red, Blue, Green, Coral }
 
 /**
  * Everything Product details renders. Display texts are already formatted (no price math in the UI); the
- * selection fields ([selectedSize], [selectedColor], [quantity], [isFavorite], [imagePage]) are UI-only state.
+ * selection fields ([selectedSize], [selectedColor], [quantity], [isFavorite]) are UI-only state.
  */
 data class ProductDetailsUiState(
     val productId: String,
@@ -23,5 +23,4 @@ data class ProductDetailsUiState(
     val selectedColor: ProductColor,
     val quantity: Int = 1,
     val isFavorite: Boolean = false,
-    val imagePage: Int = 0,
 )
