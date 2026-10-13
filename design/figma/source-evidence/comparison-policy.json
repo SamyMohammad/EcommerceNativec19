@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "channelTolerance": 16,
+  "maxChangedRatio": 0.03,
+  "ignored": [
+    {
+      "box": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "reason": "Outer Figma frame corner radius 20px; frame rounding is not app content"
+    },
+    {
+      "box": [
+        410,
+        0,
+        20,
+        20
+      ],
+      "reason": "Outer Figma frame corner radius 20px; frame rounding is not app content"
+    },
+    {
+      "box": [
+        0,
+        912,
+        20,
+        20
+      ],
+      "reason": "Outer Figma frame corner radius 20px; frame rounding is not app content"
+    },
+    {
+      "box": [
+        410,
+        912,
+        20,
+        20
+      ],
+      "reason": "Outer Figma frame corner radius 20px; frame rounding is not app content"
+    }
+  ],
+  "critical": []
+}

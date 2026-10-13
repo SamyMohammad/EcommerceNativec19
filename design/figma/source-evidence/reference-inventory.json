@@ -1,0 +1,162 @@
+[
+  {
+    "screen": "splash",
+    "nodeId": "1:2",
+    "referenceHash": "8cef1849ebc16034eae597af010bc8ff5ffb4544d89ce850e5910691d9a702e4",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": false,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "signin",
+    "nodeId": "14:47",
+    "referenceHash": "12076d9b9fcfa5f93e5ed663acb77f8ac10c990b0c247162f1185fb76f89feaa",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "signup",
+    "nodeId": "9:97",
+    "referenceHash": "13554814c7e9dec335758149d9e8260611a0f4c7bc8b70d37897929b1b06fb8c",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "home",
+    "nodeId": "14:116",
+    "referenceHash": "3a87ca9c792568404301c71a26ec8d523302c129df5068fdebb88c7dd7780c1c",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "categories",
+    "nodeId": "601:775",
+    "referenceHash": "bd25002b0c68a8cf3b4a2ebcf23ddba4e347a9d088c8b8b032cd570f58f6b848",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "productlist",
+    "nodeId": "726:650",
+    "referenceHash": "1686485d0e7550ce6e4441f7a77f469f6efe40befb46225d4ca438f0b3c5e9b2",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "details",
+    "nodeId": "620:1083",
+    "referenceHash": "f41adde8e93afd86f4fdb0dcda489a9ee52bdc5ce42fa406808cc68f6bbc47d5",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "cart",
+    "nodeId": "604:890",
+    "referenceHash": "14f9884095d0f5f398d2caf14c463acb5282e4b8e9fcd204d36b4dad58ecfd3c",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "wishlist",
+    "nodeId": "731:1294",
+    "referenceHash": "607228eef009ecc19e94f772fde2b070f07737de182ff6e50ac1861fca7e3ebe",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  },
+  {
+    "screen": "account",
+    "nodeId": "835:523",
+    "referenceHash": "29299159f52239ba680359c37663e384e69938cf674db89c8427ef0bf58e9294",
+    "pixelSize": [
+      430,
+      932
+    ],
+    "logicalSize": [
+      430,
+      932
+    ],
+    "containsText": true,
+    "metaHash": null,
+    "approval": "not_requested_metadata_incomplete"
+  }
+]

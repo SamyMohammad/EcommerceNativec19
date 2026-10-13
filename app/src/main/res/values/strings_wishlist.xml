@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wishlist_add_to_cart">Add to Cart</string>
+    <string name="wishlist_add_to_cart_description">Add %1$s to cart</string>
+    <string name="wishlist_empty">Your wishlist is empty</string>
+</resources>

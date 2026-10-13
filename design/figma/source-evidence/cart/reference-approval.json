@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "kind": "reference",
+  "contentHash": "9afcb2d45cc83a9f62a4192d2e2232d69dbd555363b73fa05a586b3eaefb2402",
+  "owner": "Samy Elmenshawy",
+  "evidence": "Owner approved source target for cart in Claude Code chat 2026-10-12 (authorizes target only, not a visual pass)",
+  "approvedAt": "2026-10-12T19:14:27Z",
+  "modes": [
+    "light"
+  ],
+  "deviations": []
+}

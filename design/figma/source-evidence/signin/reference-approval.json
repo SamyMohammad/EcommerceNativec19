@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "kind": "reference",
+  "contentHash": "0b9365966278157b4550a63ca066520f1301bda7e81747a5f0ca3940c4d3445d",
+  "owner": "Samy Elmenshawy",
+  "evidence": "Owner approved source target for signin in Claude Code chat 2026-10-12 (authorizes target only, not a visual pass)",
+  "approvedAt": "2026-10-12T19:14:27Z",
+  "modes": [
+    "light"
+  ],
+  "deviations": []
+}

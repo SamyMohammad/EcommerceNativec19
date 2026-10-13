@@ -1,0 +1,33 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+.kotlin/
+
+# Generated knowledge-graph cache (personal tooling, not project source)
+/graphify-out/
+
+# Figma workflow internals / account metadata (not needed for build)
+design/figma/source-evidence/.workflow/
+design/figma/source-evidence/reports/
+design/figma/source-evidence/manifest*.json
+design/figma/source-evidence/*.pre-*.json
+design/figma/source-evidence/source-revision-evidence.json
+design/figma/source-evidence/assets/
+design/figma/source-evidence/prepare_audit.py
+design/figma/source-evidence/budget.sqlite3
+
+/.idea/
+.claude/settings.local.json

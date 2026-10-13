@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "kind": "tokens",
+  "contentHash": "b152a50d86a1d2f017a167b0a108a0a6aa72de4150042c7399d91b649a72b89e",
+  "owner": "Samy Elmenshawy",
+  "evidence": "Owner approved in Claude Code chat 2026-10-12: light mode only, Dynamic Color off, palette/typography/Poppins per design/figma/PREIMPLEMENTATION_REVIEW.md; re-approved 2026-10-12 after owner-approved removal of typography.source06 (SF Pro Text, iOS status bar only, no font file, replaced by native Android status bar)",
+  "approvedAt": "2026-10-12T17:17:24Z",
+  "modes": [
+    "light"
+  ],
+  "deviations": [
+    "Android-native status bar instead of iOS status bar (top 44px)"
+  ]
+}

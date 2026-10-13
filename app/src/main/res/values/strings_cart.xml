@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cart_title">Cart</string>
+    <string name="cart_delete_item">Remove %1$s from cart</string>
+    <string name="cart_total_price">Total price</string>
+    <string name="cart_check_out">Check Out</string>
+    <string name="cart_empty">Your cart is empty</string>
+</resources>

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "kind": "reference",
+  "contentHash": "4331ddf082a32bc1b05be7fdb74a2b1ceb273fd69d68ed8aea13b4cd1413de96",
+  "owner": "Samy Elmenshawy",
+  "evidence": "Owner approved source target for splash in Claude Code chat 2026-10-12 (authorizes target only, not a visual pass)",
+  "approvedAt": "2026-10-12T19:14:27Z",
+  "modes": [
+    "light"
+  ],
+  "deviations": []
+}

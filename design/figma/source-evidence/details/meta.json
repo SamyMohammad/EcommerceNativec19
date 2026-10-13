@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "620:1083",
+  "sourceRevision": "2409508187813363894",
+  "logicalSize": [
+    430,
+    932
+  ],
+  "pixelSize": [
+    430,
+    932
+  ],
+  "scale": 1,
+  "locale": "en",
+  "direction": "ltr",
+  "theme": "light",
+  "fontHashes": {
+    "fonts/Poppins-Light.ttf": "650ba57fa99d12ec40c31ccfb680be656be4497fbe14164617d67e32ffe9cd46",
+    "fonts/Poppins-Regular.ttf": "7e65201e9b79159e2300267cc885e16c8dcef2424cdfa09a29bfb0980a94a7ba",
+    "fonts/Poppins-Medium.ttf": "90373e7d838d32468438fc3e152dca0bdb12edcab99ea639f158790b1ba1fd05",
+    "fonts/Poppins-SemiBold.ttf": "d3bf1bdaf0550e83da9ac0b1d1d9fe6db086835a83aa28578e609a394b9a0286"
+  },
+  "containsText": true,
+  "platform": "figma-reference",
+  "renderer": "figma-mcp-get_design_context-screenshot",
+  "textScale": 1,
+  "crop": [
+    0,
+    0,
+    430,
+    932
+  ],
+  "insets": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "animation": "settled",
+  "colorSpace": "srgb"
+}

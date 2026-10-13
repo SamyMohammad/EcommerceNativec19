@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "kind": "policy",
+  "contentHash": "e9be751b675f2925f5c4824e38dbd48fa14d84f919319e911856cdc1d80b1a6a",
+  "owner": "Samy Elmenshawy",
+  "evidence": "Owner approved in Claude Code chat 2026-10-12: proposed policy (tolerance 16, ratio 0.03, four 20px corner ignores)",
+  "approvedAt": "2026-10-12T19:14:27Z",
+  "modes": [],
+  "deviations": []
+}

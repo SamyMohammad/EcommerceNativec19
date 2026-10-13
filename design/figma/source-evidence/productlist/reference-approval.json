@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "kind": "reference",
+  "contentHash": "cafa6860037d1ea55f5123fa5a653634da68d011a99ec4246331a69b22f799be",
+  "owner": "Samy Elmenshawy",
+  "evidence": "Owner approved source target for productlist in Claude Code chat 2026-10-12 (authorizes target only, not a visual pass)",
+  "approvedAt": "2026-10-12T19:14:27Z",
+  "modes": [
+    "light"
+  ],
+  "deviations": []
+}

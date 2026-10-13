@@ -1,0 +1,532 @@
+const imgRectangle = "../assets/358098ce-2d9b-45d0-874c-7d0caeab2377.svg";
+const imgCombinedShape = "../assets/df871c14-298a-4045-a3e6-f0b64fa2a448.svg";
+const imgWiFi = "../assets/9a0476db-1c5d-4cef-8ce4-b03cda787d44.svg";
+const imgUnsplashPdxA82Obo = "../assets/dedce9f5-6a2f-4480-9ff0-a5ff451470fe.png";
+const imgEllipse16 = "../assets/37eb25ff-6b09-4aee-b36c-ed6d827da411.png";
+const imgEllipse17 = "../assets/185ed824-5389-4a29-8d66-dd9ab93c815d.png";
+const imgEllipse14 = "../assets/74a31094-d67b-44c2-a652-ffd573ec8a3f.png";
+const imgEllipse15 = "../assets/bba3a547-69a6-4f58-a7f8-51b2a403741d.png";
+const imgEllipse18 = "../assets/6ffae414-c1d2-464b-9f1a-c60b0433a501.png";
+const imgEllipse19 = "../assets/89f52566-9c7d-4124-b227-694460ffa133.png";
+const imgEllipse20 = "../assets/11cc609a-548c-43bf-b5be-22db7a47bade.png";
+const imgEllipse21 = "../assets/712ed5ff-651c-4835-9027-5836d1204061.png";
+const imgFrame9 = "../assets/2ef89760-8b2b-4f9a-9bbc-8834bacde17e.png";
+const imgFrame10 = "../assets/e9353cb3-6776-4e9b-9986-885c517b7d5f.png";
+const imgFrame11 = "../assets/5082f499-02d5-4b9d-a72e-818de082293d.png";
+const imgFrame12 = "../assets/d949f599-a780-4bad-b096-38c3dfd3ece7.png";
+const imgFrame13 = "../assets/d6d4d7c2-0b14-4af9-a42c-7463c4c52e79.png";
+const imgFrame14 = "../assets/513d4efb-f7ff-4464-83cc-778175498e9e.png";
+const imgFrame16 = "../assets/89c069cc-73ec-452c-bda7-29e4f4dfaa16.png";
+const imgUnsplashH60PiPeH8Iq = "../assets/b9a6ad77-8168-4637-adaa-ffb4daa5b3e9.png";
+const imgFrame15 = "../assets/18681980-0176-44d4-9622-cc93cba4294a.png";
+const imgFrame17 = "../assets/e0109d22-bcaf-4a09-a6d6-082799feaec5.png";
+const imgFrame18 = "../assets/eb31deae-4497-4d1f-a4bc-92214942fb3a.png";
+const imgGroup9 = "../assets/165d5c5e-84d8-4e3e-97d4-c7e4a4ce9589.svg";
+const imgGroup17 = "../assets/515793da-dafc-4fdc-b52c-f4ef3c829251.svg";
+const imgIconPlusCircle = "../assets/633de255-4553-44fe-a0ee-2fb93f43a37f.svg";
+const imgEmojiWhiteMediumStar = "../assets/8bdf3511-6e48-4aae-96ec-893f18fdff77.svg";
+const imgIconPlusCircle1 = "../assets/b5b50b38-cad4-45cf-bfa3-4cf92ada7e81.svg";
+const imgIconBrandNike = "../assets/10c0541a-d89e-4e24-b356-79e6a78727bf.svg";
+const imgIconAdidas = "../assets/1e46bbca-65a2-4b55-890e-c647f8ba881c.svg";
+const imgLine1 = "../assets/b2e0dba5-bc2c-4c00-9ef2-a3aea26585b3.svg";
+const imgGroup5 = "../assets/7dc1d110-e669-4a63-8913-0b954a657455.svg";
+const imgIconSearch = "../assets/e2303111-c1d5-471b-a0e7-0d1047e27c1c.svg";
+const imgIconShoppingCart = "../assets/26995765-43d7-43da-bd8c-652c6668b8af.svg";
+const imgEllipse39 = "../assets/5e07960d-fdbd-4876-93c7-efcd66566a8d.svg";
+const imgHeart33 = "../assets/e407d520-6210-4a94-96bf-e43d3136a658.svg";
+const imgCategory13 = "../assets/bc1cd3a4-292b-4273-bfb5-33ff9d3d6437.svg";
+const imgHome13 = "../assets/9ab9e3b3-44a2-4b75-bbd3-41fc38df4460.svg";
+const imgUser13 = "../assets/dcfd1af0-aece-44bc-81b2-97232668ba79.svg";
+
+function StatusBar({ className }: { className?: string }) {
+  return (
+    <div className={className || "bg-white h-[44px] relative rounded-[20px] w-[428px]"} data-node-id="17:156" data-name="Status Bar">
+      <div className="-translate-y-1/2 absolute contents left-[19.89px] top-[calc(50%+1px)]" data-node-id="17:157" data-name="Action">
+        <p className="-translate-x-1/2 [word-break:break-word] absolute font-['SF_Pro_Text:Semibold'] leading-[18px] left-[46.89px] not-italic text-[15px] text-black text-center top-[calc(50%-8px)] tracking-[-0.165px] w-[54px]" data-node-id="17:158">
+          9:41
+        </p>
+      </div>
+      <div className="-translate-y-1/2 absolute contents right-[16px] top-[calc(50%-0.25px)]" data-node-id="17:159" data-name="Container">
+        <div className="-translate-y-1/2 absolute contents right-[16px] top-[calc(50%-0.25px)]" data-node-id="17:160" data-name="Battery">
+          <div className="-translate-y-1/2 absolute h-[11.5px] right-[16px] top-[calc(50%-0.25px)] w-[24.5px]" data-node-id="17:161" data-name="Rectangle">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle} />
+          </div>
+          <div className="-translate-y-1/2 absolute bg-black h-[7.667px] right-[20.5px] rounded-[1.6px] top-[calc(50%-0.25px)] w-[18px]" data-node-id="17:166" data-name="Rectangle" />
+        </div>
+        <div className="-translate-y-1/2 absolute h-[10.7px] right-[65.9px] top-[calc(50%-0.21px)] w-[17.1px]" data-node-id="17:167" data-name="Combined Shape">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCombinedShape} />
+        </div>
+        <div className="-translate-y-1/2 absolute h-[11.057px] right-[45.5px] top-[calc(50%-0.23px)] w-[15.4px]" data-node-id="17:172" data-name="Wi-Fi">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgWiFi} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <div className="bg-white overflow-clip relative rounded-[20px] size-full" data-node-id="14:116" data-name="home">
+      <StatusBar className="absolute bg-white h-[44px] left-px right-px rounded-[20px] top-0" />
+      <div className="absolute h-[717px] left-[16px] top-[156px] w-[414px]" data-node-id="816:449">
+        <div className="absolute h-[200px] left-0 top-0 w-[398px]" data-node-id="34:127">
+          <div className="absolute inset-0 rounded-[15px]" data-node-id="I34:127;28:8" data-name="unsplash:PDX_a_82obo">
+            <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[15px] size-full" src={imgUnsplashPdxA82Obo} />
+          </div>
+          <div className="[word-break:break-word] absolute font-['Poppins:Regular'] inset-[42.5%_61.81%_39.5%_4.02%] leading-[0] not-italic text-[#004182] text-[14px] tracking-[-0.165px] whitespace-pre-wrap" data-node-id="I34:127;32:19">
+            <p className="leading-[18px] mb-0">{`For all Headphones `}</p>
+            <p className="leading-[18px]">{`& AirPods`}</p>
+          </div>
+          <p className="[word-break:break-word] absolute font-['Poppins:Medium'] inset-[16.5%_80.07%_74.5%_4.02%] leading-[18px] not-italic text-[#004182] text-[22px] text-center tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="I34:127;31:17">
+            UP TO
+          </p>
+          <p className="[word-break:break-word] absolute font-['Poppins:SemiBold'] inset-[29.5%_70.47%_61.5%_4.02%] leading-[0] not-italic text-[#004182] text-[0px] text-center tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="I34:127;31:18">
+            <span className="font-['Poppins:Medium'] leading-[18px] text-[30px]">25%</span>
+            <span className="font-['Poppins:Medium'] leading-[18px] text-[20px]">{` OFF `}</span>
+          </p>
+          <div className="absolute bg-[#004182] inset-[64.5%_67.59%_16.5%_4.02%] rounded-[10px]" data-node-id="I34:127;32:21" />
+          <p className="[word-break:break-word] absolute font-['Poppins:Regular'] inset-[69.5%_73.12%_21.5%_9.55%] leading-[18px] not-italic text-[14px] text-center text-white tracking-[-0.165px]" data-node-id="I34:127;32:22">
+            Shop Now
+          </p>
+          <div className="absolute contents inset-[91%_44.22%_4%_44.22%]" data-node-id="I34:127;34:9">
+            <div className="absolute inset-[91%_44.22%_4%_44.22%]" data-node-id="I34:127;34:10">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup9} />
+            </div>
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-0 not-italic text-[#06004f] text-[18px] top-[224px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="38:139">
+          Categories
+        </p>
+        <div className="absolute h-[144px] left-0 top-[258px] w-[412px]" data-node-id="66:118">
+          <div className="absolute left-[232px] size-[100px] top-0" data-node-id="57:156">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse16} width="100" />
+          </div>
+          <div className="absolute left-[348px] size-[100px] top-0" data-node-id="57:157">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse17} width="100" />
+          </div>
+          <a className="absolute contents cursor-pointer left-0 top-0" data-node-id="816:450">
+            <div className="absolute left-0 size-[100px] top-0" data-node-id="57:154">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse14} width="100" />
+            </div>
+            <div className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[0] left-[49.5px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="57:158">
+              <p className="leading-[18px] mb-0">Women’s</p>
+              <p className="leading-[18px]">fashion</p>
+            </div>
+          </a>
+          <a className="absolute contents cursor-pointer left-[116px] top-0" data-node-id="816:451">
+            <div className="absolute left-[116px] size-[100px] top-0" data-node-id="57:155">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse15} width="100" />
+            </div>
+            <div className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[0] left-[165.5px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="57:159">
+              <p className="leading-[18px] mb-0">men’s</p>
+              <p className="leading-[18px]">fashion</p>
+            </div>
+          </a>
+          <div className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[0] left-[286px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="57:160">
+            <p className="leading-[18px] mb-0">{`Laptops &`}</p>
+            <p className="leading-[18px]">Electronics</p>
+          </div>
+          <div className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[0] left-[405.5px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="57:161">
+            <p className="leading-[18px] mb-0">{`Baby &`}</p>
+            <p className="leading-[18px]">Toys</p>
+          </div>
+        </div>
+        <div className="absolute h-[126px] left-0 top-[418px] w-[412px]" data-node-id="533:348">
+          <div className="absolute left-0 size-[100px] top-0" data-node-id="533:349">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse18} width="100" />
+          </div>
+          <div className="absolute left-[116px] size-[100px] top-0" data-node-id="533:350">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse19} width="100" />
+          </div>
+          <div className="absolute h-[100px] left-[236px] top-0 w-[96px]" data-node-id="533:351">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse20} width="96" />
+          </div>
+          <div className="absolute h-[100px] left-[348px] top-0 w-[91px]" data-node-id="533:352">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" height="100" src={imgEllipse21} width="91" />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[49px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:353">
+            Beauty
+          </p>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[165.5px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:354">
+            Headphones
+          </p>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[286.5px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:355">
+            Skincare
+          </p>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[405.5px] not-italic text-[#06004f] text-[14px] text-center top-[108px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:356">
+            Cameras
+          </p>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[353px] not-italic text-[#06004f] text-[12px] top-[224px] tracking-[-0.165px] whitespace-nowrap" data-node-id="57:162">
+          view all
+        </p>
+        <p className="[word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-0 not-italic text-[#06004f] text-[18px] top-[568px] tracking-[-0.165px] whitespace-nowrap" data-node-id="58:18">
+          Home Appliance
+        </p>
+        <div className="absolute h-[211px] left-0 top-[602px] w-[412px]" data-node-id="66:119">
+          <div className="absolute bg-white border border-[rgba(0,65,130,0.3)] border-solid h-[211px] left-0 overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="60:32">
+            <div className="absolute h-[122px] left-[-1px] overflow-clip rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="58:23">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-tl-[15px] rounded-tr-[15px] size-full" src={imgFrame9} />
+              <button className="absolute block cursor-pointer left-[134px] size-[16px] top-[8px]" data-node-id="727:905">
+                <div className="absolute inset-[-31.25%_-62.5%_-93.75%_-62.5%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup17} />
+                </div>
+              </button>
+            </div>
+            <p className="[word-break:break-word] absolute capitalize font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="60:33">
+              Washing Machine
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[181px] tracking-[-0.165px] whitespace-nowrap" data-node-id="60:45">
+              EGP 9000
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[155px] tracking-[-0.165px] whitespace-nowrap" data-node-id="60:36">
+              Review (4.8)
+            </p>
+            <div className="absolute inset-[calc(81.99%+0.64px)_calc(5.06%-0.9px)_calc(3.79%-0.92px)_calc(75.95%+0.52px)]" data-node-id="60:61" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle} />
+            </div>
+            <div className="absolute inset-[calc(73.93%+0.48px)_calc(31.01%-0.38px)_calc(18.96%-0.62px)_calc(59.49%+0.19px)]" data-node-id="60:41" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+          </div>
+          <div className="absolute border border-[rgba(0,65,130,0.3)] border-solid h-[211px] left-[348px] overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="60:80">
+            <div className="absolute h-[122px] left-[-1px] rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="60:28">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-tl-[15px] rounded-tr-[15px]">
+                <img alt="" className="absolute h-[181.39%] left-[0.4%] max-w-none top-[-32.42%] w-full" src={imgFrame10} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="60:81">
+              Steam Iron
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[155px] tracking-[-0.165px] whitespace-nowrap" data-node-id="60:82">
+              Review (4.8)
+            </p>
+            <div className="absolute inset-[calc(75.36%+0.51px)_calc(31.65%-0.37px)_calc(17.54%-0.65px)_calc(58.86%+0.18px)]" data-node-id="60:73" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[181px] tracking-[-0.165px] whitespace-nowrap" data-node-id="60:83">
+              EGP 2000
+            </p>
+            <div className="absolute inset-[calc(81.99%+0.64px)_calc(5.06%-0.9px)_calc(3.79%-0.92px)_calc(75.95%+0.52px)]" data-node-id="60:84" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle1} />
+            </div>
+          </div>
+          <div className="absolute border border-[rgba(0,65,130,0.3)] border-solid h-[211px] left-[174px] overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="60:62">
+            <div className="absolute h-[122px] left-[-1px] overflow-clip rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="60:29">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-tl-[15px] rounded-tr-[15px] size-full" src={imgFrame11} />
+              <button className="absolute block cursor-pointer left-[134px] size-[16px] top-[8px]" data-node-id="727:909">
+                <div className="absolute inset-[-31.25%_-62.5%_-93.75%_-62.5%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup17} />
+                </div>
+              </button>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[14px] top-[128px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="60:63">
+              New Cooker
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[154px] tracking-[-0.165px] whitespace-nowrap" data-node-id="60:64">
+              Review (4.7)
+            </p>
+            <div className="absolute inset-[calc(73.46%+0.47px)_calc(32.28%-0.35px)_calc(19.43%-0.61px)_calc(58.23%+0.16px)]" data-node-id="60:65" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[180px] tracking-[-0.165px] whitespace-nowrap" data-node-id="60:77">
+              EGP 8000
+            </p>
+            <div className="absolute inset-[calc(81.99%+0.64px)_calc(5.06%-0.9px)_calc(3.79%-0.92px)_calc(75.95%+0.52px)]" data-node-id="60:78" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle1} />
+            </div>
+          </div>
+        </div>
+        <div className="absolute h-[211px] left-0 top-[1005px] w-[414px]" data-node-id="72:96">
+          <div className="absolute bg-white border border-[rgba(0,65,130,0.3)] border-solid h-[211px] left-0 overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="72:23">
+            <div className="absolute h-[122px] left-[-1px] overflow-clip rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="72:24">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-tl-[15px] rounded-tr-[15px] size-full" src={imgFrame12} />
+              <button className="absolute block cursor-pointer left-[134px] size-[16px] top-[8px]" data-node-id="727:917">
+                <div className="absolute inset-[-31.25%_-62.5%_-93.75%_-62.5%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup17} />
+                </div>
+              </button>
+            </div>
+            <p className="[word-break:break-word] absolute capitalize font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="72:25">
+              Makeup Palleted
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[181px] tracking-[-0.165px] whitespace-nowrap" data-node-id="72:26">
+              EGP 3000
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[155px] tracking-[-0.165px] whitespace-nowrap" data-node-id="72:27">
+              Review (4.8)
+            </p>
+            <div className="absolute inset-[calc(81.99%+0.64px)_calc(5.06%-0.9px)_calc(3.79%-0.92px)_calc(75.95%+0.52px)]" data-node-id="72:28" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle} />
+            </div>
+            <div className="absolute inset-[calc(73.93%+0.48px)_calc(31.01%-0.38px)_calc(18.96%-0.62px)_calc(59.49%+0.19px)]" data-node-id="72:30" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+          </div>
+          <div className="absolute bg-white border border-[rgba(0,65,130,0.3)] border-solid h-[211px] left-[174px] overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="72:74">
+            <div className="absolute h-[122px] left-[-1px] overflow-clip rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="72:75">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-tl-[15px] rounded-tr-[15px] size-full" src={imgFrame13} />
+              <button className="absolute block cursor-pointer left-[134px] size-[16px] top-[8px]" data-node-id="727:913">
+                <div className="absolute inset-[-31.25%_-62.5%_-93.75%_-62.5%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup17} />
+                </div>
+              </button>
+            </div>
+            <p className="[word-break:break-word] absolute capitalize font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="72:76">
+              Makeup Brushes
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[181px] tracking-[-0.165px] whitespace-nowrap" data-node-id="72:77">
+              EGP 1000
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[155px] tracking-[-0.165px] whitespace-nowrap" data-node-id="72:78">
+              Review (4.8)
+            </p>
+            <div className="absolute inset-[calc(81.99%+0.64px)_calc(5.06%-0.9px)_calc(3.79%-0.92px)_calc(75.95%+0.52px)]" data-node-id="72:79" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle} />
+            </div>
+            <div className="absolute inset-[calc(73.93%+0.48px)_calc(31.01%-0.38px)_calc(18.96%-0.62px)_calc(59.49%+0.19px)]" data-node-id="72:81" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+          </div>
+          <div className="absolute bg-white border border-[rgba(0,65,130,0.3)] border-solid h-[211px] left-[348px] overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="72:85">
+            <div className="absolute h-[122px] left-[-1px] rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="72:86">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-tl-[15px] rounded-tr-[15px]">
+                <img alt="" className="absolute h-[161.89%] left-0 max-w-none top-[0.82%] w-full" src={imgFrame14} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] absolute capitalize font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="72:87">
+              Red Rouge
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[181px] tracking-[-0.165px] whitespace-nowrap" data-node-id="72:88">
+              EGP 200
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[155px] tracking-[-0.165px] whitespace-nowrap" data-node-id="72:89">
+              Review (4.8)
+            </p>
+            <div className="absolute inset-[calc(81.99%+0.64px)_calc(5.06%-0.9px)_calc(3.79%-0.92px)_calc(75.95%+0.52px)]" data-node-id="72:90" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle} />
+            </div>
+            <div className="absolute inset-[calc(73.93%+0.48px)_calc(31.01%-0.38px)_calc(18.96%-0.62px)_calc(59.49%+0.19px)]" data-node-id="72:92" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-0 not-italic text-[#06004f] text-[18px] top-[971px] tracking-[-0.165px] whitespace-nowrap" data-node-id="60:100">
+          New Arrival
+        </p>
+        <div className="absolute bg-[#84bfe1] border border-[rgba(0,65,130,0.3)] border-solid h-[110px] left-0 overflow-clip rounded-[15px] top-[837px] w-[397px]" data-node-id="65:114">
+          <div className="absolute h-[110px] left-[253px] rounded-[15px] top-[-1px] w-[143px]" data-node-id="64:101">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[15px]">
+              <img alt="" className="absolute h-[199.9%] left-[-0.19%] max-w-none top-[-51.98%] w-[101.58%]" src={imgFrame16} />
+            </div>
+          </div>
+          <div className="absolute inset-[calc(19.1%-0.62px)_calc(87.91%+0.76px)_calc(71.81%+0.44px)_calc(6.05%-0.88px)]" data-node-id="64:111" data-name="🦆 icon 'brand nike'">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconBrandNike} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Poppins:Medium'] leading-[22px] left-[23px] not-italic text-[#06004f] text-[20px] top-[68px] tracking-[-0.165px] w-[130px]" data-node-id="65:115">
+            up to 50% off
+          </p>
+          <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[23px] not-italic text-[#06004f] text-[14px] top-[44px] tracking-[-0.165px] whitespace-nowrap" data-node-id="65:117">
+            FOOTWEAR
+          </p>
+          <div className="absolute flex h-[150.324px] items-center justify-center left-[140.85px] top-[-14.37px] w-[139.585px]" data-node-id="64:113">
+            <div className="flex-none rotate-[-28.71deg]">
+              <div className="h-[120.321px] relative w-[93.249px]" data-name="unsplash:H60PIPeH8IQ">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  <img alt="" className="absolute h-[152.5%] left-[-37.19%] max-w-none top-[-21.25%] w-[156.63%]" src={imgUnsplashH60PiPeH8Iq} />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="absolute inset-[calc(19.09%-0.62px)_calc(80.86%+0.62px)_calc(71.82%+0.44px)_calc(13.1%-0.74px)]" data-node-id="64:108" data-name="🦆 icon 'adidas'">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconAdidas} />
+          </div>
+        </div>
+        <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Medium'] leading-[18px] left-[59px] not-italic text-[#06004f] text-[18px] text-center top-[1240px] tracking-[-0.165px] whitespace-nowrap" data-node-id="526:260">
+          Smart Watch
+        </p>
+        <div className="absolute h-[235px] left-0 top-[1274px] w-[414px]" data-node-id="597:650">
+          <div className="absolute bg-white border border-[rgba(0,65,130,0.3)] border-solid h-[235px] left-0 overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="526:262">
+            <div className="absolute h-[122px] left-[-1px] overflow-clip rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="526:263">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-tl-[15px] rounded-tr-[15px] size-full" src={imgFrame15} />
+              <button className="absolute block cursor-pointer left-[134px] size-[16px] top-[8px]" data-node-id="727:921">
+                <div className="absolute inset-[-31.25%_-62.5%_-93.75%_-62.5%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup17} />
+                </div>
+              </button>
+            </div>
+            <div className="[word-break:break-word] absolute capitalize font-['Poppins:Regular'] leading-[0] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" data-node-id="526:264">
+              <p className="leading-[18px] mb-0" dir="auto">
+                Xiaomi Redmi
+              </p>
+              <p className="leading-[18px]" dir="auto">
+                Watch 2 Lite 5ATM ....
+              </p>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[173px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="526:265">
+              EGP 1,800
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[78px] not-italic text-[11px] text-[rgba(0,65,130,0.6)] top-[174px] tracking-[-0.165px] whitespace-nowrap" data-node-id="529:295">
+              2000 EGP
+            </p>
+            <div className="absolute inset-[calc(83.83%+0.68px)_calc(5.06%-0.9px)_calc(3.4%-0.93px)_calc(75.95%+0.52px)]" data-node-id="526:267" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle} />
+            </div>
+            <div className="absolute h-0 left-[79px] top-[184px] w-[49px]" data-node-id="529:297">
+              <div className="absolute inset-[-1px_0_0_0]">
+                <img alt="" className="block max-w-none size-full" src={imgLine1} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[56px] not-italic text-[#06004f] text-[12px] top-[199px] tracking-[-0.165px] whitespace-nowrap" data-node-id="529:298">
+              (4.3)
+            </p>
+            <div className="absolute inset-[calc(85.53%+0.71px)_calc(32.91%-0.34px)_calc(8.09%-0.84px)_calc(57.59%+0.15px)]" data-node-id="529:299" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[199px] tracking-[-0.165px] whitespace-nowrap" data-node-id="529:303">
+              Review
+            </p>
+          </div>
+          <div className="absolute bg-white border border-[rgba(0,65,130,0.3)] border-solid h-[235px] left-[174px] overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="529:319">
+            <div className="absolute h-[122px] left-[-1px] overflow-clip rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="529:320">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-tl-[15px] rounded-tr-[15px]">
+                <img alt="" className="absolute h-[127.89%] left-0 max-w-none top-[-7.32%] w-full" src={imgFrame17} />
+              </div>
+              <button className="absolute block cursor-pointer left-[134px] size-[16px] top-[8px]" data-node-id="727:925">
+                <div className="absolute inset-[-31.25%_-62.5%_-93.75%_-62.5%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup17} />
+                </div>
+              </button>
+            </div>
+            <div className="[word-break:break-word] absolute capitalize font-['Poppins:Regular'] leading-[0] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" data-node-id="529:321">
+              <p className="leading-[18px] mb-0" dir="auto">
+                Xiaomi Redmi
+              </p>
+              <p className="leading-[18px]" dir="auto">
+                Watch 2 Lite 5ATM ....
+              </p>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[173px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="529:322">
+              EGP 1,500
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[78px] not-italic text-[11px] text-[rgba(0,65,130,0.6)] top-[173px] tracking-[-0.165px] whitespace-nowrap" data-node-id="529:323">
+              2000 EGP
+            </p>
+            <div className="absolute inset-[calc(83.83%+0.68px)_calc(5.06%-0.9px)_calc(3.4%-0.93px)_calc(75.95%+0.52px)]" data-node-id="529:324" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle} />
+            </div>
+            <div className="absolute h-0 left-[79px] top-[184px] w-[49px]" data-node-id="529:326">
+              <div className="absolute inset-[-1px_0_0_0]">
+                <img alt="" className="block max-w-none size-full" src={imgLine1} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[56px] not-italic text-[#06004f] text-[12px] top-[199px] tracking-[-0.165px] whitespace-nowrap" data-node-id="529:327">
+              (4.8)
+            </p>
+            <div className="absolute inset-[calc(85.53%+0.71px)_calc(32.91%-0.34px)_calc(8.09%-0.84px)_calc(57.59%+0.15px)]" data-node-id="529:328" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[199px] tracking-[-0.165px] whitespace-nowrap" data-node-id="529:332">
+              Review
+            </p>
+          </div>
+          <div className="absolute bg-white border border-[rgba(0,65,130,0.3)] border-solid h-[235px] left-[348px] overflow-clip rounded-[15px] top-0 w-[158px]" data-node-id="533:333">
+            <div className="absolute h-[122px] left-[-1px] rounded-tl-[15px] rounded-tr-[15px] top-[-1px] w-[158px]" data-node-id="533:334">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-tl-[15px] rounded-tr-[15px] size-full" src={imgFrame18} />
+            </div>
+            <div className="[word-break:break-word] absolute capitalize font-['Poppins:Regular'] leading-[0] left-[7px] not-italic text-[#06004f] text-[14px] top-[129px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:335">
+              <p className="leading-[18px] mb-0" dir="auto">
+                Xiaomi Redmi
+              </p>
+              <p className="leading-[18px]" dir="auto">
+                Watch 2 Lite 5ATM ....
+              </p>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[173px] tracking-[-0.165px] whitespace-nowrap" dir="auto" data-node-id="533:336">
+              EGP 1000
+            </p>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[78px] not-italic text-[11px] text-[rgba(0,65,130,0.6)] top-[174px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:337">
+              2000 EGP
+            </p>
+            <div className="absolute inset-[calc(83.83%+0.68px)_calc(5.06%-0.9px)_calc(3.4%-0.93px)_calc(75.95%+0.52px)]" data-node-id="533:338" data-name="🦆 icon 'plus circle'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlusCircle} />
+            </div>
+            <div className="absolute h-0 left-[79px] top-[184px] w-[49px]" data-node-id="533:340">
+              <div className="absolute inset-[-1px_0_0_0]">
+                <img alt="" className="block max-w-none size-full" src={imgLine1} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[56px] not-italic text-[#06004f] text-[12px] top-[199px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:341">
+              (4.3)
+            </p>
+            <div className="absolute inset-[calc(85.53%+0.71px)_calc(32.91%-0.34px)_calc(8.09%-0.84px)_calc(57.59%+0.15px)]" data-node-id="533:342" data-name="🦆 emoji 'white medium star'">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEmojiWhiteMediumStar} />
+            </div>
+            <p className="[word-break:break-word] absolute font-['Poppins:Regular'] leading-[18px] left-[7px] not-italic text-[#06004f] text-[12px] top-[199px] tracking-[-0.165px] whitespace-nowrap" data-node-id="533:346">
+              Review
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="absolute h-[22px] left-[17px] top-[50px] w-[66px]" data-node-id="14:145">
+        <div className="absolute inset-[-3.41%_-1.14%_-5.64%_-1.14%]">
+          <img alt="" className="block max-w-none size-full" src={imgGroup5} />
+        </div>
+      </div>
+      <div className="absolute bg-[rgba(255,255,255,0.7)] border border-[#004182] border-solid h-[50px] left-[17px] overflow-clip rounded-[25px] top-[90px] w-[348px]" data-node-id="18:188">
+        <div className="absolute inset-[calc(26%-0.48px)_calc(86.19%+0.72px)_calc(26%-0.48px)_calc(6.92%-0.86px)]" data-node-id="7:56" data-name="🦆 icon 'search'">
+          <div className="absolute inset-[-3.13%]">
+            <img alt="" className="block max-w-none size-full" src={imgIconSearch} />
+          </div>
+        </div>
+        <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Poppins:Light'] leading-[18px] left-[137px] not-italic text-[14px] text-[rgba(6,0,79,0.6)] text-center top-[15px] tracking-[-0.165px] whitespace-nowrap" data-node-id="18:189">
+          what do you search for?
+        </p>
+      </div>
+      <a className="absolute block cursor-pointer left-[calc(66.67%+102.33px)] size-[24px] top-[103px]" data-node-id="620:1044" data-name="🦆 icon 'shopping cart'">
+        <div className="absolute inset-[-4.17%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconShoppingCart} />
+        </div>
+      </a>
+      <div className="absolute bg-[#004182] h-[56px] left-0 overflow-clip rounded-[15px] top-[876px] w-[430px]" data-node-id="1003:404">
+        <div className="absolute left-[54px] size-[40px] top-[8px]" data-node-id="I1003:404;964:520">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse39} />
+        </div>
+        <a className="absolute block cursor-pointer left-[242px] size-[40px] top-[8px]" data-node-id="I1003:404;964:467">
+          <div className="absolute left-[8px] size-[24px] top-[8px]" data-node-id="I1003:404;964:467;769:622" data-name="heart (3) 3">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHeart33} />
+          </div>
+        </a>
+        <a className="absolute block cursor-pointer left-[148px] size-[40px] top-[8px]" data-node-id="I1003:404;964:468">
+          <div className="absolute inset-[20%]" data-node-id="I1003:404;964:468;769:611" data-name="category (1) 3">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCategory13} />
+          </div>
+        </a>
+        <div className="absolute left-[54px] size-[40px] top-[8px]" data-node-id="I1003:404;964:469">
+          <div className="absolute left-[8px] size-[24px] top-[8px]" data-node-id="I1003:404;964:469;769:590" data-name="home (1) 3">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHome13} />
+          </div>
+        </div>
+        <a className="absolute block cursor-pointer left-[335px] size-[40px] top-[8px]" data-node-id="I1003:404;964:470">
+          <div className="absolute left-[8px] size-[24px] top-[8px]" data-node-id="I1003:404;964:470;769:633" data-name="user (1) 3">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgUser13} />
+          </div>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+These styles are contained in the design: header 1: Font(family: "Poppins", style: Medium, size: 18, weight: 500, lineHeight: 18, letterSpacing: -0.16500000655651093), general text: Font(family: "Poppins", style: Regular, size: 14, weight: 400, lineHeight: 18, letterSpacing: -0.16500000655651093), text color: #06004F, white: #FFFFFF, small text: Font(family: "Poppins", style: Regular, size: 12, weight: 400, lineHeight: 18, letterSpacing: -0.16500000655651093), main color: #004182, strok color: #004182, old price: Font(family: "Poppins", style: Regular, size: 11, weight: 400, lineHeight: 18, letterSpacing: -0.16500000655651093), description color: #06004F.
+
+Images and SVGs will be stored as constants, e.g. const image = '../assets/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

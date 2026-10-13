@@ -1,0 +1,21 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "const img24151328542545920446362786228006272036394703N1 = \"../assets/91fa108e-edf7-4dc0-9f62-0173659ee0cf.png\";\nconst imgEllipse6 = \"../assets/376b524d-49f0-4dcd-9762-100ac443c143.svg\";\n\nexport default function SplashScreen() {\n  return (\n    <div className=\"bg-[#004182] overflow-clip relative rounded-[20px] size-full\" data-node-id=\"1:2\" data-name=\"Splash Screen\">\n      <div className=\"absolute h-[165px] left-[17px] top-[383px] w-[396px]\" data-node-id=\"1:6\" data-name=\"241513285_4254592044636278_6228006272036394703_n 1\">\n        <div className=\"absolute inset-0 overflow-hidden pointer-events-none\">\n          <img alt=\"\" className=\"absolute h-[240%] left-0 max-w-none top-[-66.06%] w-full\" src={img24151328542545920446362786228006272036394703N1} />\n        </div>\n      </div>\n      <div className=\"absolute h-[457px] left-0 top-[-223px] w-[430px]\" data-node-id=\"12:2\">\n        <div className=\"absolute inset-[-32.82%_-34.88%]\">\n          <img alt=\"\" className=\"block max-w-none size-full\" src={imgEllipse6} />\n        </div>\n      </div>\n      <div className=\"absolute h-[457px] left-0 top-[708px] w-[430px]\" data-node-id=\"58:27\">\n        <div className=\"absolute inset-[-32.82%_-34.88%]\">\n          <img alt=\"\" className=\"block max-w-none size-full\" src={imgEllipse6} />\n        </div>\n      </div>\n    </div>\n  );\n}"
+    },
+    {
+      "type": "text",
+      "text": "SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.\n1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens\n2. Convert React syntax to the target framework/library\n3. Transform all Tailwind classes to the target styling system while preserving exact visual design\n4. Follow the project's existing patterns and conventions\nDO NOT install any Tailwind as a dependency unless the user instructs you to do so.\n"
+    },
+    {
+      "type": "text",
+      "text": "Node ids have been added to the code as data attributes, e.g. `data-node-id=\"1:2\"`."
+    },
+    {
+      "type": "text",
+      "text": "Images and SVGs will be stored as constants, e.g. const image = '../assets/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire."
+    }
+  ],
+  "isError": false
+}

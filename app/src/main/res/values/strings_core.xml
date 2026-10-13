@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings used by shared components in core/ui. Feature screens keep their own strings in strings_<feature>.xml. -->
+<resources>
+    <string name="core_logo_description">Route</string>
+    <string name="core_back">Back</string>
+    <string name="core_search">Search</string>
+    <string name="core_search_placeholder">what do you search for?</string>
+    <string name="core_cart">Cart</string>
+    <string name="core_add_to_cart">Add to cart</string>
+    <string name="core_nav_home">Home</string>
+    <string name="core_nav_categories">Categories</string>
+    <string name="core_nav_wishlist">Wishlist</string>
+    <string name="core_nav_account">Account</string>
+    <string name="core_favorite_add">Add to wishlist</string>
+    <string name="core_favorite_remove">Remove from wishlist</string>
+    <string name="core_review_rating">Review (%1$s)</string>
+    <string name="core_quantity_increase">Increase quantity</string>
+    <string name="core_quantity_decrease">Decrease quantity</string>
+    <string name="core_password_show">Show password</string>
+    <string name="core_password_hide">Hide password</string>
+</resources>

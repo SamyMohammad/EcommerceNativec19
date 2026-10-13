@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "fonts": [
+    {
+      "family": "Poppins",
+      "weight": 300,
+      "path": "fonts/Poppins-Light.ttf",
+      "sha256": "650ba57fa99d12ec40c31ccfb680be656be4497fbe14164617d67e32ffe9cd46",
+      "status": "available",
+      "license": "approved"
+    },
+    {
+      "family": "Poppins",
+      "weight": 400,
+      "path": "fonts/Poppins-Regular.ttf",
+      "sha256": "7e65201e9b79159e2300267cc885e16c8dcef2424cdfa09a29bfb0980a94a7ba",
+      "status": "available",
+      "license": "approved"
+    },
+    {
+      "family": "Poppins",
+      "weight": 500,
+      "path": "fonts/Poppins-Medium.ttf",
+      "sha256": "90373e7d838d32468438fc3e152dca0bdb12edcab99ea639f158790b1ba1fd05",
+      "status": "available",
+      "license": "approved"
+    },
+    {
+      "family": "Poppins",
+      "weight": 600,
+      "path": "fonts/Poppins-SemiBold.ttf",
+      "sha256": "d3bf1bdaf0550e83da9ac0b1d1d9fe6db086835a83aa28578e609a394b9a0286",
+      "status": "available",
+      "license": "approved"
+    },
+    {
+      "family": "SF Pro Text",
+      "weight": 600,
+      "path": null,
+      "sha256": null,
+      "status": "missing",
+      "license": "unknown"
+    }
+  ]
+}

@@ -1,0 +1,1330 @@
+[
+  {
+    "screenId": "1:2",
+    "nodeId": "1:2",
+    "name": "Splash Screen",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "AFTER_TIMEOUT",
+          "timeout": 0.4000000059604645
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:47",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "LINEAR"
+              },
+              "duration": 0.4000000059604645
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:47",
+    "nodeId": "14:52",
+    "name": "Frame 4",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:116",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "LINEAR"
+              },
+              "duration": 0.4000000059604645
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:47",
+    "nodeId": "14:54",
+    "name": "Don’t have an account? Create Account",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "9:97",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "LINEAR"
+              },
+              "duration": 0.4000000059604645
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "9:97",
+    "nodeId": "14:3",
+    "name": "Frame 4",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:116",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "LINEAR"
+              },
+              "duration": 0.4000000059604645
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "34:127",
+    "name": "Group 11",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "AFTER_TIMEOUT",
+          "timeout": 0.800000011920929
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "34:35",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_IN_AND_OUT"
+              },
+              "duration": 0.800000011920929
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "816:450",
+    "name": "Group 21",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "564:542",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_IN_AND_OUT"
+              },
+              "duration": 0.4000000059604645
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "816:451",
+    "name": "Group 22",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "601:775",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_IN_AND_OUT"
+              },
+              "duration": 0.4000000059604645
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "727:905",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "727:909",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "727:917",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "727:913",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "727:921",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "727:925",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "620:1044",
+    "name": "🦆 icon \"shopping cart\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "604:890",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "I1003:404;964:467",
+    "name": "Frame 79",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "731:1294",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "I1003:404;964:468",
+    "name": "Frame 78",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "601:775",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "14:116",
+    "nodeId": "I1003:404;964:470",
+    "name": "Frame 80",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "835:523",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "601:775",
+    "nodeId": "601:800",
+    "name": "Women’s Fashion",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "562:469",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "BOUNCY"
+              },
+              "duration": 0.4791082739830017
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "601:775",
+    "nodeId": "601:879",
+    "name": "Frame 54",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:650",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "601:775",
+    "nodeId": "620:1056",
+    "name": "🦆 icon \"shopping cart\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "604:890",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "601:775",
+    "nodeId": "I1003:418;964:482",
+    "name": "Frame 79",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "731:1294",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "601:775",
+    "nodeId": "I1003:418;964:484",
+    "name": "Frame 76",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:116",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "601:775",
+    "nodeId": "I1003:418;964:485",
+    "name": "Frame 80",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "835:523",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "726:702",
+    "name": "🦆 icon \"shopping cart\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "604:890",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "727:1265",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "727:1128",
+    "name": "Frame 68",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "620:1083",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "727:1269",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "727:1277",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "727:1285",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "727:1261",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "I1008:450;964:482",
+    "name": "Frame 79",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "731:1294",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "I1008:450;964:484",
+    "name": "Frame 76",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:116",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "726:650",
+    "nodeId": "I1008:450;964:485",
+    "name": "Frame 80",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "835:523",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "620:1083",
+    "nodeId": "620:1087",
+    "name": "Frame 58",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_DRAG"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "604:1014",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "GENTLE"
+              },
+              "duration": 1.0220937728881836
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "620:1083",
+    "nodeId": "I620:1087;726:850",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:844",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "620:1083",
+    "nodeId": "620:1088",
+    "name": "🦆 icon \"arrow back outline\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:650",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "620:1083",
+    "nodeId": "620:1091",
+    "name": "🦆 icon \"shopping cart\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "604:890",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "620:1083",
+    "nodeId": "704:380",
+    "name": "Frame 63",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "604:890",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "620:1083",
+    "nodeId": "I727:1072;727:1038",
+    "name": "🦆 icon \"plus circle\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "727:1048",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "QUICK"
+              },
+              "duration": 0.3721277713775635
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "604:890",
+    "nodeId": "I816:455;727:1038",
+    "name": "🦆 icon \"plus circle\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "727:1048",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "QUICK"
+              },
+              "duration": 0.3721277713775635
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "604:890",
+    "nodeId": "620:1041",
+    "name": "🦆 icon \"arrow back outline\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:116",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "731:1294",
+    "nodeId": "731:1311",
+    "name": "🦆 icon \"shopping cart\"",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "604:890",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "731:1294",
+    "nodeId": "754:398",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:842",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "731:1294",
+    "nodeId": "759:413",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:842",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "731:1294",
+    "nodeId": "759:429",
+    "name": "Group 17",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "726:842",
+            "navigation": "CHANGE_TO",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "SLOW"
+              },
+              "duration": 1.2501229047775269
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "731:1294",
+    "nodeId": "I1009:464;964:496",
+    "name": "Frame 78",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "601:775",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "731:1294",
+    "nodeId": "I1009:464;964:497",
+    "name": "Frame 76",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:116",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "731:1294",
+    "nodeId": "I1009:464;964:498",
+    "name": "Frame 80",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "835:523",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "835:523",
+    "nodeId": "I1009:478;964:508",
+    "name": "Frame 79",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "731:1294",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "835:523",
+    "nodeId": "I1009:478;964:509",
+    "name": "Frame 78",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "601:775",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "screenId": "835:523",
+    "nodeId": "I1009:478;964:510",
+    "name": "Frame 76",
+    "reactions": [
+      {
+        "trigger": {
+          "type": "ON_CLICK"
+        },
+        "actions": [
+          {
+            "type": "NODE",
+            "destinationId": "14:116",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

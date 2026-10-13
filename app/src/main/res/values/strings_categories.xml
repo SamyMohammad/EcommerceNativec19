@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Categories screen strings. Category names are design placeholder content (see CategoriesSampleData.kt). -->
+<resources>
+    <string name="categories_shop_now">Shop Now</string>
+
+    <!-- Left rail -->
+    <string name="categories_rail_mens_fashion">Men’s Fashion</string>
+    <string name="categories_rail_womens_fashion">Women’s Fashion</string>
+    <string name="categories_rail_skincare">Skincare</string>
+    <string name="categories_rail_beauty">Beauty</string>
+    <string name="categories_rail_cameras">Cameras</string>
+    <string name="categories_rail_laptops">Laptops &amp;\nElectronics</string>
+    <string name="categories_rail_baby_toys">Baby &amp; Toys</string>
+
+    <!-- Selected category content (Men's Fashion) -->
+    <string name="categories_banner_title">Men’s\nFashion</string>
+    <string name="categories_sub_tshirts">T-shirts</string>
+    <string name="categories_sub_shorts">Shorts</string>
+    <string name="categories_sub_jeans">Jeans</string>
+    <string name="categories_sub_pants">Pants</string>
+    <string name="categories_sub_footwear">Footwear</string>
+    <string name="categories_sub_suits">Suits</string>
+    <string name="categories_sub_watches">Watches</string>
+    <string name="categories_sub_bags">Bags</string>
+    <string name="categories_sub_eyewears">Eyewears</string>
+</resources>

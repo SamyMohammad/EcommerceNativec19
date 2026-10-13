@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_welcome">Welcome, %1$s</string>
+    <string name="account_label_full_name">Your full name</string>
+    <string name="account_label_email">Your E-mail</string>
+    <string name="account_label_password">Your password</string>
+    <string name="account_label_mobile">Your mobile number</string>
+    <string name="account_label_address">Your Address</string>
+    <string name="account_edit_field">Edit %1$s</string>
+    <string name="account_edit_done">Finish editing %1$s</string>
+</resources>
