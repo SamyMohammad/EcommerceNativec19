@@ -13,8 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
-import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.core.ui.BottomNavigationBar
 import com.example.ecommercenativec19.core.ui.ProductCardRatingPosition
 import com.example.ecommercenativec19.core.ui.SearchHeader
 import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
@@ -28,7 +26,6 @@ fun HomeScreen(
     state: HomeUiState,
     onQueryChange: (String) -> Unit,
     onFavoriteClick: (String) -> Unit,
-    onTabSelected: (AppTab) -> Unit,
     onOpenCart: () -> Unit,
     onOpenCategories: () -> Unit,
     modifier: Modifier = Modifier,
@@ -96,7 +93,6 @@ fun HomeScreen(
                 )
             }
         }
-        BottomNavigationBar(selectedTab = AppTab.Home, onTabSelected = onTabSelected)
     }
 }
 

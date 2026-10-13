@@ -24,8 +24,6 @@ import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppButton
 import com.example.ecommercenativec19.core.ui.AppButtonStyle
 import com.example.ecommercenativec19.core.ui.AppDimens
-import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.core.ui.BottomNavigationBar
 import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.FavoriteButton
 import com.example.ecommercenativec19.core.ui.FractionalCropImage
@@ -42,7 +40,6 @@ fun WishlistScreen(
     onToggleFavorite: (String) -> Unit,
     onAddToCart: (String) -> Unit,
     onOpenCart: () -> Unit,
-    onTabSelected: (AppTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val tokens = LocalAppTokens.current
@@ -50,7 +47,6 @@ fun WishlistScreen(
         modifier = modifier,
         containerColor = tokens.colorSource02,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = { BottomNavigationBar(selectedTab = AppTab.Wishlist, onTabSelected = onTabSelected) },
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),

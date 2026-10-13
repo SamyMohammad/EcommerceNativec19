@@ -21,6 +21,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
+import com.example.ecommercenativec19.core.ui.AppTab
 import com.example.ecommercenativec19.feature.account.AccountRoute
 import com.example.ecommercenativec19.feature.cart.CartRoute
 import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
@@ -32,6 +33,7 @@ import com.example.ecommercenativec19.feature.signin.SignInRoute
 import com.example.ecommercenativec19.feature.signup.SignUpRoute
 import com.example.ecommercenativec19.feature.splash.SplashScreen
 import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
+import com.example.ecommercenativec19.navigation.AppScaffold
 import com.example.ecommercenativec19.ui.theme.generated.AppTheme
 import com.example.ecommercenativec19.ui.theme.generated.AppThemeIdentity
 import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
@@ -89,18 +91,31 @@ class ComposeCaptureTest {
 
     @Composable
     private fun SceneContent(scene: Scene) {
+        // Tab screens no longer draw the bottom bar; the shell does, so render them inside it.
+        val tab = when (scene) {
+            Scene.Home -> AppTab.Home
+            Scene.Categories, Scene.ProductList -> AppTab.Categories
+            Scene.Wishlist -> AppTab.Wishlist
+            Scene.Account -> AppTab.Account
+            else -> null
+        }
+        AppScaffold(selectedTab = tab, onTabSelected = {}) { SceneBody(scene) }
+    }
+
+    @Composable
+    private fun SceneBody(scene: Scene) {
         when (scene) {
             Scene.Splash -> SplashScreen()
             Scene.SignIn -> SignInRoute(onSignIn = {}, onCreateAccount = {})
             Scene.SignUp -> SignUpRoute(onSignUp = {})
-            Scene.Home -> HomeRoute(onTabSelected = {}, onOpenCart = {}, onOpenCategories = {})
+            Scene.Home -> HomeRoute(onOpenCart = {}, onOpenCategories = {})
             // The screen with sample state, not the Route: the Route needs Koin and the network.
-            Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {}, {})
-            Scene.ProductList -> ProductListRoute(onTabSelected = {}, onOpenCart = {}, onOpenProduct = {})
+            Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {})
+            Scene.ProductList -> ProductListRoute(onOpenCart = {}, onOpenProduct = {})
             Scene.Details -> ProductDetailsRoute(productId = "1", onBack = {}, onOpenCart = {}, onAddToCart = {})
             Scene.Cart -> CartRoute(onBack = {})
-            Scene.Wishlist -> WishlistRoute(onTabSelected = {}, onOpenCart = {})
-            Scene.Account -> AccountRoute(onTabSelected = {})
+            Scene.Wishlist -> WishlistRoute(onOpenCart = {})
+            Scene.Account -> AccountRoute()
         }
     }
 

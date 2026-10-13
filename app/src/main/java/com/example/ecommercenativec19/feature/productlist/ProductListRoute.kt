@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.ecommercenativec19.core.ui.AppTab
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -13,7 +12,6 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun ProductListRoute(
-    onTabSelected: (AppTab) -> Unit,
     onOpenCart: () -> Unit,
     onOpenProduct: (productId: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -23,7 +21,6 @@ fun ProductListRoute(
     ProductListScreen(
         state = state,
         onQueryChange = viewModel::onQueryChange,
-        onTabSelected = onTabSelected,
         onCartClick = onOpenCart,
         onProductClick = onOpenProduct,
         onFavoriteClick = viewModel::onToggleFavorite,

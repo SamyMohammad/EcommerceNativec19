@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.AppLogoBar
-import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.core.ui.BottomNavigationBar
 import com.example.ecommercenativec19.core.ui.textLineBox
 import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
@@ -30,7 +28,6 @@ fun AccountScreen(
     onStartEditing: (AccountFieldType) -> Unit,
     onFinishEditing: () -> Unit,
     onValueChange: (AccountFieldType, String) -> Unit,
-    onTabSelected: (AppTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val tokens = LocalAppTokens.current
@@ -38,7 +35,6 @@ fun AccountScreen(
         modifier = modifier,
         containerColor = tokens.colorSource02,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = { BottomNavigationBar(selectedTab = AppTab.Account, onTabSelected = onTabSelected) },
     ) { padding ->
         Column(
             modifier = Modifier

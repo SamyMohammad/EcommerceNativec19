@@ -70,10 +70,33 @@ drags AGP and Compose compatibility with it. Revisit when the Kotlin upgrade is 
 
 ## 6. Navigation
 
-Today: Navigation Compose 2.9 with string routes, one `NavHost` in `navigation/AppNavHost.kt`.
+Navigation 3 (`navigation3-runtime/ui` 1.2.0, `lifecycle-viewmodel-navigation3` 2.11.0). The back stack is
+app-owned state, not a framework object you query.
 
-Planned: migrate to Navigation 3 (back stack as app-owned state, type-safe keys). If Nav3 hits ecosystem gaps or
-tooling friction, the fallback is staying on classic Navigation Compose; the switch will not happen silently.
+- **Keys** (`navigation/AppRoutes.kt`): `@Serializable` types implementing `NavKey` (`Home`, `Cart`,
+  `ProductDetails(productId)`, ...). The product id travels in the key, so there is no string parsing.
+- **Per-tab back stacks** (`navigation/AppNavigator.kt`): one auth stack (Splash, Sign in, Sign up) and one stack
+  per bottom-bar tab, each a `NavBackStack` from `rememberNavBackStack`, so they survive configuration change and
+  process death. `AppNavigator` is plain Kotlin over `MutableList`s and is unit-tested on the JVM
+  (`AppNavigatorTest`). Rules: a tab switch keeps each tab's history, reselecting a tab pops it to its root, back
+  pops inside the tab, back at a non-Home tab root goes to Home, back at Home root exits. Auth success clears the
+  auth stack. This replaces `saveState`/`restoreState`/`popUpTo` from classic Navigation Compose.
+- **Rendering** (`navigation/AppNavDisplay.kt`): `NavDisplay` + `entryProvider`. Hidden tab stacks stay in the
+  list passed to `NavDisplay` (below the current tab), otherwise Nav3 would treat them as popped and discard their
+  state. Duplicate keys across stacks would collide, which the flow rules out (Cart and Product details have no
+  bottom bar, so they are always the top of their stack).
+- **Entry-scoped ViewModels:** `rememberSaveableStateHolderNavEntryDecorator()` and
+  `rememberViewModelStoreNavEntryDecorator()` give every entry its own `ViewModelStore`, so `koinViewModel()` inside
+  an entry is scoped to that entry and cleared when it is popped. Koin's own Nav3 integration
+  (`koin-compose-navigation3`) is not used: it needs Koin 4.2 (Kotlin 2.3) and is experimental; the AndroidX
+  decorators are enough because Koin only needs `LocalViewModelStoreOwner`.
+- **Shared shell** (`navigation/AppScaffold.kt`): one `BottomNavigationBar`, shown only while the top key belongs to
+  a tab (Product list highlights Categories). Tab screens no longer know about the bar.
+
+**Tradeoffs:** Nav3 is new and has no built-in multi-stack or tab helper, so `AppNavigator` is ours to maintain.
+The Android `rememberNavBackStack` restores keys through reflection (`Class.forName`), so enabling R8 later needs
+keep rules for the key classes. Predictive back preview at a tab root shows the flattened stack's previous entry
+rather than "Home".
 
 ## 7. Networking
 
@@ -89,11 +112,10 @@ tooling friction, the fallback is staying on classic Navigation Compose; the swi
 
 Planned, in rough order. Each item is a small reviewed PR.
 
-- **Navigation 3** (see section 6).
 - **Material 3 theme rewrite** that replaces the Figma-generated tokens with a hand-owned theme.
 - **Coil 3 and image performance** (sizing, caching) once products show real images.
 - **Route API per feature**, replacing sample data: products, then cart, wishlist and account.
 - **Authentication** via DataStore token storage and an OkHttp interceptor that adds the `token` header. This is a
   deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart, wishlist
   and account endpoints require a token.
-- **Release hardening:** enable R8 (currently disabled for release builds) with the keep rules the stack needs.
+- **Release hardening:** enable R8 (currently disabled for release builds) with the keep rules the stack needs (including the Navigation 3 key classes).

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.ecommercenativec19.core.ui.AppTab
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -12,7 +11,7 @@ import org.koin.androidx.compose.koinViewModel
  * "add to cart" effect is Details -> Cart): wired to a no-op here (missing contract).
  */
 @Composable
-fun WishlistRoute(onTabSelected: (AppTab) -> Unit, onOpenCart: () -> Unit, modifier: Modifier = Modifier) {
+fun WishlistRoute(onOpenCart: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: WishlistViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     WishlistScreen(
@@ -21,7 +20,6 @@ fun WishlistRoute(onTabSelected: (AppTab) -> Unit, onOpenCart: () -> Unit, modif
         onToggleFavorite = viewModel::onToggleFavorite,
         onAddToCart = {},
         onOpenCart = onOpenCart,
-        onTabSelected = onTabSelected,
         modifier = modifier,
     )
 }

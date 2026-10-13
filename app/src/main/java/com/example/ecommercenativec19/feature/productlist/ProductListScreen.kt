@@ -18,17 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.AppDimens
-import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.core.ui.BottomNavigationBar
 import com.example.ecommercenativec19.core.ui.ProductCard
 import com.example.ecommercenativec19.core.ui.SearchHeader
 
-/** Stateless Product list: search header, two-column grid of [ProductCard]s, bottom bar with Categories selected. */
+/** Stateless Product list: search header, two-column grid of [ProductCard]s. */
 @Composable
 fun ProductListScreen(
     state: ProductListUiState,
     onQueryChange: (String) -> Unit,
-    onTabSelected: (AppTab) -> Unit,
     onCartClick: () -> Unit,
     onProductClick: (String) -> Unit,
     onFavoriteClick: (String) -> Unit,
@@ -39,7 +36,6 @@ fun ProductListScreen(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = { BottomNavigationBar(selectedTab = AppTab.Categories, onTabSelected = onTabSelected) },
     ) { innerPadding ->
         Column(Modifier.fillMaxSize().padding(innerPadding)) {
             SearchHeader(query = state.query, onQueryChange = onQueryChange, onCartClick = onCartClick)

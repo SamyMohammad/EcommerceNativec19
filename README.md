@@ -52,7 +52,7 @@ data → domain → presentation, with tests.
 | UI | Jetpack Compose (BOM 2026.02.01), Material 3 | No XML layouts, Fragments or ViewBinding |
 | Presentation | `ViewModel` + immutable `UiState` + `StateFlow` | Collected with `collectAsStateWithLifecycle` |
 | Async | Kotlin coroutines and Flow | |
-| Navigation | Navigation Compose 2.9 | Single `NavHost` in `navigation/AppNavHost.kt` |
+| Navigation | Navigation 3 (1.2.0) | App-owned per-tab back stacks in `navigation/AppNavigator.kt`, `NavDisplay` in `navigation/AppNavDisplay.kt`, entry-scoped ViewModels |
 | DI | Koin 4.1.1 | Chosen over Hilt for simplicity and a future KMP path. All ViewModels come from per-feature Koin modules, checked by `KoinModulesTest`. 4.1.x because 4.2.x requires Kotlin 2.3 |
 | Networking | Retrofit 3, OkHttp 5, kotlinx.serialization 1.9 | Compile-time serialization, no reflection |
 | Testing | JUnit 4, kotlinx-coroutines-test, Robolectric, Roborazzi | Hand-written fakes, no mocking library |
@@ -119,7 +119,7 @@ app/src/main/java/com/example/ecommercenativec19/
 │   │   ├── di/                  # Koin module
 │   │   └── Categories*.kt       # Route, Screen, ViewModel, UiState
 │   └── home/ cart/ wishlist/ account/ productlist/ productdetails/ signin/ signup/ splash/
-├── navigation/                  # AppNavHost: routes and transitions
+├── navigation/                  # NavKeys, AppNavigator (back stacks), NavDisplay, shared bottom bar
 └── ui/theme/generated/          # Theme tokens generated from Figma
 ```
 

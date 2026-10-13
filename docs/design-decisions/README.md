@@ -65,7 +65,7 @@ Node ids come from the comments in `navigation/AppRoutes.kt` and the KDoc of eac
 ### Navigation
 - The bottom bar has 4 tabs: Home, Categories, Wishlist, Account. Cart is not a tab; it opens from the header cart icon.
 - Splash -> Sign in after 400 ms (`AFTER_TIMEOUT` from the prototype).
-- The prototype uses SMART_ANIMATE. Compose cannot reproduce it, so screens cross-fade: 400 ms linear for Splash -> Sign in, 300 ms ease-out elsewhere (`navigation/AppNavHost.kt`).
+- The prototype uses SMART_ANIMATE. Compose cannot reproduce it, so screens cross-fade: 400 ms linear for Splash -> Sign in, 300 ms ease-out elsewhere (`navigation/AppNavDisplay.kt`).
 - Prototype reactions that lead to nodes outside the 10 screens (for example 562:469, 564:542) are not implemented.
 
 ### Assets

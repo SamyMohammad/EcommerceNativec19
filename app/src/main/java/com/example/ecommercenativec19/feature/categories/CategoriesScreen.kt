@@ -14,8 +14,6 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.core.ui.AppDimens
-import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.core.ui.BottomNavigationBar
 import com.example.ecommercenativec19.core.ui.SearchHeader
 import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
@@ -29,7 +27,6 @@ fun CategoriesScreen(
     onQueryChange: (String) -> Unit,
     onCategorySelected: (String) -> Unit,
     onRetry: () -> Unit,
-    onTabSelected: (AppTab) -> Unit,
     onOpenCart: () -> Unit,
     onOpenProductList: () -> Unit,
     modifier: Modifier = Modifier,
@@ -63,7 +60,6 @@ fun CategoriesScreen(
                 modifier = Modifier.weight(1f).fillMaxHeight().padding(start = RailToContentGap),
             )
         }
-        BottomNavigationBar(selectedTab = AppTab.Categories, onTabSelected = onTabSelected)
     }
 }
 
