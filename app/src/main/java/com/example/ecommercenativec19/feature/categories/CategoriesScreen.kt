@@ -50,16 +50,14 @@ fun CategoriesScreen(
                 .padding(start = AppDimens.ScreenHorizontal, end = AppDimens.ScreenHorizontal, top = HeaderToRailGap),
         ) {
             CategoriesRail(
-                status = state.railStatus,
-                categories = state.railCategories,
+                state = state.categories,
                 onCategorySelected = onCategorySelected,
                 onRetry = onRetry,
                 modifier = Modifier.width(RailWidth).fillMaxHeight().overflowBottom(RailUnderBarOverlap),
             )
             CategoriesContent(
-                status = state.contentStatus,
+                state = state.subCategories,
                 title = state.selectedTitle,
-                subCategories = state.subCategories,
                 onOpenProductList = onOpenProductList,
                 onRetry = onRetry,
                 modifier = Modifier.weight(1f).fillMaxHeight().padding(start = RailToContentGap),

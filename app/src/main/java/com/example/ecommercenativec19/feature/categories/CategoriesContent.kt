@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.R
+import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.CategoryTile
 import com.example.ecommercenativec19.core.ui.CategoryTileStyle
 import com.example.ecommercenativec19.core.ui.LineBoxText
@@ -37,15 +38,14 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 /** Right-hand side: selected category title, its promo banner and the three-column sub-category grid. */
 @Composable
 internal fun CategoriesContent(
-    status: LoadStatus,
+    state: LoadState<List<SubCategoryItem>>,
     title: String?,
-    subCategories: List<SubCategoryItem>,
     onOpenProductList: () -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val tokens = LocalAppTokens.current
-    StatusPane(status = status, onRetry = onRetry, modifier = modifier) {
+    StatusPane(state = state, onRetry = onRetry, modifier = modifier) { subCategories ->
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             if (title != null) {
                 Text(

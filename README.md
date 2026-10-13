@@ -128,8 +128,8 @@ app/src/main/java/com/example/ecommercenativec19/
 - **Auth:** authenticated endpoints expect a custom `token` request header, not `Authorization: Bearer`.
 - **Parsing:** `Json { ignoreUnknownKeys = true }`, and fields that are not guaranteed are nullable, so one
   malformed record cannot take a whole screen down.
-- **Errors:** `safeApiCall` maps `IOException → AppError.Network`, `HttpException → AppError.Server(code)` and
-  anything else to `AppError.Unknown`. It rethrows `CancellationException` to keep structured concurrency intact.
+- **Errors:** `safeApiCall` maps `IOException → AppError.Network`, `HttpException → AppError.Server(code)`,
+  `SerializationException → AppError.Parsing` and anything else to `AppError.Unknown`. It rethrows `CancellationException` to keep structured concurrency intact.
 - **Logging:** HTTP bodies are logged in debug builds only. The `token` and `Authorization` headers are redacted
   from the log output.
 - **API notes:** the Postman collection ships without example responses, so every endpoint the app uses is

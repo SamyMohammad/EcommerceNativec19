@@ -1,7 +1,6 @@
 package com.example.ecommercenativec19.feature.categories
 
-/** Load state of one independently loading region (the rail or the sub-category grid). */
-enum class LoadStatus { Loading, Error, Empty, Content }
+import com.example.ecommercenativec19.core.common.LoadState
 
 /** One left-rail entry. */
 data class RailCategory(
@@ -19,9 +18,7 @@ data class SubCategoryItem(
 /** Everything the stateless Categories screen renders. Rail and grid load and fail independently. */
 data class CategoriesUiState(
     val searchQuery: String = "",
-    val railStatus: LoadStatus = LoadStatus.Loading,
-    val railCategories: List<RailCategory> = emptyList(),
-    val contentStatus: LoadStatus = LoadStatus.Loading,
+    val categories: LoadState<List<RailCategory>> = LoadState.Loading,
     val selectedTitle: String? = null,
-    val subCategories: List<SubCategoryItem> = emptyList(),
+    val subCategories: LoadState<List<SubCategoryItem>> = LoadState.Loading,
 )

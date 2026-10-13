@@ -1,5 +1,7 @@
 package com.example.ecommercenativec19.feature.categories
 
+import com.example.ecommercenativec19.core.common.LoadState
+
 /** Static content for @Preview and screenshot tests; the running app loads real data from the API. */
 internal object CategoriesSampleData {
     val rail = listOf(
@@ -26,10 +28,8 @@ internal object CategoriesSampleData {
     )
 
     val state = CategoriesUiState(
-        railStatus = LoadStatus.Content,
-        railCategories = rail,
-        contentStatus = LoadStatus.Content,
+        categories = LoadState.Content(rail),
         selectedTitle = "Men’s Fashion",
-        subCategories = subCategories,
+        subCategories = LoadState.Content(subCategories),
     )
 }

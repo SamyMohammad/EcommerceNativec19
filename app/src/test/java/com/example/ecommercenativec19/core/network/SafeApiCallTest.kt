@@ -4,6 +4,7 @@ import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.SerializationException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
@@ -39,6 +40,13 @@ class SafeApiCallTest {
         val result = safeApiCall { throw httpException }
 
         assertEquals(AppResult.Failure(AppError.Server(404)), result)
+    }
+
+    @Test
+    fun `maps SerializationException to Parsing error`() = runTest {
+        val result = safeApiCall { throw SerializationException("bad json") }
+
+        assertEquals(AppResult.Failure(AppError.Parsing), result)
     }
 
     @Test

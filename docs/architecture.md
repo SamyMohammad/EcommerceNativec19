@@ -29,7 +29,9 @@ The layout mirrors the module boundaries we would extract later, so splitting is
 - A `ViewModel` exposes one immutable `UiState` through `StateFlow`.
 - The screen is stateless: it renders state and emits events upward.
 - Compose collects with `collectAsStateWithLifecycle`, so collection stops when the UI is not visible.
-- Loading, error, empty and content are explicit states, never nullable "maybe loading" flags.
+- Loading, error, empty and content are explicit states, never nullable "maybe loading" flags. Each independently
+  loading region holds one `LoadState<T>` (`Loading | Content(data) | Empty | Error(AppError)`), so contradictory
+  combinations cannot be represented.
 
 ## 4. Error handling
 
@@ -39,9 +41,11 @@ Errors are values, and they are converted at the repository boundary:
 Retrofit call -> safeApiCall -> AppResult.Success(data) | AppResult.Failure(AppError)
 ```
 
-`safeApiCall` maps `IOException` to `AppError.Network`, `HttpException` to `AppError.Server(code)` and anything
-else to `AppError.Unknown`, and rethrows `CancellationException` so structured concurrency keeps working.
-ViewModels only ever see `AppResult`, never exceptions.
+`safeApiCall` maps `IOException` to `AppError.Network`, `HttpException` to `AppError.Server(code)`,
+`SerializationException` to `AppError.Parsing` and anything else to `AppError.Unknown`, and rethrows
+`CancellationException` so structured concurrency keeps working. ViewModels only ever see `AppResult`, never
+exceptions, and keep the specific `AppError` in `LoadState.Error`. The UI turns it into copy with
+`AppError.toMessageRes()` (`core/ui`), so the lower layers stay free of Android resources.
 
 ## 5. Dependency injection: Koin
 
@@ -84,7 +88,6 @@ tooling friction, the fallback is staying on classic Navigation Compose; the swi
 
 Planned, in rough order. Each item is a small reviewed PR.
 
-- **Sealed `LoadState`** instead of per-screen status enums plus parallel fields.
 - **Koin for all ViewModels**, replacing manual construction in the remaining screens.
 - **Navigation 3** (see section 6).
 - **Material 3 theme rewrite** that replaces the Figma-generated tokens with a hand-owned theme.

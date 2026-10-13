@@ -8,5 +8,7 @@ sealed interface AppResult<out T> {
 sealed interface AppError {
     data object Network : AppError
     data class Server(val code: Int) : AppError
+    /** The response arrived but could not be decoded. */
+    data object Parsing : AppError
     data object Unknown : AppError
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.textLineBox
 import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
@@ -27,8 +28,7 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 /** Left category rail: the API's categories, or a spinner / retry / empty note while they are not available. */
 @Composable
 internal fun CategoriesRail(
-    status: LoadStatus,
-    categories: List<RailCategory>,
+    state: LoadState<List<RailCategory>>,
     onCategorySelected: (String) -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
@@ -42,13 +42,13 @@ internal fun CategoriesRail(
         bottomStart = tokens.radiusSource05,
     )
     StatusPane(
-        status = status,
+        state = state,
         onRetry = onRetry,
         modifier = modifier
             .clip(shape)
             .background(tokens.colorSource22)
             .border(1.dp, tokens.colorSource14, shape),
-    ) {
+    ) { categories ->
         Column(modifier = Modifier.verticalScroll(rememberScrollState()).selectableGroup()) {
             categories.forEach { category ->
                 if (category.isSelected) {

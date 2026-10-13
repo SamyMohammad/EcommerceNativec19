@@ -2,6 +2,7 @@ package com.example.ecommercenativec19.feature.categories
 
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
+import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.feature.categories.domain.CategoriesRepository
 import com.example.ecommercenativec19.feature.categories.domain.Category
 import com.example.ecommercenativec19.feature.categories.domain.GetCategoriesUseCase
@@ -37,7 +38,15 @@ class CategoriesViewModelTest {
         val subCategoriesGates = mutableMapOf<String, CompletableDeferred<Unit>>()
         val requestedSubCategoryIds = mutableListOf<String>()
 
-        override suspend fun getCategories(): AppResult<List<Category>> = categoriesResult
+        /** Holds the next categories call suspended until the test completes the gate. */
+        var categoriesGate: CompletableDeferred<Unit>? = null
+        var categoriesCalls = 0
+
+        override suspend fun getCategories(): AppResult<List<Category>> {
+            categoriesCalls++
+            categoriesGate?.await()
+            return categoriesResult
+        }
 
         override suspend fun getSubCategories(categoryId: String): AppResult<List<SubCategory>> {
             requestedSubCategoryIds.add(categoryId)
@@ -63,12 +72,16 @@ class CategoriesViewModelTest {
     private fun viewModel() =
         CategoriesViewModel(GetCategoriesUseCase(fakeRepository), GetSubCategoriesUseCase(fakeRepository))
 
+    private fun CategoriesUiState.rail(): List<RailCategory> = (categories as LoadState.Content).data
+
+    private fun CategoriesUiState.subs(): List<SubCategoryItem> = (subCategories as LoadState.Content).data
+
     @Test
     fun `rail and content start Loading before the init load is advanced`() = runTest(testDispatcher) {
         val viewModel = viewModel()
 
-        assertEquals(LoadStatus.Loading, viewModel.uiState.value.railStatus)
-        assertEquals(LoadStatus.Loading, viewModel.uiState.value.contentStatus)
+        assertEquals(LoadState.Loading, viewModel.uiState.value.categories)
+        assertEquals(LoadState.Loading, viewModel.uiState.value.subCategories)
     }
 
     @Test
@@ -78,23 +91,41 @@ class CategoriesViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(LoadStatus.Content, state.railStatus)
-        assertEquals(listOf("c1"), state.railCategories.filter { it.isSelected }.map { it.id })
+        assertEquals(listOf("c1"), state.rail().filter { it.isSelected }.map { it.id })
         assertEquals("Men", state.selectedTitle)
-        assertEquals(LoadStatus.Content, state.contentStatus)
-        assertEquals(listOf("s-c1"), state.subCategories.map { it.id })
+        assertEquals(listOf("s-c1"), state.subs().map { it.id })
     }
 
     @Test
-    fun `categories failure sets both rail and content to Error`() = runTest(testDispatcher) {
+    fun `categories failure sets both rail and content to the same Error`() = runTest(testDispatcher) {
         fakeRepository.categoriesResult = AppResult.Failure(AppError.Network)
         val viewModel = viewModel()
 
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(LoadStatus.Error, state.railStatus)
-        assertEquals(LoadStatus.Error, state.contentStatus)
+        assertEquals(LoadState.Error(AppError.Network), state.categories)
+        assertEquals(LoadState.Error(AppError.Network), state.subCategories)
+    }
+
+    @Test
+    fun `categories failure preserves the specific error`() = runTest(testDispatcher) {
+        fakeRepository.categoriesResult = AppResult.Failure(AppError.Server(503))
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        assertEquals(LoadState.Error(AppError.Server(503)), viewModel.uiState.value.categories)
+    }
+
+    @Test
+    fun `sub-categories failure preserves the specific error`() = runTest(testDispatcher) {
+        fakeRepository.subCategoriesResults["c1"] = AppResult.Failure(AppError.Parsing)
+        val viewModel = viewModel()
+
+        advanceUntilIdle()
+
+        assertEquals(LoadState.Error(AppError.Parsing), viewModel.uiState.value.subCategories)
     }
 
     @Test
@@ -107,7 +138,23 @@ class CategoriesViewModelTest {
         viewModel.onRetry()
         advanceUntilIdle()
 
-        assertEquals(LoadStatus.Content, viewModel.uiState.value.railStatus)
+        assertEquals(listOf("c1"), viewModel.uiState.value.rail().map { it.id })
+    }
+
+    @Test
+    fun `onRetry while a categories retry is in flight does not start another load`() = runTest(testDispatcher) {
+        fakeRepository.categoriesResult = AppResult.Failure(AppError.Network)
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        fakeRepository.categoriesGate = CompletableDeferred()
+
+        viewModel.onRetry()
+        viewModel.onRetry()
+        advanceUntilIdle()
+
+        // One call for the init load, one for the first retry; the second retry saw Loading and did nothing.
+        assertEquals(2, fakeRepository.categoriesCalls)
+        assertEquals(LoadState.Loading, viewModel.uiState.value.categories)
     }
 
     @Test
@@ -118,8 +165,8 @@ class CategoriesViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(LoadStatus.Empty, state.railStatus)
-        assertEquals(LoadStatus.Empty, state.contentStatus)
+        assertEquals(LoadState.Empty, state.categories)
+        assertEquals(LoadState.Empty, state.subCategories)
     }
 
     @Test
@@ -133,20 +180,20 @@ class CategoriesViewModelTest {
             advanceUntilIdle()
 
             val state = viewModel.uiState.value
-            assertEquals(listOf("c2"), state.railCategories.filter { it.isSelected }.map { it.id })
+            assertEquals(listOf("c2"), state.rail().filter { it.isSelected }.map { it.id })
             assertEquals("Women", state.selectedTitle)
             assertEquals(listOf("c2"), fakeRepository.requestedSubCategoryIds)
-            assertEquals(listOf("s-c2"), state.subCategories.map { it.id })
+            assertEquals(listOf("s-c2"), state.subs().map { it.id })
         }
 
     @Test
-    fun `empty sub-categories list sets content status to Empty`() = runTest(testDispatcher) {
+    fun `empty sub-categories list sets content to Empty`() = runTest(testDispatcher) {
         fakeRepository.subCategoriesResults["c1"] = AppResult.Success(emptyList())
         val viewModel = viewModel()
 
         advanceUntilIdle()
 
-        assertEquals(LoadStatus.Empty, viewModel.uiState.value.contentStatus)
+        assertEquals(LoadState.Empty, viewModel.uiState.value.subCategories)
     }
 
     @Test
@@ -155,15 +202,13 @@ class CategoriesViewModelTest {
             fakeRepository.subCategoriesResults["c1"] = AppResult.Failure(AppError.Network)
             val viewModel = viewModel()
             advanceUntilIdle()
-            assertEquals(LoadStatus.Error, viewModel.uiState.value.contentStatus)
+            assertEquals(LoadState.Error(AppError.Network), viewModel.uiState.value.subCategories)
 
             fakeRepository.subCategoriesResults["c1"] = AppResult.Success(listOf(SubCategory("s-c1", "Sub of c1")))
             viewModel.onRetry()
             advanceUntilIdle()
 
-            val state = viewModel.uiState.value
-            assertEquals(LoadStatus.Content, state.contentStatus)
-            assertEquals(listOf("s-c1"), state.subCategories.map { it.id })
+            assertEquals(listOf("s-c1"), viewModel.uiState.value.subs().map { it.id })
         }
 
     @Test
@@ -173,16 +218,14 @@ class CategoriesViewModelTest {
             fakeRepository.subCategoriesGates["c1"] = CompletableDeferred()
             val viewModel = viewModel()
             advanceUntilIdle()
-            assertEquals(LoadStatus.Content, viewModel.uiState.value.railStatus)
-            assertEquals(LoadStatus.Loading, viewModel.uiState.value.contentStatus)
+            assertEquals(LoadState.Loading, viewModel.uiState.value.subCategories)
 
             viewModel.onCategorySelected("c2")
             advanceUntilIdle()
 
             val state = viewModel.uiState.value
-            assertEquals("c2", state.railCategories.first { it.isSelected }.id)
-            assertEquals(LoadStatus.Content, state.contentStatus)
-            assertEquals(listOf("s-c2"), state.subCategories.map { it.id })
+            assertEquals("c2", state.rail().first { it.isSelected }.id)
+            assertEquals(listOf("s-c2"), state.subs().map { it.id })
         }
 
     @Test
@@ -195,7 +238,7 @@ class CategoriesViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(listOf("c1"), state.railCategories.filter { it.isSelected }.map { it.id })
+        assertEquals(listOf("c1"), state.rail().filter { it.isSelected }.map { it.id })
         assertEquals("Men", state.selectedTitle)
         assertEquals(emptyList<String>(), fakeRepository.requestedSubCategoryIds)
     }
