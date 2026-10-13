@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -34,9 +35,7 @@ import com.example.ecommercenativec19.feature.signup.SignUpRoute
 import com.example.ecommercenativec19.feature.splash.SplashScreen
 import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
 import com.example.ecommercenativec19.navigation.AppScaffold
-import com.example.ecommercenativec19.ui.theme.generated.AppTheme
-import com.example.ecommercenativec19.ui.theme.generated.AppThemeIdentity
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.AppTheme
 import com.github.takahirom.roborazzi.captureRoboImage
 import java.io.File
 import java.security.MessageDigest
@@ -143,9 +142,8 @@ class ComposeCaptureTest {
                         .put("direction", if (layoutDirection == LayoutDirection.Rtl) "rtl" else "ltr")
                         .put("theme", if (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) "dark" else "light")
                 }
-                AppTheme(dark = false) {
-                    val tokens = LocalAppTokens.current
-                    Box(Modifier.size(width.dp, height.dp).background(tokens.colorSource02).testTag("capture-frame")) {
+                AppTheme {
+                    Box(Modifier.size(width.dp, height.dp).background(MaterialTheme.colorScheme.background).testTag("capture-frame")) {
                         SceneContent(scene)
                     }
                 }
@@ -192,8 +190,6 @@ class ComposeCaptureTest {
             .put("animation", "settled").put("clockAutoAdvance", compose.mainClock.autoAdvance)
             .put("colorSpace", "srgb").put("platform", "android").put("renderer", "robolectric-native")
             .put("imageHash", sha256(image.readBytes()))
-            .put("themeIdentity", JSONObject().put("tokenHash", AppThemeIdentity.tokenHash)
-                .put("manifestHash", AppThemeIdentity.manifestHash).put("configHash", AppThemeIdentity.configHash))
             .put("versions", JSONObject().put("sdk", android.os.Build.VERSION.SDK_INT.toString())
                 .put("roborazzi", ROBORAZZI_VERSION).put("robolectric", ROBOLECTRIC_VERSION))
         File(folder, "capture-receipt.json").writeText(observed.toString(2) + "\n")

@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.FavoriteButton
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Bordered 300dp image carousel with the favorite circle (top-end) and page indicators (bottom-center): the active
@@ -43,8 +42,7 @@ internal fun ProductDetailsImageCarousel(
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource02)
+    val shape = MaterialTheme.shapes.medium
     val pagerState = rememberPagerState(initialPage = currentPage.coerceIn(0, images.lastIndex)) { images.size }
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect(onPageChanged)
@@ -54,7 +52,7 @@ internal fun ProductDetailsImageCarousel(
             .fillMaxWidth()
             .height(CarouselHeight)
             .clip(shape)
-            .border(1.dp, tokens.colorSource14, shape),
+            .border(1.dp, MaterialTheme.colorScheme.outline, shape),
     ) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
             CoverImage(
@@ -85,15 +83,15 @@ internal fun ProductDetailsImageCarousel(
                     Box(
                         Modifier
                             .size(width = ActiveIndicatorWidth, height = IndicatorSize)
-                            .background(tokens.colorSource00, RoundedCornerShape(tokens.radiusSource08)),
+                            .background(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge),
                     )
                 } else {
                     Box(
                         Modifier
                             .width(IndicatorSize)
                             .height(IndicatorSize)
-                            .background(tokens.colorSource02, CircleShape)
-                            .border(1.dp, tokens.colorSource00, CircleShape),
+                            .background(MaterialTheme.colorScheme.surface, CircleShape)
+                            .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape),
                     )
                 }
             }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Title bar of Product details and Cart: back arrow (start), centered title (Medium 20), search and cart icons (end).
@@ -33,7 +33,6 @@ fun ScreenTitleBar(
     onSearchClick: (() -> Unit)? = null,
     onCartClick: (() -> Unit)? = null,
 ) {
-    val tokens = LocalAppTokens.current
     val edgePadding = AppDimens.ScreenHorizontal - AppDimens.IconTouchInset
     Box(
         modifier = modifier
@@ -52,8 +51,8 @@ fun ScreenTitleBar(
         )
         Text(
             text = title,
-            style = tokens.typographySource10,
-            color = tokens.colorSource12,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

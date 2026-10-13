@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,7 +33,8 @@ import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.FractionalCropImage
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedColors
+import com.example.ecommercenativec19.ui.theme.extendedTypography
 
 /**
  * Promo banner. The design shows one slide with a 3-dot indicator (first dot active) but no content for slides 2
@@ -43,42 +44,41 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
  */
 @Composable
 internal fun PromoBanner(modifier: Modifier = Modifier) {
-    val tokens = LocalAppTokens.current
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
                 .heightIn(min = BannerMinHeight)
-                .clip(RoundedCornerShape(tokens.radiusSource02)),
+                .clip(MaterialTheme.shapes.medium),
         ) {
             CoverImage(painterResource(R.drawable.img_unsplash_pdx_a82obo_dedce9f5), null, Modifier.matchParentSize())
             // Design-absolute layout: each line sits at its own y inside the 398 x 200 banner.
             Text(
                 text = stringResource(R.string.home_banner_up_to),
-                style = tokens.typographySource08,
-                color = tokens.colorSource00,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
                 softWrap = false,
-                modifier = Modifier.padding(start = BannerTextStart, top = BannerUpToTop).textLineBox(tokens.typographySource08),
+                modifier = Modifier.padding(start = BannerTextStart, top = BannerUpToTop).textLineBox(MaterialTheme.typography.headlineSmall),
             )
             Text(
                 text = buildAnnotatedString {
-                    withStyle(tokens.typographySource09.toSpanStyle().copy(color = tokens.colorSource00)) {
+                    withStyle(MaterialTheme.typography.headlineLarge.toSpanStyle().copy(color = MaterialTheme.colorScheme.primary)) {
                         append(stringResource(R.string.home_banner_discount_value))
                     }
-                    withStyle(tokens.typographySource10.toSpanStyle().copy(color = tokens.colorSource00)) {
+                    withStyle(MaterialTheme.typography.titleLarge.toSpanStyle().copy(color = MaterialTheme.colorScheme.primary)) {
                         append(stringResource(R.string.home_banner_discount_suffix))
                     }
                 },
-                style = tokens.typographySource09,
+                style = MaterialTheme.typography.headlineLarge,
                 maxLines = 1,
                 softWrap = false,
-                modifier = Modifier.padding(start = BannerTextStart, top = BannerDiscountTop).textLineBox(tokens.typographySource09),
+                modifier = Modifier.padding(start = BannerTextStart, top = BannerDiscountTop).textLineBox(MaterialTheme.typography.headlineLarge),
             )
             LineBoxText(
                 text = stringResource(R.string.home_banner_description),
-                style = tokens.typographySource07,
-                color = tokens.colorSource00,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(start = BannerTextStart, top = BannerDescriptionTop),
             )
             // Visual only: the prototype defines no action for the banner's "Shop Now".
@@ -87,15 +87,15 @@ internal fun PromoBanner(modifier: Modifier = Modifier) {
                     .padding(start = BannerTextStart, top = ShopNowTop)
                     .heightIn(min = ShopNowHeight)
                     .widthIn(min = ShopNowWidth)
-                    .background(tokens.colorSource00, RoundedCornerShape(tokens.radiusSource05))
+                    .background(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
                     .padding(horizontal = ShopNowPadding),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = stringResource(R.string.home_banner_cta),
-                    style = tokens.typographySource07,
-                    color = tokens.colorSource02,
-                    modifier = Modifier.textLineBox(tokens.typographySource07),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.textLineBox(MaterialTheme.typography.bodyMedium),
                 )
             }
             Image(
@@ -116,16 +116,15 @@ internal fun PromoBanner(modifier: Modifier = Modifier) {
  */
 @Composable
 internal fun FootwearBanner(modifier: Modifier = Modifier) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource02)
+    val shape = MaterialTheme.shapes.medium
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
                 .heightIn(min = FootwearHeight)
                 .clip(shape)
-                .background(tokens.colorSource18)
-                .border(1.dp, tokens.colorSource14, shape),
+                .background(MaterialTheme.extendedColors.footwearBanner)
+                .border(1.dp, MaterialTheme.colorScheme.outline, shape),
         ) {
             FractionalCropImage(
                 painter = painterResource(R.drawable.img_frame16_89c069cc),
@@ -167,14 +166,14 @@ internal fun FootwearBanner(modifier: Modifier = Modifier) {
                 }
                 Text(
                     text = stringResource(R.string.home_footwear_label),
-                    style = tokens.typographySource07,
-                    color = tokens.colorSource12,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(top = FootwearLabelTop),
                 )
                 Text(
                     text = stringResource(R.string.home_footwear_offer),
-                    style = tokens.typographySource12,
-                    color = tokens.colorSource12,
+                    style = MaterialTheme.extendedTypography.bannerOffer,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(top = FootwearOfferTop),
                 )
             }

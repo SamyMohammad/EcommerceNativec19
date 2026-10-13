@@ -108,11 +108,19 @@ rather than "Home".
   headers are redacted so credentials never reach Logcat.
 - `Json { ignoreUnknownKeys = true }` and nullable DTO fields for anything the API does not guarantee.
 
+## Theme
+
+The theme is hand-owned Material 3 in `ui/theme/` (light only, no dynamic color). Screens read
+`MaterialTheme.colorScheme`, `.typography` and `.shapes`; values the Material roles have no honest name for
+(price strike-through, product swatches, variant dots, a few text styles, the search-field shape) live in
+`AppExtendedColors` / `AppExtendedTypography` / `AppExtendedShapes`, read via `MaterialTheme.extendedColors` etc.
+They are static composition locals because they never change at runtime. The token-to-role table is in
+`docs/design-decisions/theme-m3.md`. The earlier Figma-generated token files were retired.
+
 ## 8. Refactor roadmap
 
 Planned, in rough order. Each item is a small reviewed PR.
 
-- **Material 3 theme rewrite** that replaces the Figma-generated tokens with a hand-owned theme.
 - **Coil 3 and image performance** (sizing, caching) once products show real images.
 - **Route API per feature**, replacing sample data: products, then cart, wishlist and account.
 - **Authentication** via DataStore token storage and an OkHttp interceptor that adds the `token` header. This is a

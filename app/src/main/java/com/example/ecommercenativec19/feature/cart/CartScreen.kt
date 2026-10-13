@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +34,6 @@ import com.example.ecommercenativec19.core.ui.QuantitySelector
 import com.example.ecommercenativec19.core.ui.ScreenTitleBar
 import com.example.ecommercenativec19.core.ui.textLineBox
 import com.example.ecommercenativec19.core.ui.tokenColor
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Stateless Cart: title bar, product rows, and the footer with total price and "Check Out". */
 @Composable
@@ -48,7 +48,6 @@ fun CartScreen(
     onCheckOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Column(modifier.fillMaxSize()) {
         ScreenTitleBar(
             title = stringResource(R.string.cart_title),
@@ -62,8 +61,8 @@ fun CartScreen(
                 // Deviation: the design shows no empty state; this is a minimal accessible one.
                 Text(
                     text = stringResource(R.string.cart_empty),
-                    style = tokens.typographySource00,
-                    color = tokens.colorSource21,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.align(Alignment.Center).padding(horizontal = AppDimens.ScreenHorizontal),
                 )
             } else {
@@ -135,7 +134,6 @@ private fun CartRow(
 
 @Composable
 private fun CartFooter(totalPrice: String, onCheckOut: () -> Unit) {
-    val tokens = LocalAppTokens.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -147,15 +145,15 @@ private fun CartFooter(totalPrice: String, onCheckOut: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(TotalGap)) {
             Text(
                 text = stringResource(R.string.cart_total_price),
-                style = tokens.typographySource00,
-                color = tokens.colorSource21,
-                modifier = Modifier.textLineBox(tokens.typographySource00),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
             Text(
                 text = totalPrice,
-                style = tokens.typographySource00,
-                color = tokens.colorSource12,
-                modifier = Modifier.textLineBox(tokens.typographySource00),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
         }
         Spacer(Modifier.weight(1f))

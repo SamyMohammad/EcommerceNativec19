@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
@@ -34,7 +34,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedColors
+import com.example.ecommercenativec19.ui.theme.extendedTypography
 
 /**
  * Sign in / Sign up text field: label (Medium 18, white) above a 64dp white rounded field.
@@ -56,15 +57,14 @@ fun AuthTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource02)
+    val shape = MaterialTheme.shapes.medium
     Column(modifier) {
         Text(
             text = label,
-            style = tokens.typographySource00,
-            color = tokens.colorSource02,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
             maxLines = 1,
-            modifier = Modifier.textLineBox(tokens.typographySource00),
+            modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
         )
         Spacer(Modifier.height(AuthLabelToFieldGap))
         BasicTextField(
@@ -74,10 +74,10 @@ fun AuthTextField(
                 .fillMaxWidth()
                 .height(AppDimens.AuthFieldHeight)
                 .clip(shape)
-                .background(tokens.colorSource02)
+                .background(MaterialTheme.colorScheme.surface)
                 .semantics { contentDescription = label },
-            textStyle = tokens.typographySource01.copy(color = tokens.colorSource08),
-            cursorBrush = SolidColor(tokens.colorSource00),
+            textStyle = MaterialTheme.extendedTypography.fieldInput.copy(color = MaterialTheme.extendedColors.inputText),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             singleLine = true,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -100,8 +100,8 @@ fun AuthTextField(
                         if (value.isEmpty()) {
                             Text(
                                 text = placeholder,
-                                style = tokens.typographySource01,
-                                color = tokens.colorSource03,
+                                style = MaterialTheme.extendedTypography.fieldInput,
+                                color = MaterialTheme.extendedColors.inputPlaceholder,
                                 maxLines = 1,
                             )
                         }

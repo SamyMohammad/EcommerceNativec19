@@ -20,6 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,7 +46,7 @@ import com.example.ecommercenativec19.core.ui.AuthTextField
 import com.example.ecommercenativec19.core.ui.LightStatusBarIconsEffect
 import com.example.ecommercenativec19.core.ui.PasswordVisibilityToggle
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedTypography
 
 /**
  * Sign in (Figma node 14:47): primary-color full-bleed screen with the white logo, title, two fields, a
@@ -64,13 +65,12 @@ fun SignInScreen(
     onCreateAccount: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     LightStatusBarIconsEffect()
     val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(tokens.colorSource00)
+            .background(MaterialTheme.colorScheme.primary)
             .verticalScroll(rememberScrollState())
             .imePadding()
             .navigationBarsPadding()
@@ -82,16 +82,16 @@ fun SignInScreen(
         Spacer(Modifier.height(LogoToTitleGap))
         Text(
             text = stringResource(R.string.signin_title),
-            style = tokens.typographySource03,
-            color = tokens.colorSource02,
-            modifier = Modifier.textLineBox(tokens.typographySource03).semantics { heading() },
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.textLineBox(MaterialTheme.typography.headlineMedium).semantics { heading() },
         )
         Spacer(Modifier.height(TitleToSubtitleGap))
         Text(
             text = stringResource(R.string.signin_subtitle),
-            style = tokens.typographySource04,
-            color = tokens.colorSource02,
-            modifier = Modifier.textLineBox(tokens.typographySource04),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.textLineBox(MaterialTheme.typography.bodyLarge),
         )
         Spacer(Modifier.height(SubtitleToFirstFieldGap))
         AuthTextField(
@@ -121,10 +121,10 @@ fun SignInScreen(
         Spacer(Modifier.height(PasswordToForgotGap))
         Text(
             text = stringResource(R.string.signin_forgot_password),
-            style = tokens.typographySource05,
-            color = tokens.colorSource02,
+            style = MaterialTheme.extendedTypography.inlineLink,
+            color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.End,
-            modifier = Modifier.fillMaxWidth().textLineBox(tokens.typographySource05),
+            modifier = Modifier.fillMaxWidth().textLineBox(MaterialTheme.extendedTypography.inlineLink),
         )
         Spacer(Modifier.height(ForgotToButtonGap))
         AppButton(
@@ -145,8 +145,8 @@ fun SignInScreen(
         ) {
             Text(
                 text = stringResource(R.string.signin_create_account),
-                style = tokens.typographySource00,
-                color = tokens.colorSource02,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center,
             )
         }

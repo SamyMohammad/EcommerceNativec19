@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,6 @@ import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.AppLogoBar
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Stateless Account: logo, welcome header, the five profile fields, bottom bar (Account tab selected). */
 @Composable
@@ -30,10 +30,9 @@ fun AccountScreen(
     onValueChange: (AccountFieldType, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Scaffold(
         modifier = modifier,
-        containerColor = tokens.colorSource02,
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
         Column(
@@ -50,15 +49,15 @@ fun AccountScreen(
             ) {
                 Text(
                     text = stringResource(R.string.account_welcome, state.welcomeName),
-                    style = tokens.typographySource00,
-                    color = tokens.colorSource12,
-                    modifier = Modifier.textLineBox(tokens.typographySource00),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
                 )
                 Text(
                     text = state.headerEmail,
-                    style = tokens.typographySource15,
-                    color = tokens.colorSource21,
-                    modifier = Modifier.textLineBox(tokens.typographySource15),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.textLineBox(MaterialTheme.typography.labelLarge),
                 )
             }
             Spacer(Modifier.height(HeaderToFirstLabelGap))

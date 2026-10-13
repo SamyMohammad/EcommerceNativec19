@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +31,6 @@ import com.example.ecommercenativec19.core.ui.FractionalCropImage
 import com.example.ecommercenativec19.core.ui.ProductRowCard
 import com.example.ecommercenativec19.core.ui.SearchHeader
 import com.example.ecommercenativec19.core.ui.tokenColor
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Stateless Wishlist: search header, product rows with favorite heart and "Add to Cart", bottom bar. */
 @Composable
@@ -42,10 +42,9 @@ fun WishlistScreen(
     onOpenCart: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Scaffold(
         modifier = modifier,
-        containerColor = tokens.colorSource02,
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
         LazyColumn(
@@ -67,8 +66,8 @@ fun WishlistScreen(
                     Box(Modifier.fillMaxWidth().padding(horizontal = AppDimens.ScreenHorizontal), contentAlignment = Alignment.Center) {
                         Text(
                             text = stringResource(R.string.wishlist_empty),
-                            style = tokens.typographySource00,
-                            color = tokens.colorSource21,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -93,7 +92,7 @@ private fun WishlistRow(
         price = item.price,
         oldPrice = item.oldPrice,
         colorDot = item.dot.tokenColor(),
-        variantColor = LocalAppTokens.current.colorSource12,
+        variantColor = MaterialTheme.colorScheme.onSurface,
         variantLabel = item.variantLabel,
         image = {
             val painter = painterResource(item.image)

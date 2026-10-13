@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * The four bottom-navigation destinations of the design (Home, Categories, Wishlist, Account). Cart is not a tab:
@@ -56,11 +55,10 @@ fun BottomNavigationBar(
     onTabSelected: (AppTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(tokens.colorSource00, RoundedCornerShape(tokens.radiusSource02))
+            .background(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.medium)
             .navigationBarsPadding(),
     ) {
         Row(

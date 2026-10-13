@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +32,6 @@ import com.example.ecommercenativec19.core.ui.ProductCard
 import com.example.ecommercenativec19.core.ui.ProductCardRatingPosition
 import com.example.ecommercenativec19.core.ui.ProductCardSize
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Section title (Medium 18) with an optional end-aligned small link-style label ("view all"). */
 @Composable
@@ -40,7 +40,6 @@ internal fun HomeSectionHeader(
     modifier: Modifier = Modifier,
     trailing: String? = null,
 ) {
-    val tokens = LocalAppTokens.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -50,17 +49,17 @@ internal fun HomeSectionHeader(
     ) {
         Text(
             text = title,
-            style = tokens.typographySource00,
-            color = tokens.colorSource12,
-            modifier = Modifier.textLineBox(tokens.typographySource00),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
         )
         if (trailing != null) {
             // The prototype defines no destination for "view all", so it is plain text, not a button.
             Text(
                 text = trailing,
-                style = tokens.typographySource11,
-                color = tokens.colorSource12,
-                modifier = Modifier.textLineBox(tokens.typographySource11),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.bodySmall),
             )
         }
     }

@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Left category rail: the API's categories, or a spinner / retry / empty note while they are not available. */
 @Composable
@@ -33,21 +33,15 @@ internal fun CategoriesRail(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     // Rounded top-start / bottom corners, square top-end (as in the design).
-    val shape = RoundedCornerShape(
-        topStart = tokens.radiusSource05,
-        topEnd = tokens.radiusSource01,
-        bottomEnd = tokens.radiusSource05,
-        bottomStart = tokens.radiusSource05,
-    )
+    val shape = MaterialTheme.shapes.small.copy(topEnd = ZeroCornerSize)
     StatusPane(
         state = state,
         onRetry = onRetry,
         modifier = modifier
             .clip(shape)
-            .background(tokens.colorSource22)
-            .border(1.dp, tokens.colorSource14, shape),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(1.dp, MaterialTheme.colorScheme.outline, shape),
     ) { categories ->
         Column(modifier = Modifier.verticalScroll(rememberScrollState()).selectableGroup()) {
             categories.forEach { category ->
@@ -63,12 +57,11 @@ internal fun CategoriesRail(
 
 @Composable
 private fun SelectedRailItem(label: String, onClick: () -> Unit) {
-    val tokens = LocalAppTokens.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = SelectedRowHeight)
-            .background(tokens.colorSource02)
+            .background(MaterialTheme.colorScheme.surface)
             .selectable(selected = true, role = Role.Tab, onClick = onClick),
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -76,24 +69,23 @@ private fun SelectedRailItem(label: String, onClick: () -> Unit) {
             modifier = Modifier
                 .padding(start = IndicatorStart)
                 .size(width = IndicatorWidth, height = IndicatorHeight)
-                .background(tokens.colorSource00, RoundedCornerShape(tokens.radiusSource00)),
+                .background(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.large),
         )
         Text(
             text = label,
-            style = tokens.typographySource15,
-            color = tokens.colorSource12,
-            modifier = Modifier.padding(start = SelectedTextStart, end = ItemEnd).textLineBox(tokens.typographySource15),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(start = SelectedTextStart, end = ItemEnd).textLineBox(MaterialTheme.typography.labelLarge),
         )
     }
 }
 
 @Composable
 private fun RailItem(label: String, onClick: () -> Unit) {
-    val tokens = LocalAppTokens.current
     LineBoxText(
         text = label,
-        style = tokens.typographySource15,
-        color = tokens.colorSource12,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
             .fillMaxWidth()
             .selectable(selected = false, role = Role.Tab, onClick = onClick)

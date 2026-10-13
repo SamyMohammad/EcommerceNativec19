@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.FigmaCroppedImage
 import com.example.ecommercenativec19.core.ui.LightStatusBarIconsEffect
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedColors
 
 /**
  * Splash screen (Figma node 1:2): primary-color background, the "Route" logo image centered, and two blurred white
@@ -37,9 +38,8 @@ import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
  */
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
-    val tokens = LocalAppTokens.current
     LightStatusBarIconsEffect()
-    Box(modifier = modifier.fillMaxSize().background(tokens.colorSource00)) {
+    Box(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary)) {
         SplashGlow(Modifier.align(Alignment.TopCenter).offset(y = -GlowOverflowTop))
         SplashGlow(Modifier.align(Alignment.BottomCenter).offset(y = GlowOverflowBottom))
         FigmaCroppedImage(
@@ -59,11 +59,11 @@ fun SplashScreen(modifier: Modifier = Modifier) {
 /**
  * One blurred ellipse. The exported SVG ([R.drawable.ic_ellipse6_376b524d]) carries a Gaussian blur filter
  * (stdDeviation 75) that VectorDrawable cannot hold, so the blur is applied here. `Modifier.blur` needs
- * API 31; below that a radial fade approximating the same falloff is drawn instead (token `colorSource01`).
+ * API 31; below that a radial fade approximating the same falloff is drawn instead (`extendedColors.splashGlow`).
  */
 @Composable
 private fun SplashGlow(modifier: Modifier = Modifier) {
-    val glowColor = LocalAppTokens.current.colorSource01
+    val glowColor = MaterialTheme.extendedColors.splashGlow
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         Image(
             painter = painterResource(R.drawable.ic_ellipse6_376b524d),

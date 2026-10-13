@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,8 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.AppTokens
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
+import com.example.ecommercenativec19.ui.theme.extendedColors
 
 /**
  * Row of size choices: the selected size is a 35dp primary circle with white text, the others plain text.
@@ -38,7 +39,6 @@ internal fun ProductSizeOptions(
     onSizeSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Row(modifier = modifier.padding(start = OptionsStartPadding)) {
         sizes.forEach { size ->
             val selected = size == selectedSize
@@ -53,15 +53,15 @@ internal fun ProductSizeOptions(
                 Box(
                     modifier = Modifier
                         .size(OptionCircleSize)
-                        .then(if (selected) Modifier.background(tokens.colorSource00, CircleShape) else Modifier),
+                        .then(if (selected) Modifier.background(MaterialTheme.colorScheme.primary, CircleShape) else Modifier),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = size,
-                        style = tokens.typographySource07,
-                        color = if (selected) tokens.colorSource02 else tokens.colorSource12,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (selected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.textLineBox(tokens.typographySource07),
+                        modifier = Modifier.textLineBox(MaterialTheme.typography.bodyMedium),
                     )
                 }
             }
@@ -77,7 +77,6 @@ internal fun ProductColorOptions(
     onColorSelected: (ProductColor) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     Row(modifier = modifier.padding(start = OptionsStartPadding)) {
         colors.forEach { color ->
             val selected = color == selectedColor
@@ -92,7 +91,7 @@ internal fun ProductColorOptions(
                 Box(
                     modifier = Modifier
                         .size(OptionCircleSize)
-                        .background(color.swatch(tokens), CircleShape),
+                        .background(color.swatch(), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     if (selected) {
@@ -108,12 +107,14 @@ internal fun ProductColorOptions(
     }
 }
 
-private fun ProductColor.swatch(tokens: AppTokens): Color = when (this) {
-    ProductColor.Black -> tokens.colorSource24
-    ProductColor.Red -> tokens.colorSource25
-    ProductColor.Blue -> tokens.colorSource26
-    ProductColor.Green -> tokens.colorSource27
-    ProductColor.Coral -> tokens.colorSource28
+@Composable
+@ReadOnlyComposable
+private fun ProductColor.swatch(): Color = when (this) {
+    ProductColor.Black -> MaterialTheme.extendedColors.swatchBlack
+    ProductColor.Red -> MaterialTheme.extendedColors.swatchRed
+    ProductColor.Blue -> MaterialTheme.extendedColors.swatchBlue
+    ProductColor.Green -> MaterialTheme.extendedColors.swatchGreen
+    ProductColor.Coral -> MaterialTheme.extendedColors.swatchCoral
 }
 
 private fun ProductColor.label(): Int = when (this) {

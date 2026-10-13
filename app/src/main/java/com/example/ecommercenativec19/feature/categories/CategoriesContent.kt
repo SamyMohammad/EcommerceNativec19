@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,7 +33,6 @@ import com.example.ecommercenativec19.core.ui.CategoryTile
 import com.example.ecommercenativec19.core.ui.CategoryTileStyle
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Right-hand side: selected category title, its promo banner and the three-column sub-category grid. */
 @Composable
@@ -44,15 +43,14 @@ internal fun CategoriesContent(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     StatusPane(state = state, onRetry = onRetry, modifier = modifier) { subCategories ->
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             if (title != null) {
                 Text(
                     text = title,
-                    style = tokens.typographySource15,
-                    color = tokens.colorSource12,
-                    modifier = Modifier.textLineBox(tokens.typographySource15),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.textLineBox(MaterialTheme.typography.labelLarge),
                 )
                 SelectedCategoryBanner(title, Modifier.padding(top = TitleToBannerGap))
             }
@@ -83,29 +81,28 @@ internal fun CategoriesContent(
 /** The API gives sub-categories no image, so every tile shows a neutral block. */
 @Composable
 private fun TilePlaceholder() {
-    Box(Modifier.fillMaxSize().background(LocalAppTokens.current.colorSource22))
+    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant))
 }
 
 /** Faded photo banner with title and a "Shop Now" pill. The photo is directional artwork, so it stays LTR. */
 @Composable
 private fun SelectedCategoryBanner(title: String, modifier: Modifier = Modifier) {
-    val tokens = LocalAppTokens.current
-    val shape = RoundedCornerShape(tokens.radiusSource05)
+    val shape = MaterialTheme.shapes.small
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
                 .heightIn(min = BannerMinHeight)
                 .clip(shape)
-                .background(tokens.colorSource23),
+                .background(MaterialTheme.colorScheme.surfaceContainer),
         ) {
             // The exported photo already carries the design's 80% opacity in its alpha channel (204/255).
             CoverImage(painterResource(R.drawable.img_frame32_617edea3), null, Modifier.matchParentSize())
             // Design-absolute layout inside the 237 x 94 banner: title at y 8, "Shop Now" pill at y 56.
             LineBoxText(
                 text = title,
-                style = tokens.typographySource16,
-                color = tokens.colorSource12,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start = BannerPadding, top = BannerTop),
             )
             // Visual only: the prototype defines no action for the banner's "Shop Now".
@@ -113,14 +110,14 @@ private fun SelectedCategoryBanner(title: String, modifier: Modifier = Modifier)
                 modifier = Modifier
                     .padding(start = BannerPadding, top = ShopNowTop)
                     .size(width = ShopNowWidth, height = ShopNowHeight)
-                    .background(tokens.colorSource00, RoundedCornerShape(tokens.radiusSource05)),
+                    .background(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small),
                 contentAlignment = Alignment.CenterStart,
             ) {
                 Text(
                     text = stringResource(R.string.categories_shop_now),
-                    style = tokens.typographySource11,
-                    color = tokens.colorSource02,
-                    modifier = Modifier.padding(start = ShopNowTextStart).textLineBox(tokens.typographySource11),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(start = ShopNowTextStart).textLineBox(MaterialTheme.typography.bodySmall),
                 )
             }
         }

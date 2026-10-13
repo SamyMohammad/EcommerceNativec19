@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +20,6 @@ import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.AppButton
 import com.example.ecommercenativec19.core.ui.AppButtonStyle
 import com.example.ecommercenativec19.core.ui.toMessageRes
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Renders [content] only for [LoadState.Content]; the other states get a spinner, a retry prompt or an empty note. */
 @Composable
@@ -29,16 +29,15 @@ internal fun <T> StatusPane(
     modifier: Modifier = Modifier,
     content: @Composable (T) -> Unit,
 ) {
-    val tokens = LocalAppTokens.current
     Box(modifier = modifier) {
         when (state) {
             is LoadState.Content -> content(state.data)
-            LoadState.Loading -> CenteredStatus { CircularProgressIndicator(color = tokens.colorSource00) }
+            LoadState.Loading -> CenteredStatus { CircularProgressIndicator(color = MaterialTheme.colorScheme.primary) }
             is LoadState.Error -> CenteredStatus {
                 Text(
                     text = stringResource(state.error.toMessageRes()),
-                    style = tokens.typographySource11,
-                    color = tokens.colorSource12,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 12.dp),
                 )
@@ -52,8 +51,8 @@ internal fun <T> StatusPane(
             LoadState.Empty -> CenteredStatus {
                 Text(
                     text = stringResource(R.string.categories_empty),
-                    style = tokens.typographySource11,
-                    color = tokens.colorSource12,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                 )
             }

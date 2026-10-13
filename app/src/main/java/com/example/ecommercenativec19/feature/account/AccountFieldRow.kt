@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +33,6 @@ import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.AppIconButton
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Label (Medium 18) above a 54dp bordered field (radius 15) showing the value (Medium 14) and the edit icon at
@@ -49,22 +48,21 @@ fun AccountFieldRow(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     val label = stringResource(field.type.label)
-    val shape = RoundedCornerShape(tokens.radiusSource02)
+    val shape = MaterialTheme.shapes.medium
     Column(modifier.fillMaxWidth()) {
         Text(
             text = label,
-            style = tokens.typographySource00,
-            color = tokens.colorSource12,
-            modifier = Modifier.textLineBox(tokens.typographySource00),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
         )
         Spacer(Modifier.height(LabelToFieldGap))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = FieldMinHeight)
-                .border(1.dp, tokens.colorSource14, shape)
+                .border(1.dp, MaterialTheme.colorScheme.outline, shape)
                 .padding(
                     start = AppDimens.ScreenHorizontal,
                     end = AppDimens.ScreenHorizontal - AppDimens.IconTouchInset,
@@ -81,8 +79,8 @@ fun AccountFieldRow(
                         value = field.value,
                         onValueChange = onValueChange,
                         modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                        textStyle = tokens.typographySource15.copy(color = tokens.colorSource12),
-                        cursorBrush = SolidColor(tokens.colorSource00),
+                        textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                         singleLine = true,
                         visualTransformation = visualTransformation,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -91,11 +89,11 @@ fun AccountFieldRow(
                 } else {
                     Text(
                         text = if (field.type.isPassword) "*".repeat(field.value.length) else field.value,
-                        style = tokens.typographySource15,
-                        color = tokens.colorSource12,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.textLineBox(tokens.typographySource15),
+                        modifier = Modifier.textLineBox(MaterialTheme.typography.labelLarge),
                     )
                 }
             }

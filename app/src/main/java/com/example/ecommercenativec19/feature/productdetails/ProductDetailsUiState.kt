@@ -1,6 +1,6 @@
 package com.example.ecommercenativec19.feature.productdetails
 
-/** The five color swatches of the design; the actual colors come from the theme tokens in the UI layer. */
+/** The five color swatches of the design; the actual colors come from the extended theme colors in the UI layer. */
 enum class ProductColor { Black, Red, Blue, Green, Coral }
 
 /**

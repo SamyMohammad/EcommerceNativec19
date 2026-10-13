@@ -49,7 +49,7 @@ data → domain → presentation, with tests.
 | Concern | Choice | Notes |
 |---|---|---|
 | Language | Kotlin 2.2.10 | |
-| UI | Jetpack Compose (BOM 2026.02.01), Material 3 | No XML layouts, Fragments or ViewBinding |
+| UI | Jetpack Compose (BOM 2026.02.01), Material 3 | No XML layouts, Fragments or ViewBinding. Hand-owned light M3 theme with extended colors / typography / shapes in `ui/theme/` |
 | Presentation | `ViewModel` + immutable `UiState` + `StateFlow` | Collected with `collectAsStateWithLifecycle` |
 | Async | Kotlin coroutines and Flow | |
 | Navigation | Navigation 3 (1.2.0) | App-owned per-tab back stacks in `navigation/AppNavigator.kt`, `NavDisplay` in `navigation/AppNavDisplay.kt`, entry-scoped ViewModels |
@@ -120,7 +120,7 @@ app/src/main/java/com/example/ecommercenativec19/
 │   │   └── Categories*.kt       # Route, Screen, ViewModel, UiState
 │   └── home/ cart/ wishlist/ account/ productlist/ productdetails/ signin/ signup/ splash/
 ├── navigation/                  # NavKeys, AppNavigator (back stacks), NavDisplay, shared bottom bar
-└── ui/theme/generated/          # Theme tokens generated from Figma
+└── ui/theme/                    # Hand-owned Material 3 theme: Color, Type, Shape, ExtendedTheme, Theme
 ```
 
 ## Networking and error handling

@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /** Image shape + label size of the two category tiles in the design. */
 enum class CategoryTileStyle(internal val imageSize: Dp) {
@@ -57,10 +56,9 @@ fun CategoryTile(
     labelOffsetX: Dp = 0.dp,
     labelStart: Dp? = null,
 ) {
-    val tokens = LocalAppTokens.current
     val imageShape = when (style) {
         CategoryTileStyle.Circle -> CircleShape
-        CategoryTileStyle.Square -> RoundedCornerShape(tokens.radiusSource07)
+        CategoryTileStyle.Square -> MaterialTheme.shapes.extraSmall
     }
     val clickModifier = if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier
     Column(
@@ -75,7 +73,7 @@ fun CategoryTile(
                     .clip(imageShape)
                     .then(
                         if (style == CategoryTileStyle.Square) {
-                            Modifier.border(1.dp, tokens.colorSource14, imageShape)
+                            Modifier.border(1.dp, MaterialTheme.colorScheme.outline, imageShape)
                         } else {
                             Modifier
                         },
@@ -84,19 +82,19 @@ fun CategoryTile(
             )
         }
         Spacer(Modifier.height(8.dp))
-        val labelStyle = if (style == CategoryTileStyle.Circle) tokens.typographySource07 else tokens.typographySource11
+        val labelStyle = if (style == CategoryTileStyle.Circle) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall
         if (labelStart != null) {
             LineBoxText(
                 text = label,
                 style = labelStyle,
-                color = tokens.colorSource12,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.fillMaxWidth().padding(start = labelStart),
             )
         } else {
             LineBoxText(
                 text = label,
                 style = labelStyle,
-                color = tokens.colorSource12,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.offset(x = labelOffsetX),
             )

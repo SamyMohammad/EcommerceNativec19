@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +36,6 @@ import com.example.ecommercenativec19.core.ui.AppLogoStyle
 import com.example.ecommercenativec19.core.ui.AuthTextField
 import com.example.ecommercenativec19.core.ui.LightStatusBarIconsEffect
 import com.example.ecommercenativec19.core.ui.PasswordVisibilityToggle
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Sign up (Figma node 9:97): primary-color full-bleed screen with the white logo, four labelled fields (full name,
@@ -55,13 +55,12 @@ fun SignUpScreen(
     onSignUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
     LightStatusBarIconsEffect()
     val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(tokens.colorSource00)
+            .background(MaterialTheme.colorScheme.primary)
             .verticalScroll(rememberScrollState())
             .imePadding()
             .navigationBarsPadding()

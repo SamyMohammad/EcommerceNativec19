@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +35,6 @@ import com.example.ecommercenativec19.core.ui.QuantitySelector
 import com.example.ecommercenativec19.core.ui.ScreenTitleBar
 import com.example.ecommercenativec19.core.ui.centeredBorder
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Stateless Product details: title bar, scrollable content (carousel, title/price, sold + rating + quantity,
@@ -101,7 +100,6 @@ private fun ProductDetailsContent(
     onIncrementQuantity: () -> Unit,
     onDecrementQuantity: () -> Unit,
 ) {
-    val tokens = LocalAppTokens.current
     Column(Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -112,16 +110,16 @@ private fun ProductDetailsContent(
         ) {
             Text(
                 text = state.title,
-                style = tokens.typographySource00,
-                color = tokens.colorSource12,
-                modifier = Modifier.weight(1f).textLineBox(tokens.typographySource00),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f).textLineBox(MaterialTheme.typography.titleMedium),
             )
             Spacer(Modifier.width(SectionGap))
             Text(
                 text = state.price,
-                style = tokens.typographySource00,
-                color = tokens.colorSource12,
-                modifier = Modifier.textLineBox(tokens.typographySource00),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
         }
         Spacer(Modifier.size(SectionGap))
@@ -132,20 +130,20 @@ private fun ProductDetailsContent(
             // The design top-aligns the sold pill (34dp), the rating and the quantity pill (42dp) at y 448.
             verticalAlignment = Alignment.Top,
         ) {
-            val pillShape = RoundedCornerShape(tokens.radiusSource00)
+            val pillShape = MaterialTheme.shapes.large
             Box(
                 modifier = Modifier
                     .heightIn(min = SoldPillHeight)
                     // The sold pill's stroke is centered on its edge in the design (half a dp outside the box).
-                    .centeredBorder(1.dp, tokens.colorSource14, pillShape)
+                    .centeredBorder(1.dp, MaterialTheme.colorScheme.outline, pillShape)
                     .padding(horizontal = SoldPillHorizontalPadding),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = state.soldLabel,
-                    style = tokens.typographySource15,
-                    color = tokens.colorSource12,
-                    modifier = Modifier.textLineBox(tokens.typographySource15),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.textLineBox(MaterialTheme.typography.labelLarge),
                 )
             }
             Row(
@@ -163,9 +161,9 @@ private fun ProductDetailsContent(
                 Spacer(Modifier.width(StarGap))
                 Text(
                     text = state.ratingLabel,
-                    style = tokens.typographySource07,
-                    color = tokens.colorSource12,
-                    modifier = Modifier.textLineBox(tokens.typographySource07),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.textLineBox(MaterialTheme.typography.bodyMedium),
                 )
             }
             QuantitySelector(
@@ -180,10 +178,10 @@ private fun ProductDetailsContent(
         Text(
             text = buildAnnotatedString {
                 append(state.description)
-                withStyle(SpanStyle(color = tokens.colorSource12)) { append(stringResource(R.string.details_read_more)) }
+                withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) { append(stringResource(R.string.details_read_more)) }
             },
-            style = tokens.typographySource07,
-            color = tokens.colorSource21,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             // The multi-line text keeps the font's natural first-line ascent (a line box of 18dp cannot be forced on
             // it), so it is drawn 1dp up and the layout gap below it is 2dp shorter to land on the design's y.
             modifier = Modifier
@@ -203,18 +201,16 @@ private fun ProductDetailsContent(
 
 @Composable
 private fun SectionHeading(text: String) {
-    val tokens = LocalAppTokens.current
     Text(
         text = text,
-        style = tokens.typographySource00,
-        color = tokens.colorSource12,
-        modifier = Modifier.textLineBox(tokens.typographySource00).padding(horizontal = AppDimens.ScreenHorizontal),
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium).padding(horizontal = AppDimens.ScreenHorizontal),
     )
 }
 
 @Composable
 private fun ProductDetailsFooter(totalPrice: String, onAddToCart: () -> Unit) {
-    val tokens = LocalAppTokens.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -225,15 +221,15 @@ private fun ProductDetailsFooter(totalPrice: String, onAddToCart: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(TotalLabelGap)) {
             Text(
                 text = stringResource(R.string.details_total_price),
-                style = tokens.typographySource00,
-                color = tokens.colorSource21,
-                modifier = Modifier.textLineBox(tokens.typographySource00),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
             Text(
                 text = totalPrice,
-                style = tokens.typographySource00,
-                color = tokens.colorSource12,
-                modifier = Modifier.textLineBox(tokens.typographySource00),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
         }
         AppButton(

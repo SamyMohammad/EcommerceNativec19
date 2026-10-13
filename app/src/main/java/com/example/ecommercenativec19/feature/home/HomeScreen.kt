@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,7 +16,6 @@ import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.ProductCardRatingPosition
 import com.example.ecommercenativec19.core.ui.SearchHeader
-import com.example.ecommercenativec19.ui.theme.generated.LocalAppTokens
 
 /**
  * Stateless Home screen: fixed logo/search/cart header and bottom bar around a vertically scrolling body
@@ -30,8 +30,7 @@ fun HomeScreen(
     onOpenCategories: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tokens = LocalAppTokens.current
-    Column(modifier = modifier.fillMaxSize().background(tokens.colorSource02)) {
+    Column(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         SearchHeader(
             query = state.searchQuery,
             onQueryChange = onQueryChange,
