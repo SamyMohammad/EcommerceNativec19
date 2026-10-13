@@ -62,7 +62,8 @@ exceptions, and keep the specific `AppError` in `LoadState.Error`. The UI turns 
 
 **Tradeoff:** Koin resolves dependencies at runtime, so a missing binding fails when first requested, not at
 compile time. Hilt gives compile-time graph validation. We accept that for a small app; a Koin module-graph
-verification test (planned with the "Koin for all ViewModels" step) closes most of that gap.
+verification test closes most of that gap. Every ViewModel is created by Koin from a per-feature `di/` module, and
+`KoinModulesTest` verifies the full production list (`appModules`).
 
 **Why 4.1.x:** it is the newest Koin line built on Kotlin 2.2. Koin 4.2.x requires Kotlin 2.3, and bumping Kotlin
 drags AGP and Compose compatibility with it. Revisit when the Kotlin upgrade is done on its own merits.
@@ -88,7 +89,6 @@ tooling friction, the fallback is staying on classic Navigation Compose; the swi
 
 Planned, in rough order. Each item is a small reviewed PR.
 
-- **Koin for all ViewModels**, replacing manual construction in the remaining screens.
 - **Navigation 3** (see section 6).
 - **Material 3 theme rewrite** that replaces the Figma-generated tokens with a hand-owned theme.
 - **Coil 3 and image performance** (sizing, caching) once products show real images.

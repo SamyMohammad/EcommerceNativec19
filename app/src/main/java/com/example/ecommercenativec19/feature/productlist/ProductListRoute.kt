@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ecommercenativec19.core.ui.AppTab
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Product list entry point. Card click -> [onOpenProduct] with the opaque product id. The card "+" button has no
@@ -18,7 +18,7 @@ fun ProductListRoute(
     onOpenProduct: (productId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: ProductListViewModel = viewModel()
+    val viewModel: ProductListViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     ProductListScreen(
         state = state,

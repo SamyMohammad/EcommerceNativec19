@@ -53,7 +53,7 @@ data → domain → presentation, with tests.
 | Presentation | `ViewModel` + immutable `UiState` + `StateFlow` | Collected with `collectAsStateWithLifecycle` |
 | Async | Kotlin coroutines and Flow | |
 | Navigation | Navigation Compose 2.9 | Single `NavHost` in `navigation/AppNavHost.kt` |
-| DI | Koin 4.1.1 | Chosen over Hilt for simplicity and a future KMP path. 4.1.x because 4.2.x requires Kotlin 2.3 |
+| DI | Koin 4.1.1 | Chosen over Hilt for simplicity and a future KMP path. All ViewModels come from per-feature Koin modules, checked by `KoinModulesTest`. 4.1.x because 4.2.x requires Kotlin 2.3 |
 | Networking | Retrofit 3, OkHttp 5, kotlinx.serialization 1.9 | Compile-time serialization, no reflection |
 | Testing | JUnit 4, kotlinx-coroutines-test, Robolectric, Roborazzi | Hand-written fakes, no mocking library |
 | Build | AGP 9.4.1 (built-in Kotlin), Gradle 9.6, version catalog | `gradle/libs.versions.toml` |
@@ -106,6 +106,7 @@ For the reasoning behind these choices and the planned refactor roadmap, see
 ```
 app/src/main/java/com/example/ecommercenativec19/
 ├── EcommerceApp.kt              # Application: starts Koin
+├── di/                          # appModules: the single production Koin module list
 ├── MainActivity.kt              # Single activity, hosts the Compose tree
 ├── core/
 │   ├── common/                  # AppResult / AppError (pure Kotlin)
