@@ -22,8 +22,12 @@ import kotlinx.serialization.Serializable
 /** 601:775 */
 @Serializable data object Categories : NavKey
 
-/** 726:650; opened from Categories, so it lives on the Categories tab stack. */
-@Serializable data object ProductList : NavKey
+/** 726:650; opened from a Categories sub-category tile, so it lives on the Categories tab stack. */
+@Serializable data class ProductList(val subCategoryId: String) : NavKey {
+    init {
+        require(subCategoryId.isNotBlank()) { "subCategoryId must not be blank" }
+    }
+}
 
 /** 620:1083 */
 @Serializable data class ProductDetails(val productId: String) : NavKey {
@@ -54,7 +58,8 @@ val AppTab.rootKey: NavKey
 val NavKey.bottomBarTab: AppTab?
     get() = when (this) {
         Home -> AppTab.Home
-        Categories, ProductList -> AppTab.Categories
+        Categories -> AppTab.Categories
+        is ProductList -> AppTab.Categories
         Wishlist -> AppTab.Wishlist
         Account -> AppTab.Account
         else -> null

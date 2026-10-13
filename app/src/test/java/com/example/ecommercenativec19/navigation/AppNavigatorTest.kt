@@ -82,7 +82,7 @@ class AppNavigatorTest {
     fun `switching tabs preserves each tab history`() {
         val nav = signedIn()
         nav.selectTab(AppTab.Categories)
-        nav.push(ProductList)
+        nav.push(ProductList("sub-1"))
         nav.push(ProductDetails("7"))
 
         nav.selectTab(AppTab.Home)
@@ -90,24 +90,24 @@ class AppNavigatorTest {
 
         assertEquals(ProductDetails("7"), nav.topKey)
         assertTrue(nav.back())
-        assertEquals(ProductList, nav.topKey)
+        assertEquals(ProductList("sub-1"), nav.topKey)
     }
 
     @Test
     fun `hidden tab stacks stay in the display list below the current tab`() {
         val nav = signedIn()
         nav.selectTab(AppTab.Categories)
-        nav.push(ProductList)
+        nav.push(ProductList("sub-1"))
         nav.selectTab(AppTab.Home)
 
-        assertEquals(listOf(Categories, ProductList, Home), nav.displayStack)
+        assertEquals(listOf(Categories, ProductList("sub-1"), Home), nav.displayStack)
     }
 
     @Test
     fun `reselecting the current tab pops it to its root`() {
         val nav = signedIn()
         nav.selectTab(AppTab.Categories)
-        nav.push(ProductList)
+        nav.push(ProductList("sub-1"))
         nav.push(ProductDetails("7"))
 
         nav.selectTab(AppTab.Categories)
@@ -141,7 +141,7 @@ class AppNavigatorTest {
     fun `cart back pops to the screen that opened it`() {
         val nav = signedIn()
         nav.selectTab(AppTab.Categories)
-        nav.push(ProductList)
+        nav.push(ProductList("sub-1"))
         nav.push(ProductDetails("3"))
         nav.push(Cart)
 
@@ -161,7 +161,7 @@ class AppNavigatorTest {
     @Test
     fun `bottom bar shows on tab screens and Product list but not on details or cart`() {
         assertEquals(AppTab.Home, Home.bottomBarTab)
-        assertEquals(AppTab.Categories, ProductList.bottomBarTab)
+        assertEquals(AppTab.Categories, ProductList("sub-1").bottomBarTab)
         assertEquals(null, ProductDetails("1").bottomBarTab)
         assertEquals(null, Cart.bottomBarTab)
         assertEquals(null, SignIn.bottomBarTab)
@@ -170,5 +170,10 @@ class AppNavigatorTest {
     @Test(expected = IllegalArgumentException::class)
     fun `product details rejects a blank id`() {
         ProductDetails(" ")
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `product list rejects a blank sub-category id`() {
+        ProductList(" ")
     }
 }

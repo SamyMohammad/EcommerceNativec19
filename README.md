@@ -37,10 +37,10 @@ the public [Route E-commerce API](https://documenter.getpostman.com/view/5709532
 | Splash, Sign in, Sign up | Done | Local state (auth not wired yet) |
 | Home | Done | Sample data |
 | **Categories** | Done | **Route API** (categories + sub-categories) |
-| Product list, Product details | Done | Sample data |
+| **Product list, Product details** | Done | **Route API** (products by sub-category with load-more paging, product by id) |
 | Cart, Wishlist, Account | Done | Sample data |
 
-**Next slices:** products (Home, Product list, Product details) → authentication (token storage) → cart and
+**Next slices:** Home on the products API → authentication (token storage) → cart and
 wishlist → account. Each slice is delivered as a small, reviewed PR that takes one feature through
 data → domain → presentation, with tests.
 
@@ -112,14 +112,17 @@ app/src/main/java/com/example/ecommercenativec19/
 ├── core/
 │   ├── common/                  # AppResult / AppError (pure Kotlin)
 │   ├── network/                 # Retrofit, OkHttp, Json, safeApiCall
-│   └── ui/                      # Reusable design-system composables
+│   └── ui/                      # Reusable design-system composables (ProductImage, StatusPane, price formatting)
 ├── feature/
 │   ├── categories/              # First slice wired to the API
 │   │   ├── data/                # CategoriesApi, DTOs, mapper, repository impl
 │   │   ├── domain/              # Models, repository interface, use cases
 │   │   ├── di/                  # Koin module
 │   │   └── Categories*.kt       # Route, Screen, ViewModel, UiState
-│   └── home/ cart/ wishlist/ account/ productlist/ productdetails/ signin/ signup/ splash/
+│   ├── products/                # Shared product data + domain (ProductsApi, mapper, repository, use cases)
+│   ├── productlist/             # Sub-category product grid with load-more paging
+│   ├── productdetails/          # Product by id: carousel, quantity and total
+│   └── home/ cart/ wishlist/ account/ signin/ signup/ splash/
 ├── navigation/                  # NavKeys, AppNavigator (back stacks), NavDisplay, shared bottom bar
 └── ui/theme/                    # Hand-owned Material 3 theme: Color, Type, Shape, ExtendedTheme, Theme
 ```

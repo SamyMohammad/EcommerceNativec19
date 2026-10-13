@@ -1,26 +1,29 @@
 package com.example.ecommercenativec19.feature.productdetails
 
-/** The five color swatches of the design; the actual colors come from the extended theme colors in the UI layer. */
-enum class ProductColor { Black, Red, Blue, Green, Coral }
+import com.example.ecommercenativec19.core.common.LoadState
+
+/** What the details screen shows of a loaded product. Prices are whole EGP; the UI formats them. */
+data class ProductDetailsUi(
+    val id: String,
+    val title: String,
+    /** What the customer pays for one item. */
+    val unitPrice: Int,
+    val soldCount: Int,
+    val rating: Double,
+    val ratingCount: Int,
+    val description: String,
+    val images: List<String>,
+)
 
 /**
- * Everything Product details renders. Display texts are already formatted (no price math in the UI); the
- * selection fields ([selectedSize], [selectedColor], [quantity], [isFavorite]) are UI-only state.
+ * Everything Product details renders. [quantity] and [isFavorite] are UI-only: favorites arrive with the wishlist
+ * API slice and "Add to cart" has no behavior beyond navigation until the cart slice.
  */
 data class ProductDetailsUiState(
-    val productId: String,
-    val title: String,
-    val price: String,
-    val soldLabel: String,
-    val ratingLabel: String,
-    val description: String,
-    /** Drawable resource ids of the carousel pages. */
-    val images: List<Int>,
-    val sizes: List<String>,
-    val colors: List<ProductColor>,
-    val totalPrice: String,
-    val selectedSize: String,
-    val selectedColor: ProductColor,
+    val product: LoadState<ProductDetailsUi> = LoadState.Loading,
     val quantity: Int = 1,
     val isFavorite: Boolean = false,
-)
+) {
+    /** Unit price times quantity; 0 while there is no product. */
+    val totalPrice: Int get() = ((product as? LoadState.Content)?.data?.unitPrice ?: 0) * quantity
+}

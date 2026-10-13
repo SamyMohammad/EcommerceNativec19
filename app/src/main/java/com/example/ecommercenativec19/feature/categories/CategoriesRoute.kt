@@ -6,11 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 
-/** Categories entry point. Callback contract: see AppNavDisplay (cart icon, any sub-category tile -> Product list). */
+/** Categories entry point. Callback contract: see AppNavDisplay (cart icon, any sub-category tile -> Product list of that sub-category). */
 @Composable
 fun CategoriesRoute(
     onOpenCart: () -> Unit,
-    onOpenProductList: () -> Unit,
+    onOpenProductList: (subCategoryId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CategoriesViewModel = koinViewModel()

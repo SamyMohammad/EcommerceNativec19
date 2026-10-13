@@ -1,4 +1,4 @@
-package com.example.ecommercenativec19.feature.categories
+package com.example.ecommercenativec19.core.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,15 +17,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.common.LoadState
-import com.example.ecommercenativec19.core.ui.AppButton
-import com.example.ecommercenativec19.core.ui.AppButtonStyle
-import com.example.ecommercenativec19.core.ui.toMessageRes
 
-/** Renders [content] only for [LoadState.Content]; the other states get a spinner, a retry prompt or an empty note. */
+/**
+ * Renders [content] only for [LoadState.Content]; the other states get a spinner, a retry prompt or [emptyText].
+ * The empty copy is a parameter because "nothing here" means something different on every screen.
+ */
 @Composable
-internal fun <T> StatusPane(
+fun <T> StatusPane(
     state: LoadState<T>,
     onRetry: () -> Unit,
+    emptyText: String,
     modifier: Modifier = Modifier,
     content: @Composable (T) -> Unit,
 ) {
@@ -42,7 +43,7 @@ internal fun <T> StatusPane(
                     modifier = Modifier.padding(bottom = 12.dp),
                 )
                 AppButton(
-                    text = stringResource(R.string.categories_retry),
+                    text = stringResource(R.string.core_retry),
                     onClick = onRetry,
                     style = AppButtonStyle.PrimarySmall,
                     modifier = Modifier.padding(horizontal = 8.dp),
@@ -50,7 +51,7 @@ internal fun <T> StatusPane(
             }
             LoadState.Empty -> CenteredStatus {
                 Text(
-                    text = stringResource(R.string.categories_empty),
+                    text = emptyText,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,

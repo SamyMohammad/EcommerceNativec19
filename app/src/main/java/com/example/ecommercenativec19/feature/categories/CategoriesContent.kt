@@ -30,6 +30,7 @@ import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.CategoryTile
 import com.example.ecommercenativec19.core.ui.CategoryTileStyle
 import com.example.ecommercenativec19.core.ui.LineBoxText
+import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.textLineBox
 
 /** Right-hand side: selected category title, its promo banner and the three-column sub-category grid. */
@@ -37,11 +38,16 @@ import com.example.ecommercenativec19.core.ui.textLineBox
 internal fun CategoriesContent(
     state: LoadState<List<SubCategoryItem>>,
     title: String?,
-    onOpenProductList: () -> Unit,
+    onOpenProductList: (subCategoryId: String) -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    StatusPane(state = state, onRetry = onRetry, modifier = modifier) { subCategories ->
+    StatusPane(
+        state = state,
+        onRetry = onRetry,
+        emptyText = stringResource(R.string.categories_empty),
+        modifier = modifier,
+    ) { subCategories ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(GridColumns),
             contentPadding = PaddingValues(bottom = BottomContentGap),
@@ -73,7 +79,7 @@ internal fun CategoriesContent(
                         label = sub.label,
                         image = { TilePlaceholder() },
                         style = CategoryTileStyle.Square,
-                        onClick = onOpenProductList,
+                        onClick = { onOpenProductList(sub.id) },
                     )
                 }
             }

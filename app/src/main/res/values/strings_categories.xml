@@ -3,6 +3,5 @@
 <resources>
     <string name="categories_shop_now">Shop Now</string>
 
-    <string name="categories_retry">Retry</string>
     <string name="categories_empty">Nothing here yet</string>
 </resources>

@@ -33,12 +33,17 @@ import com.example.ecommercenativec19.core.ui.AppButton
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.QuantitySelector
 import com.example.ecommercenativec19.core.ui.ScreenTitleBar
+import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.centeredBorder
+import com.example.ecommercenativec19.core.ui.formatAmount
+import com.example.ecommercenativec19.core.ui.formatPrice
+import com.example.ecommercenativec19.core.ui.formatRating
 import com.example.ecommercenativec19.core.ui.textLineBox
 
 /**
- * Stateless Product details: title bar, scrollable content (carousel, title/price, sold + rating + quantity,
- * description, size, color) and a pinned footer with the total price and "Add to cart".
+ * Stateless Product details: title bar, then (once loaded) scrollable content (carousel, title/price, sold + rating +
+ * quantity, description) and a pinned footer with the total price and "Add to cart". The API has no size or color
+ * variants, so there are no option pickers.
  */
 @Composable
 fun ProductDetailsScreen(
@@ -47,10 +52,9 @@ fun ProductDetailsScreen(
     onCartClick: () -> Unit,
     onAddToCart: () -> Unit,
     onFavoriteClick: () -> Unit,
-    onSizeSelected: (String) -> Unit,
-    onColorSelected: (ProductColor) -> Unit,
     onIncrementQuantity: () -> Unit,
     onDecrementQuantity: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier.fillMaxSize()) {
@@ -61,39 +65,47 @@ fun ProductDetailsScreen(
             onSearchClick = {},
             onCartClick = onCartClick,
         )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                // The carousel starts at y 90, 2dp inside the 48dp title bar band that ends at 92.
-                .offset(y = -CarouselOverlap)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            ProductDetailsImageCarousel(
-                images = state.images,
-                isFavorite = state.isFavorite,
-                onFavoriteClick = onFavoriteClick,
-                modifier = Modifier.padding(horizontal = AppDimens.ScreenHorizontal),
-            )
-            Spacer(Modifier.size(SectionGap + CarouselToTitleExtra))
-            ProductDetailsContent(
-                state = state,
-                onSizeSelected = onSizeSelected,
-                onColorSelected = onColorSelected,
-                onIncrementQuantity = onIncrementQuantity,
-                onDecrementQuantity = onDecrementQuantity,
-            )
-            Spacer(Modifier.size(SectionGap))
+        StatusPane(
+            state = state.product,
+            onRetry = onRetry,
+            // A single product by id is never "empty": it loads or fails.
+            emptyText = stringResource(R.string.error_unknown),
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+        ) { product ->
+            Column(Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        // The carousel starts at y 90, 2dp inside the 48dp title bar band that ends at 92.
+                        .offset(y = -CarouselOverlap)
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    ProductDetailsImageCarousel(
+                        images = product.images,
+                        isFavorite = state.isFavorite,
+                        onFavoriteClick = onFavoriteClick,
+                        modifier = Modifier.padding(horizontal = AppDimens.ScreenHorizontal),
+                    )
+                    Spacer(Modifier.size(SectionGap + CarouselToTitleExtra))
+                    ProductDetailsContent(
+                        product = product,
+                        quantity = state.quantity,
+                        onIncrementQuantity = onIncrementQuantity,
+                        onDecrementQuantity = onDecrementQuantity,
+                    )
+                    Spacer(Modifier.size(SectionGap))
+                }
+                ProductDetailsFooter(totalPrice = state.totalPrice, onAddToCart = onAddToCart)
+            }
         }
-        ProductDetailsFooter(totalPrice = state.totalPrice, onAddToCart = onAddToCart)
     }
 }
 
 @Composable
 private fun ProductDetailsContent(
-    state: ProductDetailsUiState,
-    onSizeSelected: (String) -> Unit,
-    onColorSelected: (ProductColor) -> Unit,
+    product: ProductDetailsUi,
+    quantity: Int,
     onIncrementQuantity: () -> Unit,
     onDecrementQuantity: () -> Unit,
 ) {
@@ -106,14 +118,14 @@ private fun ProductDetailsContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = state.title,
+                text = product.title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f).textLineBox(MaterialTheme.typography.titleMedium),
             )
             Spacer(Modifier.width(SectionGap))
             Text(
-                text = state.price,
+                text = formatPrice(product.unitPrice),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
@@ -137,7 +149,7 @@ private fun ProductDetailsContent(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = state.soldLabel,
+                    text = stringResource(R.string.details_sold, formatAmount(product.soldCount)),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.textLineBox(MaterialTheme.typography.labelLarge),
@@ -157,14 +169,14 @@ private fun ProductDetailsContent(
                 )
                 Spacer(Modifier.width(StarGap))
                 Text(
-                    text = state.ratingLabel,
+                    text = stringResource(R.string.details_rating, formatRating(product.rating), formatAmount(product.ratingCount)),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.textLineBox(MaterialTheme.typography.bodyMedium),
                 )
             }
             QuantitySelector(
-                quantity = state.quantity,
+                quantity = quantity,
                 onIncrement = onIncrementQuantity,
                 onDecrement = onDecrementQuantity,
             )
@@ -174,25 +186,17 @@ private fun ProductDetailsContent(
         Spacer(Modifier.size(HeadingGap))
         Text(
             text = buildAnnotatedString {
-                append(state.description)
+                append(product.description)
                 withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) { append(stringResource(R.string.details_read_more)) }
             },
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             // The multi-line text keeps the font's natural first-line ascent (a line box of 18dp cannot be forced on
-            // it), so it is drawn 1dp up and the layout gap below it is 2dp shorter to land on the design's y.
+            // it), so it is drawn 1dp up to land on the design's y.
             modifier = Modifier
                 .offset(y = -DescriptionRaise)
                 .padding(start = AppDimens.ScreenHorizontal, end = DescriptionEndPadding),
         )
-        Spacer(Modifier.size(SectionGap - DescriptionExtraHeight))
-        SectionHeading(stringResource(R.string.details_size_heading))
-        Spacer(Modifier.size(OptionsTopGap))
-        ProductSizeOptions(state.sizes, state.selectedSize, onSizeSelected)
-        Spacer(Modifier.size(SectionGap - OptionsInset))
-        SectionHeading(stringResource(R.string.details_color_heading))
-        Spacer(Modifier.size(OptionsTopGap))
-        ProductColorOptions(state.colors, state.selectedColor, onColorSelected)
     }
 }
 
@@ -207,7 +211,7 @@ private fun SectionHeading(text: String) {
 }
 
 @Composable
-private fun ProductDetailsFooter(totalPrice: String, onAddToCart: () -> Unit) {
+private fun ProductDetailsFooter(totalPrice: Int, onAddToCart: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -223,7 +227,7 @@ private fun ProductDetailsFooter(totalPrice: String, onAddToCart: () -> Unit) {
                 modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
             )
             Text(
-                text = totalPrice,
+                text = formatPrice(totalPrice),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.textLineBox(MaterialTheme.typography.titleMedium),
@@ -257,11 +261,6 @@ private val FooterBottomMargin = 104.dp
 /** The design's description box is 381dp wide (x 16..397), which decides the line breaks. */
 private val DescriptionEndPadding = 33.dp
 private val DescriptionRaise = 1.dp
-private val DescriptionExtraHeight = 2.dp
-
-/** The 35dp option circles sit centered in 48dp-tall targets: 6.5dp of the 8dp heading gap is inside the target. */
-private val OptionsInset = 6.5.dp
-private val OptionsTopGap = 1.dp
 
 /** Carousel top (y 90) is above the title bar band's bottom (y 92). */
 private val CarouselOverlap = 2.dp

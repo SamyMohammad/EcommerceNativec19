@@ -7,6 +7,7 @@ import com.example.ecommercenativec19.feature.categories.di.categoriesModule
 import com.example.ecommercenativec19.feature.home.di.homeModule
 import com.example.ecommercenativec19.feature.productdetails.di.productDetailsModule
 import com.example.ecommercenativec19.feature.productlist.di.productListModule
+import com.example.ecommercenativec19.feature.products.di.productsModule
 import com.example.ecommercenativec19.feature.signin.di.signInModule
 import com.example.ecommercenativec19.feature.signup.di.signUpModule
 import com.example.ecommercenativec19.feature.wishlist.di.wishlistModule
@@ -15,6 +16,7 @@ import com.example.ecommercenativec19.feature.wishlist.di.wishlistModule
 val appModules = listOf(
     networkModule,
     categoriesModule,
+    productsModule,
     homeModule,
     productListModule,
     productDetailsModule,

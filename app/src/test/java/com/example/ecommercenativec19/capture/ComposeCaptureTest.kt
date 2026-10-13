@@ -9,6 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -34,11 +36,8 @@ import com.example.ecommercenativec19.feature.categories.CategoriesScreen
 import com.example.ecommercenativec19.feature.home.HomeSampleData
 import com.example.ecommercenativec19.feature.home.HomeScreen
 import com.example.ecommercenativec19.feature.home.HomeUiState
-import com.example.ecommercenativec19.feature.productdetails.ProductDetailsSampleData
 import com.example.ecommercenativec19.feature.productdetails.ProductDetailsScreen
-import com.example.ecommercenativec19.feature.productlist.ProductListSampleData
 import com.example.ecommercenativec19.feature.productlist.ProductListScreen
-import com.example.ecommercenativec19.feature.productlist.ProductListUiState
 import com.example.ecommercenativec19.feature.signin.SignInScreen
 import com.example.ecommercenativec19.feature.signin.SignInUiState
 import com.example.ecommercenativec19.feature.signup.SignUpScreen
@@ -49,6 +48,10 @@ import com.example.ecommercenativec19.feature.wishlist.WishlistScreen
 import com.example.ecommercenativec19.feature.wishlist.WishlistUiState
 import com.example.ecommercenativec19.navigation.AppScaffold
 import com.example.ecommercenativec19.ui.theme.AppTheme
+import coil3.annotation.ExperimentalCoilApi
+import coil3.asImage
+import coil3.compose.AsyncImagePreviewHandler
+import coil3.compose.LocalAsyncImagePreviewHandler
 import com.github.takahirom.roborazzi.captureRoboImage
 import java.io.File
 import java.security.MessageDigest
@@ -132,10 +135,12 @@ class ComposeCaptureTest {
                 {}, {}, {}, {},
             )
             Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {})
-            Scene.ProductList -> ProductListScreen(ProductListUiState(products = ProductListSampleData.items), {}, {}, {}, {}, {})
-            Scene.Details -> ProductDetailsScreen(
-                ProductDetailsSampleData.forProductId("1"), {}, {}, {}, {}, {}, {}, {}, {},
-            )
+            Scene.ProductList -> WithFixtureImages {
+                ProductListScreen(ProductFixtures.productList, {}, {}, {}, {}, {}, {}, {})
+            }
+            Scene.Details -> WithFixtureImages {
+                ProductDetailsScreen(ProductFixtures.productDetails, {}, {}, {}, {}, {}, {}, {})
+            }
             Scene.Cart -> CartScreen(CartUiState(CartSampleData.items, CartSampleData.TOTAL_PRICE), {}, {}, {}, {}, {}, {}, {})
             Scene.Wishlist -> WishlistScreen(WishlistUiState(items = WishlistSampleData.items), {}, {}, {}, {})
             Scene.Account -> AccountScreen(
@@ -143,6 +148,24 @@ class ComposeCaptureTest {
                 {}, {}, { _, _ -> },
             )
         }
+    }
+
+    /**
+     * Coil only consults its preview handler in inspection mode, so both are provided together: fixture URLs resolve to
+     * bundled drawables instead of the network.
+     */
+    @OptIn(ExperimentalCoilApi::class)
+    @Composable
+    private fun WithFixtureImages(content: @Composable () -> Unit) {
+        val context = LocalContext.current
+        val handler = AsyncImagePreviewHandler { request ->
+            checkNotNull(context.getDrawable(ProductFixtures.drawableFor(request.data.toString()))).asImage()
+        }
+        CompositionLocalProvider(
+            LocalInspectionMode provides true,
+            LocalAsyncImagePreviewHandler provides handler,
+            content = content,
+        )
     }
 
     private fun hasText(node: SemanticsNode): Boolean =

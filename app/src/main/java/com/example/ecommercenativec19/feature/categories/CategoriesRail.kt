@@ -19,9 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.LineBoxText
+import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.textLineBox
 
 /** Left category rail: the API's categories, or a spinner / retry / empty note while they are not available. */
@@ -37,6 +40,7 @@ internal fun CategoriesRail(
     StatusPane(
         state = state,
         onRetry = onRetry,
+        emptyText = stringResource(R.string.categories_empty),
         modifier = modifier
             .clip(shape)
             .background(MaterialTheme.colorScheme.surfaceVariant)

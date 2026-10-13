@@ -42,8 +42,8 @@ import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
  * | `SignInRoute` | `onSignIn()`, `onCreateAccount()` | Login -> Home; "Create Account" -> Sign up |
  * | `SignUpRoute` | `onSignUp()` | Sign up button -> Home |
  * | `HomeRoute` | `onOpenCart()`, `onOpenCategories()` | cart icon -> Cart; "men's fashion" circle -> Categories |
- * | `CategoriesRoute` | `onOpenCart()`, `onOpenProductList()` | cart icon -> Cart; any sub-category tile -> Product list |
- * | `ProductListRoute` | `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; product card -> Product details |
+ * | `CategoriesRoute` | `onOpenCart()`, `onOpenProductList(subCategoryId)` | cart icon -> Cart; any sub-category tile -> Product list of that sub-category |
+ * | `ProductListRoute` | `subCategoryId`, `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; product card -> Product details |
  * | `ProductDetailsRoute` | `productId`, `onBack()`, `onOpenCart()`, `onAddToCart()` | back arrow -> Product list; cart icon and "Add to cart" -> Cart |
  * | `CartRoute` | `onBack()` | back arrow -> previous screen (deviation: the prototype always leads to Home) |
  * | `WishlistRoute` | `onOpenCart()` | cart icon -> Cart |
@@ -62,7 +62,7 @@ import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
  *   no validation rules and no session state.
  * - "Check Out" (Cart), "Add to cart" side effects (Details), search and list data have no behavior in the
  *   prototype; the only documented effect of "Add to cart" is the transition to Cart.
- * - Product ids are opaque strings passed from Product list to Product details.
+ * - Product and sub-category ids are opaque strings from the API.
  *
  * ## Transitions
  * The prototype uses SMART_ANIMATE (matching layers morph). Compose cannot reproduce that, so screens cross-fade:
@@ -107,11 +107,12 @@ fun AppNavDisplay(
                 entry<Categories> {
                     CategoriesRoute(
                         onOpenCart = { navigator.push(Cart) },
-                        onOpenProductList = { navigator.push(ProductList) },
+                        onOpenProductList = { subCategoryId -> navigator.push(ProductList(subCategoryId)) },
                     )
                 }
-                entry<ProductList> {
+                entry<ProductList> { key ->
                     ProductListRoute(
+                        subCategoryId = key.subCategoryId,
                         onOpenCart = { navigator.push(Cart) },
                         onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
                     )

@@ -11,6 +11,9 @@
     <string name="core_nav_categories">Categories</string>
     <string name="core_nav_wishlist">Wishlist</string>
     <string name="core_nav_account">Account</string>
+    <string name="core_retry">Retry</string>
+    <string name="core_price">EGP %1$s</string>
+    <string name="core_old_price">%1$s EGP</string>
     <string name="core_favorite_add">Add to wishlist</string>
     <string name="core_favorite_remove">Remove from wishlist</string>
     <string name="core_review_rating">Review (%1$s)</string>

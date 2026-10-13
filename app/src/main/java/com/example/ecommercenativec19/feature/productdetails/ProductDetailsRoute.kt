@@ -28,10 +28,9 @@ fun ProductDetailsRoute(
         onCartClick = onOpenCart,
         onAddToCart = onAddToCart,
         onFavoriteClick = viewModel::onToggleFavorite,
-        onSizeSelected = viewModel::onSizeSelected,
-        onColorSelected = viewModel::onColorSelected,
         onIncrementQuantity = viewModel::onIncrementQuantity,
         onDecrementQuantity = viewModel::onDecrementQuantity,
+        onRetry = viewModel::onRetry,
         modifier = modifier,
     )
 }

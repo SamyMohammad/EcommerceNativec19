@@ -28,7 +28,7 @@ fun CategoriesScreen(
     onCategorySelected: (String) -> Unit,
     onRetry: () -> Unit,
     onOpenCart: () -> Unit,
-    onOpenProductList: () -> Unit,
+    onOpenProductList: (subCategoryId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {

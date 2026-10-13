@@ -19,12 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.core.ui.FavoriteButton
+import com.example.ecommercenativec19.core.ui.ProductImage
 
 /**
  * Bordered 300dp image carousel with the favorite circle (top-end) and page indicators (bottom-center): the active
@@ -33,7 +32,7 @@ import com.example.ecommercenativec19.core.ui.FavoriteButton
  */
 @Composable
 internal fun ProductDetailsImageCarousel(
-    images: List<Int>,
+    images: List<String>,
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -48,8 +47,8 @@ internal fun ProductDetailsImageCarousel(
             .border(1.dp, MaterialTheme.colorScheme.outline, shape),
     ) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-            CoverImage(
-                painter = painterResource(images[page]),
+            ProductImage(
+                url = images[page],
                 contentDescription = stringResource(R.string.details_image_description, page + 1, images.size),
                 modifier = Modifier.fillMaxSize(),
             )
