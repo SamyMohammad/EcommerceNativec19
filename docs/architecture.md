@@ -134,10 +134,10 @@ They are static composition locals because they never change at runtime. The tok
 Planned, in rough order. Each item is a small reviewed PR.
 
 - **Route API per feature**, replacing sample data. Done: categories, product list, product details (shared
-  `feature/products/`), Home and wishlist (section 10), cart (section 11). Next: account.
+  `feature/products/`), Home and wishlist (section 10), cart (section 11), account (section 12). Every screen is now on the API.
 - **Authentication.** Done: sign-in, sign-up, encrypted session, `token` header, sign-out on 401 (section 9). This
   is a deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart,
-  wishlist and account endpoints require a token. Still no password reset, social login or profile editing.
+  wishlist and account endpoints require a token. Profile editing and password change arrived with the account slice (section 12). Still no password reset or social login.
 - **Release hardening:** enable R8 (currently disabled for release builds) with the keep rules the stack needs (including the Navigation 3 key classes).
 
 ## 9. Authentication and session
@@ -241,3 +241,30 @@ lifecycle as the wishlist (section 10): app-scoped, `createdAtStart`, loaded on 
   if the second step of an add fails the cache is resynced with a background GET.
 
 Details of the endpoints: [`docs/api/cart.md`](api/cart.md); screen notes: `docs/design-decisions/cart.md`.
+
+## 12. Account: profile from the server, nothing stored
+
+`feature/account/` has `AccountApi` and `AccountRepositoryImpl` in `data/`, and `GetProfileUseCase`,
+`UpdateProfileUseCase`, `ChangePasswordUseCase` plus the `Profile` model in `domain/`. Endpoints and quirks:
+[`docs/api/account.md`](api/account.md); screen notes: `docs/design-decisions/account.md`.
+
+- **Profile source: `GET /users/getMe`, no local copy.** The sign-in response and the token only carry a name, so the
+  first plan was to persist the profile next to the session. `getMe` made that unnecessary: one call returns name,
+  e-mail, phone and the embedded addresses. The profile therefore lives only in `AccountViewModel`, so no personal data
+  is written to disk and none can outlive the signed-in user (compare the wishlist and cart caches, which need an
+  explicit wipe on sign-out). That is why the use case is `GetProfileUseCase`, not an "observe" one.
+- **Send only what changed.** The server answers an unchanged e-mail with 400 "already in use", so `UpdateProfileUseCase`
+  diffs the edit against the loaded profile, validates only the changed fields (a stored `+20` phone is valid for the
+  server but not for `AuthValidation`) and skips the request when nothing changed.
+- **Password change replaces the token.** `PUT /users/changeMyPassword` invalidates the old token the moment it
+  succeeds and returns a new one; the repository stores it before reporting success. The server also accepts a
+  3-character new password here, so `ChangePasswordUseCase` is the only length guard.
+- **One address line over a list.** The design shows one address; the API keeps many. Editing adds the new address
+  and then removes the previous ones. This is not atomic; a failed removal is ignored because the screen shows the
+  last address anyway.
+- **Failures reuse `AuthError`.** Server 400 text and transport errors are already worded by `AuthMessages`.
+- **Logging.** `SensitivePathLoggingInterceptor` now covers `/users/` as well as `/auth/`: `getMe` returns the stored
+  password hash and `changeMyPassword` carries both passwords and a token, so those paths log headers only.
+- **Sign out** is `SignOutUseCase`; the signed-out session already resets navigation and wipes the wishlist and cart.
+- **Known gaps.** A request that is in flight with the old token while the password changes can get a 401 and sign the
+  user out (narrow race). No snackbar for a failed save beyond the inline message.

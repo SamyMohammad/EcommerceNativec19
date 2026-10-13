@@ -45,6 +45,15 @@ class SensitivePathLoggingInterceptorTest {
     }
 
     @Test
+    fun `user endpoints use the header-only logger`() {
+        call("users/getMe")
+        call("users/updateMe")
+        call("users/changeMyPassword")
+
+        assertEquals(listOf("safe", "safe", "safe"), used)
+    }
+
+    @Test
     fun `other endpoints use the default logger`() {
         call("products")
 

@@ -24,9 +24,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
@@ -47,6 +48,8 @@ fun AccountFieldRow(
     onFinishEditing: () -> Unit,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    errorText: String? = null,
+    enabled: Boolean = true,
 ) {
     val label = stringResource(field.type.label)
     val shape = MaterialTheme.shapes.medium
@@ -69,8 +72,6 @@ fun AccountFieldRow(
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val visualTransformation =
-                if (field.type.isPassword) PasswordVisualTransformation('*') else VisualTransformation.None
             Box(Modifier.weight(1f)) {
                 if (isEditing) {
                     val focusRequester = remember { FocusRequester() }
@@ -82,13 +83,13 @@ fun AccountFieldRow(
                         textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.onSurface),
                         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                         singleLine = true,
-                        visualTransformation = visualTransformation,
+                        enabled = enabled,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = { onFinishEditing() }),
                     )
                 } else {
                     Text(
-                        text = if (field.type.isPassword) "*".repeat(field.value.length) else field.value,
+                        text = field.value,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
@@ -103,7 +104,16 @@ fun AccountFieldRow(
                     if (isEditing) R.string.account_edit_done else R.string.account_edit_field,
                     label,
                 ),
-                onClick = if (isEditing) onFinishEditing else onStartEditing,
+                // No click target while a save is in flight, so it cannot be started twice.
+                onClick = if (!enabled) null else if (isEditing) onFinishEditing else onStartEditing,
+            )
+        }
+        if (errorText != null) {
+            Text(
+                text = errorText,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = ErrorTopGap).semantics { liveRegion = LiveRegionMode.Polite },
             )
         }
     }
@@ -112,3 +122,4 @@ fun AccountFieldRow(
 /** Label line bottom (y 198) to the field top (y 214). */
 private val LabelToFieldGap = 16.dp
 private val FieldMinHeight = 54.dp
+private val ErrorTopGap = 4.dp

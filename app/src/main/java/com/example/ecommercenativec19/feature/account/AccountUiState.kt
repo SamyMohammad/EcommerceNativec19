@@ -2,6 +2,11 @@ package com.example.ecommercenativec19.feature.account
 
 import androidx.annotation.StringRes
 import com.example.ecommercenativec19.R
+import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.feature.account.domain.AccountField
+import com.example.ecommercenativec19.feature.account.domain.Profile
+import com.example.ecommercenativec19.feature.auth.domain.AuthError
+import com.example.ecommercenativec19.feature.auth.domain.FieldError
 
 /** The five profile fields in design order. */
 enum class AccountFieldType(@param:StringRes val label: Int, val isPassword: Boolean = false) {
@@ -15,12 +20,47 @@ enum class AccountFieldType(@param:StringRes val label: Int, val isPassword: Boo
 data class AccountFieldUi(val type: AccountFieldType, val value: String)
 
 /**
- * [welcomeName] and [headerEmail] are the header texts as given (placeholder data); they do not follow edits of
- * the fields. [editing] is the field currently being edited, if any.
+ * The server never returns the password, so the row shows a fixed mask (22 characters, as in the design) instead of
+ * a value; the real change happens in the password dialog.
+ */
+internal const val PASSWORD_MASK = "**********************"
+
+/**
+ * [editing] is the field being edited inline (never the password) and [draft] its text; [fieldError] belongs to it.
+ * [saveError] is a failed save of that edit. [passwordForm] is non-null while the change-password dialog is open.
  */
 data class AccountUiState(
-    val welcomeName: String = "",
-    val headerEmail: String = "",
-    val fields: List<AccountFieldUi> = emptyList(),
+    val profile: LoadState<Profile> = LoadState.Loading,
     val editing: AccountFieldType? = null,
+    val draft: String = "",
+    val fieldError: FieldError? = null,
+    val saveError: AuthError? = null,
+    val isSaving: Boolean = false,
+    val passwordForm: PasswordFormUi? = null,
 )
+
+/** The two passwords live only here while the dialog is open. */
+data class PasswordFormUi(
+    val currentPassword: String = "",
+    val newPassword: String = "",
+    val errors: Map<AccountField, FieldError> = emptyMap(),
+    val submitError: AuthError? = null,
+    val isSaving: Boolean = false,
+) {
+    // Keeps the passwords out of logs and assertion messages.
+    override fun toString(): String = "PasswordFormUi(***)"
+}
+
+internal fun Profile.valueOf(type: AccountFieldType): String = when (type) {
+    AccountFieldType.FullName -> name
+    AccountFieldType.Email -> email
+    AccountFieldType.Password -> PASSWORD_MASK
+    AccountFieldType.Mobile -> phone
+    AccountFieldType.Address -> address
+}
+
+/** The rows in design order, with the field being edited showing its draft instead of the saved value. */
+internal fun AccountUiState.rows(profile: Profile): List<AccountFieldUi> =
+    AccountFieldType.entries.map { type ->
+        AccountFieldUi(type, if (type == editing) draft else profile.valueOf(type))
+    }

@@ -40,9 +40,9 @@ the public [Route E-commerce API](https://documenter.getpostman.com/view/5709532
 | **Product list, Product details** | Done | **Route API** (products by sub-category with load-more paging, product by id) |
 | **Wishlist** + every favorite heart | Done | **Route API** (`/wishlist`); one shared favorites cache feeds Home, Product list, Details and the Wishlist screen, with optimistic toggles |
 | **Cart** + every "add to cart" button | Done | **Route API** (`/cart`); one shared cart cache with optimistic count changes and server totals; "Check Out" is a no-op (payments are out of scope) |
-| Account | Done | Sample data |
+| **Account** | Done | **Route API** (`/users/getMe`, `/users/updateMe`, `/users/changeMyPassword`, `/addresses`); inline edit per field, a change-password dialog and a Sign out button |
 
-**Next slice:** account. Each slice is delivered as a small, reviewed PR that takes one feature through
+Every screen now runs on the Route API. Each slice was delivered as a small, reviewed PR that took one feature through
 data → domain → presentation, with tests.
 
 ## Tech stack
@@ -123,12 +123,13 @@ app/src/main/java/com/example/ecommercenativec19/
 │   │   ├── di/                  # Koin module
 │   │   └── Categories*.kt       # Route, Screen, ViewModel, UiState
 │   ├── auth/                    # Sign-in / sign-up data + domain (AuthApi, repository, validation, use cases)
+│   ├── account/                 # Profile, edit, change password: data + domain and the Account screen
 │   ├── products/                # Shared product data + domain (ProductsApi, mapper, repository, use cases)
 │   ├── productlist/             # Sub-category product grid with load-more paging
 │   ├── productdetails/          # Product by id: carousel, quantity and total
 │   ├── wishlist/                # Favorites source of truth (data + domain) and the Wishlist screen
 │   ├── cart/                    # Cart source of truth (data + domain) and the Cart screen
-│   └── home/ account/ signin/ signup/ splash/
+│   └── home/ signin/ signup/ splash/
 ├── navigation/                  # NavKeys, AppNavigator (back stacks), NavDisplay, shared bottom bar
 └── ui/theme/                    # Hand-owned Material 3 theme: Color, Type, Shape, ExtendedTheme, Theme
 ```

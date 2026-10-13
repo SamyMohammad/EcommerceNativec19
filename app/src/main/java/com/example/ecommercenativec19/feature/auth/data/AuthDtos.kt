@@ -25,13 +25,3 @@ data class SignUpRequest(
 data class AuthResponseDto(val token: String) {
     override fun toString(): String = "AuthResponseDto(token=***)"
 }
-
-/**
- * Error body. 400 uses `{ message: "fail", errors: { msg, param } }`, 401/409 use `{ statusMsg, message }`;
- * every field is optional so either shape parses.
- */
-@Serializable
-data class ErrorBodyDto(val message: String? = null, val errors: ErrorDetailDto? = null)
-
-@Serializable
-data class ErrorDetailDto(val msg: String? = null)

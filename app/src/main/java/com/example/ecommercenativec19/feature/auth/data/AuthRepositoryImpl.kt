@@ -2,6 +2,7 @@ package com.example.ecommercenativec19.feature.auth.data
 
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
+import com.example.ecommercenativec19.core.network.apiErrorMessage
 import com.example.ecommercenativec19.core.network.safeApiCall
 import com.example.ecommercenativec19.core.session.SessionRepository
 import com.example.ecommercenativec19.feature.auth.domain.AuthError
@@ -9,7 +10,6 @@ import com.example.ecommercenativec19.feature.auth.domain.AuthRepository
 import com.example.ecommercenativec19.feature.auth.domain.AuthResult
 import com.example.ecommercenativec19.feature.auth.domain.SignUpData
 import kotlin.coroutines.cancellation.CancellationException
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import retrofit2.Response
 
@@ -57,21 +57,10 @@ class AuthRepositoryImpl(
     }
 
     private fun Response<*>.toAuthError(): AuthError = when (code()) {
-        HTTP_BAD_REQUEST -> errorMessage()?.let(AuthError::Validation) ?: AuthError.Other(AppError.Server(code()))
+        HTTP_BAD_REQUEST -> apiErrorMessage(json)?.let(AuthError::Validation) ?: AuthError.Other(AppError.Server(code()))
         HTTP_UNAUTHORIZED -> AuthError.InvalidCredentials
         HTTP_CONFLICT -> AuthError.EmailAlreadyUsed
         else -> AuthError.Other(AppError.Server(code()))
-    }
-
-    /** Retrofit has already buffered an error body, so reading it does not block on the network. */
-    private fun Response<*>.errorMessage(): String? {
-        val raw = errorBody()?.string() ?: return null
-        return try {
-            val body = json.decodeFromString<ErrorBodyDto>(raw)
-            (body.errors?.msg ?: body.message)?.trim()?.takeIf { it.isNotEmpty() }
-        } catch (e: SerializationException) {
-            null
-        }
     }
 
     private companion object {

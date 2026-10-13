@@ -24,10 +24,11 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
+import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.AppTab
-import com.example.ecommercenativec19.feature.account.AccountSampleData
 import com.example.ecommercenativec19.feature.account.AccountScreen
 import com.example.ecommercenativec19.feature.account.AccountUiState
+import com.example.ecommercenativec19.feature.account.domain.AccountFixtures
 import com.example.ecommercenativec19.feature.cart.CartScreen
 import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
 import com.example.ecommercenativec19.feature.categories.CategoriesScreen
@@ -130,8 +131,8 @@ class ComposeCaptureTest {
             Scene.Cart -> WithFixtureImages { CartScreen(ProductFixtures.cart, {}, {}, {}, {}, {}, {}, {}, {}) }
             Scene.Wishlist -> WithFixtureImages { WishlistScreen(ProductFixtures.wishlist, {}, {}, {}, {}, {}, {}) }
             Scene.Account -> AccountScreen(
-                AccountUiState(AccountSampleData.WELCOME_NAME, AccountSampleData.HEADER_EMAIL, AccountSampleData.fields),
-                {}, {}, { _, _ -> },
+                AccountUiState(profile = LoadState.Content(AccountFixtures.profile)),
+                {}, {}, {}, {}, {}, {}, {}, {}, {},
             )
         }
     }
