@@ -24,6 +24,10 @@ class WishlistRepositoryImplTest {
         var wishlist: List<ProductDto> = emptyList()
         var failure: Exception? = null
 
+        /** Like [gate] and [failure] but only for add and remove, so a test can sign in again meanwhile. */
+        var toggleGate: CompletableDeferred<Unit>? = null
+        var toggleFailure: Exception? = null
+
         /** When set, every call suspends until it completes, so a test can look at the state mid-request. */
         var gate: CompletableDeferred<Unit>? = null
 
@@ -42,11 +46,15 @@ class WishlistRepositoryImplTest {
 
         override suspend fun add(request: AddToWishlistRequest): ListResponse<String> {
             enter("add:${request.productId}")
+            toggleGate?.await()
+            toggleFailure?.let { throw it }
             return ListResponse(listOf(request.productId))
         }
 
         override suspend fun remove(productId: String): ListResponse<String> {
             enter("remove:$productId")
+            toggleGate?.await()
+            toggleFailure?.let { throw it }
             return ListResponse(emptyList())
         }
     }
@@ -267,5 +275,57 @@ class WishlistRepositoryImplTest {
         runCurrent()
 
         assertTrue(repository.favoriteIds.value.isEmpty())
+    }
+
+    @Test
+    fun `a rollback from the previous account does not touch the next account favorites`() = runTest {
+        api.wishlist = listOf(dto("a"))
+        val repository = repository()
+        runCurrent()
+        api.toggleGate = CompletableDeferred()
+        api.toggleFailure = IOException()
+        backgroundScope.launch { repository.toggle("a") }
+        runCurrent()
+
+        session.set(SessionState.SignedOut)
+        runCurrent()
+        api.wishlist = emptyList()
+        session.set(SessionState.SignedIn("other-token"))
+        runCurrent()
+        api.toggleGate?.complete(Unit)
+        runCurrent()
+
+        assertTrue(repository.favoriteIds.value.isEmpty())
+    }
+
+    @Test
+    fun `a toggle after sign out is not dropped by the previous session request`() = runTest {
+        val repository = repository()
+        runCurrent()
+        api.toggleGate = CompletableDeferred()
+        backgroundScope.launch { repository.toggle("a") }
+        runCurrent()
+
+        session.set(SessionState.SignedOut)
+        runCurrent()
+        session.set(SessionState.SignedIn("other-token"))
+        runCurrent()
+        backgroundScope.launch { repository.toggle("a") }
+        runCurrent()
+
+        assertEquals(2, api.calls.count { it == "add:a" })
+    }
+
+    @Test
+    fun `a token rotation for the same session does not reload the favorites`() = runTest {
+        api.wishlist = listOf(dto("a"))
+        val repository = repository()
+        runCurrent()
+
+        session.set(SessionState.SignedIn("rotated-token"))
+        runCurrent()
+
+        assertEquals(listOf("get"), api.calls)
+        assertEquals(setOf("a"), repository.favoriteIds.value)
     }
 }

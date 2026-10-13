@@ -60,7 +60,12 @@ class DataStoreSessionRepository(
     }
 
     override suspend fun invalidate(rejectedToken: String) {
-        if ((state.value as? SessionState.SignedIn)?.token == rejectedToken) clear()
+        // Compared against the stored value inside the transaction, not against [state]: that cache lags behind
+        // save(), so a late 401 for the old token could otherwise wipe the token that just replaced it.
+        dataStore.edit { preferences ->
+            val stored = preferences[TOKEN_KEY].toStored()
+            if (stored !is Stored.Token || stored.value == rejectedToken) preferences.remove(TOKEN_KEY)
+        }
     }
 
     private fun String?.toStored(): Stored {

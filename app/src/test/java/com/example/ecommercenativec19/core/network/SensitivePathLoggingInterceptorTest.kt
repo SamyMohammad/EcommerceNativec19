@@ -54,6 +54,14 @@ class SensitivePathLoggingInterceptorTest {
     }
 
     @Test
+    fun `address endpoints use the header-only logger`() {
+        call("addresses")
+        call("addresses/a1")
+
+        assertEquals(listOf("safe", "safe"), used)
+    }
+
+    @Test
     fun `other endpoints use the default logger`() {
         call("products")
 

@@ -132,6 +132,33 @@ class DataStoreSessionRepositoryTest {
     }
 
     @Test
+    fun `a late rejection of the old token does not clear the token that replaced it`() = runTest {
+        val store = dataStore()
+        val repo = repository(store)
+        repo.save("jwt-A")
+        repo.state.first { it == SessionState.SignedIn("jwt-A") }
+
+        // No suspension point between these calls, so the in-memory state still shows jwt-A: the lagging cache that
+        // a comparison against state.value would trust.
+        repo.save("jwt-B")
+        repo.invalidate("jwt-A")
+
+        assertEquals("enc:B-twj", store.data.first()[rawKey])
+        assertEquals(SessionState.SignedIn("jwt-B"), repo.state.first { it == SessionState.SignedIn("jwt-B") })
+    }
+
+    @Test
+    fun `invalidate removes an unreadable blob`() = runTest {
+        val store = dataStore()
+        val repo = repository(store)
+        store.edit { it[rawKey] = "not-encrypted-by-this-key" }
+
+        repo.invalidate("anything")
+
+        assertNull(store.data.first()[rawKey])
+    }
+
+    @Test
     fun `an undecryptable blob means signed out and is removed`() = runTest {
         val store = dataStore()
         store.edit { it[rawKey] = "not-encrypted-by-this-key" }

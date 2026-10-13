@@ -27,6 +27,10 @@
 - Heart and button sit 16dp from the end, so 8dp extra end padding is added to the row slots.
 - Android native status bar instead of the iOS band (see README).
 
+## Coupling
+
+- `WishlistRepositoryImpl` imports the `ProductDto` mapper from `feature/products/data` on purpose: the wishlist endpoint returns full product objects, and a second mapper would duplicate it.
+
 ## Missing contracts
 
 - Search from the wishlist. "Add to Cart" adds one unit through the cart API and stays on the screen (no confirmation message). Loading and error states are additions.

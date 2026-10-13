@@ -11,6 +11,8 @@ import com.example.ecommercenativec19.feature.account.domain.Profile
 import com.example.ecommercenativec19.feature.account.domain.ProfileChanges
 import com.example.ecommercenativec19.feature.auth.domain.AuthError
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import retrofit2.Response
 
@@ -49,21 +51,24 @@ class AccountRepositoryImpl(
     override suspend fun changePassword(currentPassword: String, newPassword: String): AccountResult<Unit> {
         // The design has no confirm-password field; the server only checks equality (same as sign-up).
         val request = ChangePasswordRequest(currentPassword, newPassword, rePassword = newPassword)
-        val body = when (val result = write { api.changePassword(request) }) {
-            is AccountResult.Failure -> return result
-            is AccountResult.Success -> result.data
-        }
-        val token = body?.token?.takeIf { it.isNotBlank() }
-            ?: return AccountResult.Failure(AuthError.Other(AppError.Parsing))
-        return try {
-            // The old token is already dead server-side, so the new one must replace it before anything else runs.
-            sessions.save(token)
-            AccountResult.Success(Unit)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            // The password changed but the new token could not be kept: the next request will sign the user out.
-            AccountResult.Failure(AuthError.Other(AppError.Unknown))
+        // NonCancellable: once the server rotated the token, leaving the screen must not drop the new one on the floor.
+        return withContext(NonCancellable) {
+            val body = when (val result = write { api.changePassword(request) }) {
+                is AccountResult.Failure -> return@withContext result
+                is AccountResult.Success -> result.data
+            }
+            val token = body?.token?.takeIf { it.isNotBlank() }
+                ?: return@withContext AccountResult.Failure(AuthError.Other(AppError.Parsing))
+            try {
+                // The old token is already dead server-side, so the new one must replace it before anything else runs.
+                sessions.save(token)
+                AccountResult.Success(Unit)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // The password changed but the new token could not be kept: the next request will sign the user out.
+                AccountResult.Failure(AuthError.Other(AppError.Unknown))
+            }
         }
     }
 

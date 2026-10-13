@@ -12,6 +12,10 @@ import com.example.ecommercenativec19.feature.account.domain.ProfileChanges
 import com.example.ecommercenativec19.feature.auth.data.AuthResponseDto
 import com.example.ecommercenativec19.feature.auth.domain.AuthError
 import java.io.IOException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -22,6 +26,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Test
 import retrofit2.Response
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AccountRepositoryImplTest {
 
     private class FakeAccountApi : AccountApi {
@@ -30,6 +35,9 @@ class AccountRepositoryImplTest {
         var changePassword: () -> Response<AuthResponseDto> = { Response.success(AuthResponseDto("new-jwt")) }
         var addAddress: () -> ListResponse<AddressDto> = { ListResponse(listOf(AddressDto("a1", "1 Example Road"))) }
         var removeAddress: () -> ListResponse<AddressDto> = { ListResponse(emptyList()) }
+
+        /** When set, changePassword suspends until it completes, so a test can cancel the caller mid-request. */
+        var changePasswordGate: CompletableDeferred<Unit>? = null
 
         var lastUpdate: UpdateMeRequest? = null
         var lastPassword: ChangePasswordRequest? = null
@@ -45,6 +53,7 @@ class AccountRepositoryImplTest {
 
         override suspend fun changePassword(request: ChangePasswordRequest): Response<AuthResponseDto> {
             lastPassword = request
+            changePasswordGate?.await()
             return changePassword()
         }
 
@@ -202,6 +211,21 @@ class AccountRepositoryImplTest {
 
         assertEquals(AccountResult.Success(Unit), result)
         assertEquals(ChangePasswordRequest("old-pass", "new-pass", "new-pass"), api.lastPassword)
+        assertEquals(SessionState.SignedIn("new-jwt"), sessions.state.value)
+    }
+
+    @Test
+    fun `cancelling the caller mid-request still stores the rotated token`() = runTest {
+        val gate = CompletableDeferred<Unit>()
+        api.changePasswordGate = gate
+        val call = launch { repository.changePassword("old-pass", "new-pass") }
+        runCurrent()
+
+        call.cancel()
+        runCurrent()
+        gate.complete(Unit)
+        runCurrent()
+
         assertEquals(SessionState.SignedIn("new-jwt"), sessions.state.value)
     }
 

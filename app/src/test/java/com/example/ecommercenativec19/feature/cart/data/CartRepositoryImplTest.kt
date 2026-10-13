@@ -12,6 +12,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
 
@@ -125,6 +126,47 @@ class CartRepositoryImplTest {
         runCurrent()
 
         assertNull(repository.cart.value)
+    }
+
+    @Test
+    fun `a token rotation for the same session keeps the cart and its pending counts`() = runTest {
+        api.lines["a"] = 1
+        val repository = repository()
+        runCurrent()
+        api.gate = CompletableDeferred()
+        backgroundScope.launch { repository.updateCount("a", 3) }
+        runCurrent()
+        assertEquals(mapOf("a" to 3), repository.counts())
+
+        session.set(SessionState.SignedIn("rotated-token"))
+        runCurrent()
+        assertEquals(mapOf("a" to 3), repository.counts())
+        api.gate?.complete(Unit)
+        runCurrent()
+
+        assertEquals(mapOf("a" to 3), repository.counts())
+        assertEquals(listOf("get", "put:a:3"), api.calls)
+    }
+
+    @Test
+    fun `an add queued behind another one sends nothing after the session changed`() = runTest {
+        val repository = repository()
+        runCurrent()
+        api.gate = CompletableDeferred()
+        backgroundScope.launch { repository.addProduct("a") }
+        runCurrent()
+        val queued = backgroundScope.launch { repository.addProduct("a") }
+        runCurrent()
+
+        session.set(SessionState.SignedOut)
+        runCurrent()
+        session.set(SessionState.SignedIn("other-token"))
+        runCurrent()
+        api.gate?.complete(Unit)
+        runCurrent()
+
+        assertTrue(queued.isCompleted)
+        assertEquals(1, api.calls.count { it == "add:a" })
     }
 
     @Test

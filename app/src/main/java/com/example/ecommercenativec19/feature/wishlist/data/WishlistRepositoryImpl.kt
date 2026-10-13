@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,18 +42,23 @@ class WishlistRepositoryImpl(
     /** Bumped by every toggle and sign-out; lets [refresh] detect that its response is already out of date. */
     private var mutations = 0
 
+    /** Bumped when the user signs in or out; a toggle that started under an older one belongs to nobody. */
+    private var epoch = 0
+
     init {
         scope.launch {
-            // collectLatest: a new session cancels a load that was started for the previous one.
-            session.state.collectLatest { state ->
-                when (state) {
-                    is SessionState.SignedIn -> refresh()
-                    SessionState.SignedOut -> synchronized(lock) {
+            // Keyed on signed in / not, so a token rotation (password change) neither reloads nor bumps the epoch.
+            // collectLatest: signing out cancels a load that was started for the previous session.
+            session.state.map { it is SessionState.SignedIn }.distinctUntilChanged().collectLatest { signedIn ->
+                synchronized(lock) {
+                    epoch++
+                    inFlight.clear()
+                    if (!signedIn) {
                         mutations++
                         _favoriteIds.value = emptySet()
                     }
-                    SessionState.Loading -> Unit
                 }
+                if (signedIn) refresh()
             }
         }
     }
@@ -74,20 +81,23 @@ class WishlistRepositoryImpl(
     override suspend fun toggle(productId: String): AppResult<Unit> {
         // Why drop instead of queue: two overlapping POST/DELETE for one product can reach the server out of order, and
         // there would be two rollbacks competing over one id. One request per product keeps both simple.
-        val wasFavorite = synchronized(lock) {
+        val (wasFavorite, startEpoch) = synchronized(lock) {
             if (!inFlight.add(productId)) return AppResult.Success(Unit)
             mutations++
-            (productId in _favoriteIds.value).also { setFavorite(productId, !it) }
+            (productId in _favoriteIds.value).also { setFavorite(productId, !it) } to epoch
         }
         // NonCancellable: leaving the screen right after the tap must not abandon the request, or the cache would show
         // a state the server never received.
         return withContext(NonCancellable) {
             val result = safeApiCall { if (wasFavorite) api.remove(productId) else api.add(AddToWishlistRequest(productId)) }
             synchronized(lock) {
-                inFlight.remove(productId)
-                // After a sign-out the cache already belongs to nobody; rolling back would resurrect an old id.
-                if (result is AppResult.Failure && session.state.value is SessionState.SignedIn) {
-                    setFavorite(productId, wasFavorite)
+                // After a sign-out the cache and inFlight already belong to the next session; touching either would
+                // resurrect an old id or drop a new account's tap.
+                if (epoch == startEpoch) {
+                    inFlight.remove(productId)
+                    if (result is AppResult.Failure && session.state.value is SessionState.SignedIn) {
+                        setFavorite(productId, wasFavorite)
+                    }
                 }
             }
             when (result) {

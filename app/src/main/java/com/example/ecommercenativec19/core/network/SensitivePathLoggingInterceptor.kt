@@ -4,12 +4,14 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 /**
- * Routes each request to one of two loggers: [safe] for `/auth/` and `/users/` endpoints, [default] for the rest.
+ * Routes each request to one of two loggers: [safe] for `/auth/`, `/users/` and `/addresses` endpoints, [default] for
+ * the rest.
  *
  * The auth request bodies carry the password, the 400 validation response echoes it back, and the success response
  * carries the token. `/users/` adds the password-change request (current and new password, new token in the answer)
- * and `getMe`, whose body holds the stored password hash plus e-mail and phone. A header-level logger prints the line
- * and status without any body, so none of that reaches Logcat even in debug builds.
+ * and `getMe`, whose body holds the stored password hash plus e-mail and phone. `/addresses` carries street addresses
+ * and phone numbers. A header-level logger prints the line and status without any body, so none of that reaches
+ * Logcat even in debug builds.
  */
 class SensitivePathLoggingInterceptor(
     private val default: Interceptor,
@@ -23,6 +25,6 @@ class SensitivePathLoggingInterceptor(
     }
 
     private companion object {
-        val SENSITIVE_SEGMENTS = listOf("/auth/", "/users/")
+        val SENSITIVE_SEGMENTS = listOf("/auth/", "/users/", "/addresses")
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ecommercenativec19.feature.cart.data
 
+import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
 import com.example.ecommercenativec19.core.network.safeApiCall
 import com.example.ecommercenativec19.core.session.SessionRepository
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -61,16 +64,13 @@ class CartRepositoryImpl(
 
     init {
         scope.launch {
-            // collectLatest: a new session cancels a load that was started for the previous one.
-            session.state.collectLatest { state ->
-                when (state) {
-                    is SessionState.SignedIn -> {
-                        resetForNewSession()
-                        refresh()
-                    }
-                    SessionState.SignedOut -> resetForNewSession()
-                    SessionState.Loading -> Unit
-                }
+            // Keyed on signed in / not, not on every emission: a password change swaps the token for the same user and
+            // must not wipe the cart. An account switch always passes through SignedOut (sign-in is only reachable
+            // while signed out), so a token change inside SignedIn is always a rotation.
+            // collectLatest: signing out cancels a load that was started for the previous session.
+            session.state.map { it is SessionState.SignedIn }.distinctUntilChanged().collectLatest { signedIn ->
+                resetForNewSession()
+                if (signedIn) refresh()
             }
         }
     }
@@ -107,6 +107,8 @@ class CartRepositoryImpl(
     }
 
     private suspend fun add(productId: String, quantity: Int, startEpoch: Int): AppResult<Unit> {
+        // This add may have waited for the product lock across a sign-out; its POST would carry the next session's token.
+        if (synchronized(lock) { epoch != startEpoch }) return AppResult.Failure(AppError.Unknown)
         val added = when (val result = safeApiCall { api.add(AddToCartRequest(productId)) }) {
             is AppResult.Failure -> return result
             is AppResult.Success -> result.data
