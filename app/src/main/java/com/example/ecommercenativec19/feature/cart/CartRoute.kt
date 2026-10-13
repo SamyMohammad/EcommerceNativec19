@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Cart entry point. [onBack] leads to Home (prototype). The search icon, the cart icon (already on Cart) and
@@ -12,7 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
  */
 @Composable
 fun CartRoute(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val viewModel: CartViewModel = viewModel()
+    val viewModel: CartViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     CartScreen(
         state = state,

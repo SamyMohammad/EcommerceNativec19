@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Sign in entry point.
@@ -19,7 +19,7 @@ fun SignInRoute(
     onSignIn: () -> Unit,
     onCreateAccount: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignInViewModel = viewModel(),
+    viewModel: SignInViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     SignInScreen(

@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ecommercenativec19.core.ui.AppTab
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Wishlist entry point. The row "Add to Cart" buttons have no behavior in the prototype (the only documented
@@ -13,7 +13,7 @@ import com.example.ecommercenativec19.core.ui.AppTab
  */
 @Composable
 fun WishlistRoute(onTabSelected: (AppTab) -> Unit, onOpenCart: () -> Unit, modifier: Modifier = Modifier) {
-    val viewModel: WishlistViewModel = viewModel()
+    val viewModel: WishlistViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     WishlistScreen(
         state = state,
