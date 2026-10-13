@@ -37,6 +37,9 @@ class AppNavigator(
 
     val topKey: NavKey get() = displayStack.last()
 
+    /** True once the auth stack is gone, i.e. the user is past Splash / Sign in / Sign up. */
+    val isSignedIn: Boolean get() = authStack.isEmpty()
+
     /** Splash finished: it removes itself and Sign in becomes the root. */
     fun finishSplash() {
         authStack.clear()
@@ -47,6 +50,14 @@ class AppNavigator(
     fun completeAuth() {
         authStack.clear()
         openTab(AppTab.Home)
+    }
+
+    /** Session ended (sign-out or a rejected token): forget every tab's history and show Sign in. */
+    fun signOut() {
+        tabStacks.values.forEach { it.clear() }
+        currentTabState.value = AppTab.Home
+        authStack.clear()
+        authStack.add(SignIn)
     }
 
     /** Pushes [key] on the stack currently shown (the tab stack, or the auth stack while signed out). */

@@ -29,7 +29,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,7 @@ import com.example.ecommercenativec19.ui.theme.extendedTypography
  * Text direction follows the layout direction (start aligned); placeholder/typed text use the design's Light 18.
  * [trailingIcon] is an optional slot at the end of the field (e.g. [PasswordVisibilityToggle]); the slot is
  * given the design's 16dp end margin minus the touch inset, so pass a 48dp-target icon.
+ * [errorText], when set, is announced and shown under the field with [AuthErrorText].
  */
 @Composable
 fun AuthTextField(
@@ -56,6 +59,7 @@ fun AuthTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: (@Composable () -> Unit)? = null,
+    errorText: String? = null,
 ) {
     val shape = MaterialTheme.shapes.medium
     Column(modifier) {
@@ -111,7 +115,22 @@ fun AuthTextField(
                 }
             },
         )
+        if (errorText != null) {
+            Spacer(Modifier.height(AuthErrorGap))
+            AuthErrorText(errorText)
+        }
     }
+}
+
+/** Validation or submit failure on the primary-color auth background; announced politely by screen readers. */
+@Composable
+fun AuthErrorText(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onPrimary,
+        modifier = modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite },
+    )
 }
 
 /**
@@ -149,3 +168,5 @@ fun PasswordVisibilityToggle(
 
 /** Label bottom (y 351) to field top (y 375) in the sign in / sign up frames. */
 private val AuthLabelToFieldGap = 24.dp
+
+private val AuthErrorGap = 6.dp

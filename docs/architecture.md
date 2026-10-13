@@ -80,7 +80,7 @@ app-owned state, not a framework object you query.
   process death. `AppNavigator` is plain Kotlin over `MutableList`s and is unit-tested on the JVM
   (`AppNavigatorTest`). Rules: a tab switch keeps each tab's history, reselecting a tab pops it to its root, back
   pops inside the tab, back at a non-Home tab root goes to Home, back at Home root exits. Auth success clears the
-  auth stack. This replaces `saveState`/`restoreState`/`popUpTo` from classic Navigation Compose.
+  auth stack; `signOut()` clears every tab stack and shows Sign in. This replaces `saveState`/`restoreState`/`popUpTo` from classic Navigation Compose.
 - **Rendering** (`navigation/AppNavDisplay.kt`): `NavDisplay` + `entryProvider`. Hidden tab stacks stay in the
   list passed to `NavDisplay` (below the current tab), otherwise Nav3 would treat them as popped and discard their
   state. Duplicate keys across stacks would collide, which the flow rules out (Cart and Product details have no
@@ -105,7 +105,15 @@ rather than "Home".
   config change rather than a code change.
 - Explicit connect, read and write timeouts on the OkHttp client.
 - Debug builds log request and response bodies; release builds log nothing. The `token` and `Authorization`
-  headers are redacted so credentials never reach Logcat.
+  headers are redacted so credentials never reach Logcat. `SensitivePathLoggingInterceptor` routes `/auth/`
+  requests to a headers-only logger, because their bodies carry the password (request, and echoed back in 400
+  responses) and the token (success responses).
+- Interceptor order: `AuthInterceptor` first (adds the `token` header, so the logger sees and redacts it), then
+  logging. `AuthInterceptor` reads the token from `SessionRepository.state.value`, an in-memory `StateFlow`, so
+  OkHttp threads never wait for disk. On a 401 to a request that carried a token it calls
+  `SessionRepository.invalidate(token)`, which signs out only if that token is still current (a late 401 for an old
+  token must not end a newer session). Sign-in and sign-up never carry the token, so their 401 ("wrong password")
+  cannot sign anyone out.
 - `Json { ignoreUnknownKeys = true }` and nullable DTO fields for anything the API does not guarantee.
 - Image loading: Coil 3 (`SingletonImageLoader.Factory` on `EcommerceApp`) fetches through the same Koin-provided
   `OkHttpClient`, so image requests share the API client's timeouts, logging and connection pool. Screens adopt
@@ -127,7 +135,58 @@ Planned, in rough order. Each item is a small reviewed PR.
 
 - **Route API per feature**, replacing sample data. Done: categories, product list, product details (shared
   `feature/products/`) and Home. Next: cart, wishlist and account.
-- **Authentication** via DataStore token storage and an OkHttp interceptor that adds the `token` header. This is a
-  deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart, wishlist
-  and account endpoints require a token.
+- **Authentication.** Done: sign-in, sign-up, encrypted session, `token` header, sign-out on 401 (section 9). This
+  is a deliberate, user-approved exception to the "no login" rule in `CLAUDE.md` section G, because the cart,
+  wishlist and account endpoints require a token. Still no password reset, social login or profile editing.
 - **Release hardening:** enable R8 (currently disabled for release builds) with the keep rules the stack needs (including the Navigation 3 key classes).
+
+## 9. Authentication and session
+
+Authentication is the one place the app stores something secret, so the design is deliberate.
+
+**Layers.** `feature/auth/` follows the usual split. `AuthApi` (Retrofit, returns `Response<T>` so the repository can
+read 400/401/409 error bodies) and `AuthRepositoryImpl` in `data/`; `AuthRepository`, `SignInUseCase`,
+`SignUpUseCase`, `SignOutUseCase`, `ObserveSessionUseCase` and the validation rules in `domain/`. The token itself is
+owned by `core/session/` because the network layer and every later feature (cart, wishlist, account) need it.
+
+**Session storage.** `SessionRepository` exposes `state: StateFlow<SessionState>` with `Loading`, `SignedOut` and
+`SignedIn(token)`. It is backed by Preferences DataStore (`files/datastore/session.preferences_pb`) holding the token
+encrypted by `TokenCipher`; the production implementation is AES-256/GCM with a non-exportable Android Keystore key
+(`androidx.security:security-crypto` is deprecated, and the platform API is about 40 lines). The state is derived from
+the store with `stateIn(Eagerly)` and the repository is created at app start, so the cache is warm when Splash or
+OkHttp ask. `Loading` exists so Splash can wait for the disk read instead of guessing "signed out". `SignedIn`
+overrides `toString`, and the request DTOs and UI states hide passwords the same way, so a stray log line or failing
+assertion cannot print a secret.
+
+**Failure modes.** A stored blob that cannot be decrypted (key lost after a backup restore, Keystore reset) is treated
+as signed out and deleted. If the token cannot be stored after a successful sign-in, the user sees a generic error
+rather than a silently half-signed-in app.
+
+**Backup.** `allowBackup` stays on, but the DataStore file is excluded in `backup_rules.xml` (Android 11 and older)
+and in `data_extraction_rules.xml` (Android 12+, cloud backup and device transfer). Keystore keys are never backed
+up, so a restored blob would be unreadable anyway; excluding it keeps credentials out of backups altogether, and
+leaves the option to back up harmless preferences later. If a second DataStore file appears, decide per file.
+
+**Errors.** Failures the UI words differently get their own case in `AuthError` (`InvalidCredentials` for 401,
+`EmailAlreadyUsed` for 409, `Validation(message)` for 400); everything else is `Other(AppError)` and reuses the shared
+mapping. It is a separate type rather than new `AppError` cases because `AppError` is shared by every feature and
+these only mean something for credentials. Use cases return `AuthOutcome`: `Success`, `Invalid(fieldErrors)` (the
+client-side check failed and nothing was sent) or `Failed(AuthError)`. Domain results carry no Android resources; the
+UI maps them to strings in `feature/auth/ui/AuthMessages.kt`.
+
+**Validation.** `AuthValidation` mirrors the server (docs/api/auth.md): name at least 3 characters, valid email,
+password at least 6 characters (no complexity rule), Egyptian mobile `01[0125]` plus 8 digits. The server reports only
+the first failing field; the client reports all of them. The design has no confirm-password field, so the data layer
+sends the password as `rePassword` and the UI offers the show/hide toggle instead.
+
+**One-shot "signed in" effect.** Modeled as state (`SignInUiState.signedIn`, `SignUpUiState.signedUp`) observed by the
+route in a `LaunchedEffect`, following the official guidance that UI events that change state should be state, not
+`Channel`/`SharedFlow` events that can be lost or replayed. Leaving the screen removes its ViewModel, so there is no
+flag to reset.
+
+**Navigation reaction.** Splash waits for the first non-`Loading` session (after its 0.4 s delay) and goes to Home or
+Sign in. `AppNavDisplay` collects the session with `collectAsStateWithLifecycle`; when it turns `SignedOut` while the
+user is past the auth screens (sign-out, or a 401 handled by `AuthInterceptor`), it calls `AppNavigator.signOut()`.
+
+**Not covered by JVM tests.** The Keystore cipher needs a device; `DataStoreSessionRepositoryTest` uses a fake cipher
+and an in-memory DataStore (the file-backed one cannot rewrite its file on Windows hosts), plus one real-file smoke test.

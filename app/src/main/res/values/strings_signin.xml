@@ -2,8 +2,8 @@
 <resources>
     <string name="signin_title">Welcome Back To Route</string>
     <string name="signin_subtitle">Please sign in with your mail</string>
-    <string name="signin_user_name_label">User Name</string>
-    <string name="signin_user_name_placeholder">enter your name</string>
+    <string name="signin_email_label">E-mail address</string>
+    <string name="signin_email_placeholder">enter your email address</string>
     <string name="signin_password_label">Password</string>
     <string name="signin_password_placeholder">enter your password</string>
     <string name="signin_forgot_password">Forgot password</string>

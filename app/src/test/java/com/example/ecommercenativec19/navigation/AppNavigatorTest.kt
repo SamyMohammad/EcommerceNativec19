@@ -167,6 +167,58 @@ class AppNavigatorTest {
         assertEquals(null, SignIn.bottomBarTab)
     }
 
+    @Test
+    fun `splash with a stored session goes straight to Home`() {
+        val nav = signedOut()
+
+        nav.completeAuth()
+
+        assertEquals(listOf<NavKey>(Home), nav.displayStack)
+        assertTrue(nav.isSignedIn)
+    }
+
+    @Test
+    fun `auth screens are not signed in`() {
+        assertFalse(signedOut().isSignedIn)
+    }
+
+    @Test
+    fun `sign out shows only Sign in and drops every tab history`() {
+        val nav = signedIn()
+        nav.selectTab(AppTab.Categories)
+        nav.push(ProductList("sub-1"))
+        nav.push(ProductDetails("7"))
+        nav.selectTab(AppTab.Account)
+
+        nav.signOut()
+
+        assertEquals(listOf<NavKey>(SignIn), nav.displayStack)
+        assertFalse(nav.isSignedIn)
+        assertEquals(AppTab.Home, nav.currentTab)
+    }
+
+    @Test
+    fun `back after sign out exits instead of reaching a previous tab`() {
+        val nav = signedIn()
+        nav.push(Cart)
+        nav.signOut()
+
+        assertFalse(nav.back())
+    }
+
+    @Test
+    fun `signing in again after sign out starts on a fresh Home`() {
+        val nav = signedIn()
+        nav.selectTab(AppTab.Categories)
+        nav.push(ProductList("sub-1"))
+        nav.signOut()
+
+        nav.completeAuth()
+
+        assertEquals(listOf<NavKey>(Home), nav.displayStack)
+        assertEquals(AppTab.Home, nav.currentTab)
+    }
+
     @Test(expected = IllegalArgumentException::class)
     fun `product details rejects a blank id`() {
         ProductDetails(" ")

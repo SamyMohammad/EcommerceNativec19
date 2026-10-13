@@ -34,14 +34,13 @@ the public [Route E-commerce API](https://documenter.getpostman.com/view/5709532
 
 | Screen | UI | Data source |
 |---|---|---|
-| Splash, Sign in, Sign up | Done | Local state (auth not wired yet) |
+| Splash, Sign in, Sign up | Done | **Route API** (`/auth/signin`, `/auth/signup`); the token is stored encrypted and Splash restores the session |
 | **Home** | Done | **Route API** (categories grid + three product rows ranked by sales, recency and rating; promo banners are static artwork) |
 | **Categories** | Done | **Route API** (categories + sub-categories) |
 | **Product list, Product details** | Done | **Route API** (products by sub-category with load-more paging, product by id) |
 | Cart, Wishlist, Account | Done | Sample data |
 
-**Next slices:** authentication (token storage) → cart and
-wishlist → account. Each slice is delivered as a small, reviewed PR that takes one feature through
+**Next slices:** cart and wishlist → account. Each slice is delivered as a small, reviewed PR that takes one feature through
 data → domain → presentation, with tests.
 
 ## Tech stack
@@ -55,12 +54,13 @@ data → domain → presentation, with tests.
 | Navigation | Navigation 3 (1.2.0) | App-owned per-tab back stacks in `navigation/AppNavigator.kt`, `NavDisplay` in `navigation/AppNavDisplay.kt`, entry-scoped ViewModels |
 | DI | Koin 4.1.1 | Chosen over Hilt for simplicity and a future KMP path. All ViewModels come from per-feature Koin modules, checked by `KoinModulesTest`. 4.1.x because 4.2.x requires Kotlin 2.3 |
 | Networking | Retrofit 3, OkHttp 5, kotlinx.serialization 1.9 | Compile-time serialization, no reflection |
+| Session storage | Preferences DataStore 1.2.1, Android Keystore (AES-256/GCM) | The token is encrypted with a non-exportable Keystore key before it is written; `androidx.security:security-crypto` is deprecated, so the small `AndroidKeystoreTokenCipher` uses the platform API directly |
 | Images | Coil 3.3.0 (`coil-compose`, `coil-network-okhttp`) | Loader built in `EcommerceApp` on the app's OkHttpClient; no screen loads remote images yet. 3.3.x because 3.4+ requires Kotlin 2.3 |
 | Testing | JUnit 4, kotlinx-coroutines-test, Robolectric, Roborazzi | Hand-written fakes, no mocking library |
 | Build | AGP 9.4.1 (built-in Kotlin), Gradle 9.6, version catalog | `gradle/libs.versions.toml` |
 | SDK | `minSdk` 24, `targetSdk` / `compileSdk` 37 | |
 
-Dependencies are added only when a slice needs them. DataStore, for example, arrives with
+Dependencies are added only when a slice needs them. DataStore, for example, arrived with
 the authentication slice.
 
 ## Architecture
@@ -111,7 +111,8 @@ app/src/main/java/com/example/ecommercenativec19/
 ├── MainActivity.kt              # Single activity, hosts the Compose tree
 ├── core/
 │   ├── common/                  # AppResult / AppError (pure Kotlin)
-│   ├── network/                 # Retrofit, OkHttp, Json, safeApiCall
+│   ├── network/                 # Retrofit, OkHttp, Json, safeApiCall, AuthInterceptor, auth-safe logging
+│   ├── session/                 # SessionRepository: encrypted token in DataStore, in-memory SessionState cache
 │   └── ui/                      # Reusable design-system composables (ProductImage, StatusPane, price formatting)
 ├── feature/
 │   ├── categories/              # First slice wired to the API
@@ -119,6 +120,7 @@ app/src/main/java/com/example/ecommercenativec19/
 │   │   ├── domain/              # Models, repository interface, use cases
 │   │   ├── di/                  # Koin module
 │   │   └── Categories*.kt       # Route, Screen, ViewModel, UiState
+│   ├── auth/                    # Sign-in / sign-up data + domain (AuthApi, repository, validation, use cases)
 │   ├── products/                # Shared product data + domain (ProductsApi, mapper, repository, use cases)
 │   ├── productlist/             # Sub-category product grid with load-more paging
 │   ├── productdetails/          # Product by id: carousel, quantity and total
@@ -131,12 +133,15 @@ app/src/main/java/com/example/ecommercenativec19/
 
 - **Base URL:** `https://ecommerce.routemisr.com/`, exposed as `BuildConfig.BASE_URL` (set in `app/build.gradle.kts`).
 - **Auth:** authenticated endpoints expect a custom `token` request header, not `Authorization: Bearer`.
+  `AuthInterceptor` adds it from an in-memory session cache and clears the session on a 401 for a request that
+  carried a token. Sign-in and sign-up are documented in [`docs/api/auth.md`](docs/api/auth.md).
 - **Parsing:** `Json { ignoreUnknownKeys = true }`, and fields that are not guaranteed are nullable, so one
   malformed record cannot take a whole screen down.
 - **Errors:** `safeApiCall` maps `IOException → AppError.Network`, `HttpException → AppError.Server(code)`,
   `SerializationException → AppError.Parsing` and anything else to `AppError.Unknown`. It rethrows `CancellationException` to keep structured concurrency intact.
-- **Logging:** HTTP bodies are logged in debug builds only. The `token` and `Authorization` headers are redacted
-  from the log output.
+- **Logging:** HTTP bodies are logged in debug builds only, except for `/auth/` endpoints, which log headers only
+  (their bodies hold the password and the token). The `token` and `Authorization` headers are redacted from the
+  log output.
 - **API notes:** the Postman collection ships without example responses, so every endpoint the app uses is
   documented from live calls in [`docs/api/`](docs/api/), including server quirks. For example, the
   documented nested sub-categories endpoint ignores its category id, so the app uses the

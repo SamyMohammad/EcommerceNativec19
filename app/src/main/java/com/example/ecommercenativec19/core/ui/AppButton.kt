@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
@@ -76,6 +77,7 @@ private fun AppButtonStyle.textStyle(): TextStyle = when (this) {
 /**
  * Stateless button. The label is centered; [leadingIcon] / [trailingIcon] (24dp, decorative) are pinned to the
  * start/end edge at the style's icon inset, as in "Add to cart" (cart icon) and "Check Out" (arrow icon).
+ * A disabled button (for example while a request is in flight) ignores taps and is dimmed.
  */
 @Composable
 fun AppButton(
@@ -85,10 +87,12 @@ fun AppButton(
     style: AppButtonStyle = AppButtonStyle.Primary,
     leadingIcon: Painter? = null,
     trailingIcon: Painter? = null,
+    enabled: Boolean = true,
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier.height(style.height),
+        enabled = enabled,
+        modifier = modifier.height(style.height).alpha(if (enabled) 1f else DisabledAlpha),
         shape = style.shape(),
         color = style.container(),
         contentColor = style.content(),
@@ -130,3 +134,5 @@ fun AppButton(
         }
     }
 }
+
+private const val DisabledAlpha = 0.6f
