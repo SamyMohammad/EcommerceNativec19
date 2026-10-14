@@ -27,7 +27,7 @@ import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.textLineBox
 
-/** Left category rail: the API's categories, or a spinner / retry / empty note while they are not available. */
+/** Left category rail: the categories, or a spinner / retry / empty note while they are not available. */
 @Composable
 internal fun CategoriesRail(
     state: LoadState<List<RailCategory>>,

@@ -87,7 +87,7 @@ internal fun CategoriesContent(
     }
 }
 
-/** The API gives sub-categories no image, so every tile shows a neutral block. */
+/** Sub-categories have no image, so every tile shows a neutral block. */
 @Composable
 private fun TilePlaceholder() {
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant))

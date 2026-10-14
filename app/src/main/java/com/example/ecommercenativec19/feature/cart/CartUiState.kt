@@ -1,12 +1,13 @@
 package com.example.ecommercenativec19.feature.cart
 
+import androidx.annotation.DrawableRes
 import com.example.ecommercenativec19.core.common.LoadState
 
 /** One cart row. Prices are whole EGP; the UI formats them. */
 data class CartLineUi(
     val id: String,
     val title: String,
-    val imageUrl: String?,
+    @param:DrawableRes val imageRes: Int?,
     /** Unit price times [quantity]. */
     val linePrice: Int,
     val quantity: Int,

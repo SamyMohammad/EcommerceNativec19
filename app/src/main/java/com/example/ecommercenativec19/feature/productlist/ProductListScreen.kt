@@ -127,7 +127,7 @@ private fun ProductGrid(
                 onClick = { onProductClick(product.id) },
                 // Design card height is 237; used as a minimum so larger fonts can grow the card.
                 modifier = Modifier.heightIn(min = CardMinHeight),
-                image = { ProductImage(url = product.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
+                image = { ProductImage(imageRes = product.imageRes, contentDescription = null, modifier = Modifier.fillMaxSize()) },
             )
         }
         if (loadMore != LoadMoreState.Idle) {

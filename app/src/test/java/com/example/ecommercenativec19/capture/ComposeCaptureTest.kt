@@ -1,6 +1,5 @@
 package com.example.ecommercenativec19.capture
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -10,8 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -29,7 +26,7 @@ import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.core.ui.AppTab
 import com.example.ecommercenativec19.feature.account.AccountScreen
 import com.example.ecommercenativec19.feature.account.AccountUiState
-import com.example.ecommercenativec19.feature.account.domain.AccountFixtures
+import com.example.ecommercenativec19.fake.FakeData
 import com.example.ecommercenativec19.feature.cart.CartScreen
 import com.example.ecommercenativec19.feature.categories.CategoriesSampleData
 import com.example.ecommercenativec19.feature.categories.CategoriesScreen
@@ -44,10 +41,6 @@ import com.example.ecommercenativec19.feature.splash.SplashScreen
 import com.example.ecommercenativec19.feature.wishlist.WishlistScreen
 import com.example.ecommercenativec19.navigation.AppScaffold
 import com.example.ecommercenativec19.ui.theme.AppTheme
-import coil3.annotation.ExperimentalCoilApi
-import coil3.asImage
-import coil3.compose.AsyncImagePreviewHandler
-import coil3.compose.LocalAsyncImagePreviewHandler
 import com.github.takahirom.roborazzi.captureRoboImage
 import java.io.File
 import java.security.MessageDigest
@@ -84,7 +77,6 @@ private enum class Scene(val variant: String, val nodeId: String, val containsTe
 
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-// Plain Application: avoids EcommerceApp.startKoin running once per Robolectric test (it would throw on the second).
 @Config(sdk = [36], application = Application::class, qualifiers = "en-ldltr-w430dp-h932dp-notnight-mdpi")
 class ComposeCaptureTest {
     @get:Rule val compose = createComposeRule()
@@ -115,46 +107,23 @@ class ComposeCaptureTest {
 
     @Composable
     private fun SceneBody(scene: Scene) {
-        // Stateless screens with sample state, not the Routes: Routes resolve ViewModels through Koin, which is not
-        // started in this capture test.
+        // Stateless screens with fixed sample state, not the Routes: Routes read the FakeStore, which is not
+        // provided in this capture test.
         when (scene) {
             Scene.Splash -> SplashScreen()
             Scene.SignIn -> SignInScreen(SignInUiState(), {}, {}, {}, {}, {})
             Scene.SignUp -> SignUpScreen(SignUpUiState(), {}, {}, {}, {}, {}, {})
-            Scene.Home -> WithFixtureImages { HomeScreen(ProductFixtures.home, {}, {}, {}, {}, {}, {}, {}, {}) }
+            Scene.Home -> HomeScreen(ProductFixtures.home, {}, {}, {}, {}, {}, {}, {}, {})
             Scene.Categories -> CategoriesScreen(CategoriesSampleData.state, {}, {}, {}, {}, {})
-            Scene.ProductList -> WithFixtureImages {
-                ProductListScreen(ProductFixtures.productList, {}, {}, {}, {}, {}, {}, {})
-            }
-            Scene.Details -> WithFixtureImages {
-                ProductDetailsScreen(ProductFixtures.productDetails, {}, {}, {}, {}, {}, {}, {})
-            }
-            Scene.Cart -> WithFixtureImages { CartScreen(ProductFixtures.cart, {}, {}, {}, {}, {}, {}, {}, {}) }
-            Scene.Wishlist -> WithFixtureImages { WishlistScreen(ProductFixtures.wishlist, {}, {}, {}, {}, {}, {}) }
+            Scene.ProductList -> ProductListScreen(ProductFixtures.productList, {}, {}, {}, {}, {}, {}, {})
+            Scene.Details -> ProductDetailsScreen(ProductFixtures.productDetails, {}, {}, {}, {}, {}, {}, {})
+            Scene.Cart -> CartScreen(ProductFixtures.cart, {}, {}, {}, {}, {}, {}, {}, {})
+            Scene.Wishlist -> WishlistScreen(ProductFixtures.wishlist, {}, {}, {}, {}, {}, {})
             Scene.Account -> AccountScreen(
-                AccountUiState(profile = LoadState.Content(AccountFixtures.profile)),
+                AccountUiState(profile = LoadState.Content(FakeData.profile)),
                 {}, {}, {}, {}, {}, {}, {}, {}, {},
             )
         }
-    }
-
-    /**
-     * Coil only consults its preview handler in inspection mode, so both are provided together: fixture URLs resolve to
-     * bundled drawables instead of the network.
-     */
-    @SuppressLint("LocalContextGetResourceValueCall") // fixed fixture drawables, no configuration-dependent resources
-    @OptIn(ExperimentalCoilApi::class)
-    @Composable
-    private fun WithFixtureImages(content: @Composable () -> Unit) {
-        val context = LocalContext.current
-        val handler = AsyncImagePreviewHandler { request ->
-            checkNotNull(context.getDrawable(ProductFixtures.drawableFor(request.data.toString()))).asImage()
-        }
-        CompositionLocalProvider(
-            LocalInspectionMode provides true,
-            LocalAsyncImagePreviewHandler provides handler,
-            content = content,
-        )
     }
 
     private fun hasText(node: SemanticsNode): Boolean =

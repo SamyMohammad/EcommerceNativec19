@@ -1,14 +1,19 @@
 package com.example.ecommercenativec19.feature.wishlist
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.koinViewModel
+import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.fake.FakeData
+import com.example.ecommercenativec19.fake.LocalFakeStore
+import com.example.ecommercenativec19.fake.toCardUi
 
 /**
- * Wishlist entry point. Row tap -> [onOpenProduct]. The row "Add to Cart" button adds one unit to the cart and stays here.
+ * Wishlist entry point. Row tap -> [onOpenProduct]. The row "Add to Cart" button adds one unit to the in-memory cart
+ * and stays here; un-hearting a row removes it at once.
  */
 @Composable
 fun WishlistRoute(
@@ -16,18 +21,20 @@ fun WishlistRoute(
     onOpenProduct: (productId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: WishlistViewModel = koinViewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    // Runs on every visit, not just when the ViewModel is created: the tab's ViewModel outlives tab switches.
-    LaunchedEffect(viewModel) { viewModel.onEnter() }
+    val store = LocalFakeStore.current
+    var query by remember { mutableStateOf("") }
+    val favorites = FakeData.products.filter { it.id in store.favoriteIds }.map { it.toCardUi() }
     WishlistScreen(
-        state = state,
-        onQueryChange = viewModel::onQueryChange,
-        onToggleFavorite = viewModel::onToggleFavorite,
+        state = WishlistUiState(
+            query = query,
+            items = if (favorites.isEmpty()) LoadState.Empty else LoadState.Content(favorites),
+        ),
+        onQueryChange = { query = it },
+        onToggleFavorite = store::toggleFavorite,
         onProductClick = onOpenProduct,
-        onAddToCart = viewModel::onAddToCart,
+        onAddToCart = { store.addToCart(it) },
         onOpenCart = onOpenCart,
-        onRetry = viewModel::onRetry,
+        onRetry = {},
         modifier = modifier,
     )
 }

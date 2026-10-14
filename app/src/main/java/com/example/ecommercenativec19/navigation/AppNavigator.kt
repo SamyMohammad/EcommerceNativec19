@@ -29,7 +29,7 @@ class AppNavigator(
     val displayStack: List<NavKey>
         get() {
             if (authStack.isNotEmpty()) return authStack.toList()
-            // Hidden tabs stay in the list (below the current one) so their entry-scoped ViewModels and
+            // Hidden tabs stay in the list (below the current one) so their screen state and
             // scroll state are not cleared when the user switches tabs.
             return AppTab.entries.filter { it != currentTab }.flatMap { tabStacks.getValue(it) } +
                 tabStacks.getValue(currentTab)

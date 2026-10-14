@@ -84,7 +84,7 @@ private fun WishlistRow(
         title = item.title,
         price = formatPrice(item.price),
         oldPrice = item.oldPrice?.let { formatOldPrice(it) },
-        image = { ProductImage(url = item.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
+        image = { ProductImage(imageRes = item.imageRes, contentDescription = null, modifier = Modifier.fillMaxSize()) },
         // The design places the heart and the button 16dp from the end (the row's corner slot gives 8).
         topEnd = {
             FavoriteButton(

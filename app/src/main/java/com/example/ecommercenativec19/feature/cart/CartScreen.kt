@@ -94,7 +94,7 @@ private fun CartRow(
         titleTop = 16.dp,
         variantTop = 47.dp,
         priceTop = 81.dp,
-        image = { ProductImage(url = item.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
+        image = { ProductImage(imageRes = item.imageRes, contentDescription = null, modifier = Modifier.fillMaxSize()) },
         topEnd = {
             // 48dp target whose icon stays at the design position (top-end corner); the target grows inward.
             Box(

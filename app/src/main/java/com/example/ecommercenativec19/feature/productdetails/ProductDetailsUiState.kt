@@ -12,11 +12,11 @@ data class ProductDetailsUi(
     val rating: Double,
     val ratingCount: Int,
     val description: String,
-    val images: List<String>,
+    val images: List<Int>,
 )
 
 /**
- * Everything Product details renders. [quantity] is UI-only until "Add to cart" sends it; [isFavorite] mirrors the shared wishlist cache.
+ * Everything Product details renders. [quantity] is UI-only until "Add to cart" adds it; [isFavorite] mirrors the in-memory favorites.
  */
 data class ProductDetailsUiState(
     val product: LoadState<ProductDetailsUi> = LoadState.Loading,

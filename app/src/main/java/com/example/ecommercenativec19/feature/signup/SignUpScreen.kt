@@ -33,12 +33,10 @@ import com.example.ecommercenativec19.core.ui.AppButtonStyle
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.AppLogo
 import com.example.ecommercenativec19.core.ui.AppLogoStyle
-import com.example.ecommercenativec19.core.ui.AuthErrorText
 import com.example.ecommercenativec19.core.ui.AuthTextField
 import com.example.ecommercenativec19.core.ui.LightStatusBarIconsEffect
 import com.example.ecommercenativec19.core.ui.PasswordVisibilityToggle
-import com.example.ecommercenativec19.feature.auth.domain.AuthField
-import com.example.ecommercenativec19.feature.auth.ui.message
+import com.example.ecommercenativec19.feature.auth.AuthField
 import com.example.ecommercenativec19.feature.auth.ui.messageFor
 
 /**
@@ -122,15 +120,10 @@ fun SignUpScreen(
             },
         )
         Spacer(Modifier.height(PasswordToButtonGap))
-        state.submitError?.let {
-            AuthErrorText(it.message())
-            Spacer(Modifier.height(SubmitErrorGap))
-        }
         AppButton(
             text = stringResource(R.string.signup_submit),
             onClick = onSignUp,
             style = AppButtonStyle.OnPrimary,
-            enabled = !state.isSubmitting,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(AppDimens.ScreenHorizontal))
@@ -145,9 +138,6 @@ private val LogoToFirstLabelGap = 47.dp
 
 /** Field bottom (309 / 447 / 585) -> next label top (341 / 479 / 617). */
 private val FieldGap = 32.dp
-
-/** Space between the submit error and the Sign up button. */
-private val SubmitErrorGap = 12.dp
 
 /** Password field bottom 723 -> "Sign up" button top 779. */
 private val PasswordToButtonGap = 56.dp

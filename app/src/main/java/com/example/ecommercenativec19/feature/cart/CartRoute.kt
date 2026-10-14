@@ -1,32 +1,43 @@
 package com.example.ecommercenativec19.feature.cart
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.koinViewModel
+import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.fake.FakeData
+import com.example.ecommercenativec19.fake.LocalFakeStore
 
 /**
  * Cart entry point. [onBack] pops to the previous screen. The search icon, the cart icon (already on Cart) and
- * "Check Out" have no behavior: they are wired to no-ops here (no search or checkout contract; payments are out of scope).
+ * "Check Out" have no behavior: they are wired to no-ops here (payments are out of scope). Line prices and the total
+ * are computed from the in-memory cart.
  */
 @Composable
 fun CartRoute(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val viewModel: CartViewModel = koinViewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    // Runs on every visit, not just when the ViewModel is created: the cart may have changed since the last one.
-    LaunchedEffect(viewModel) { viewModel.onEnter() }
+    val store = LocalFakeStore.current
+    val lines = store.cart.mapNotNull { entry ->
+        FakeData.product(entry.productId)?.let { product ->
+            CartLineUi(
+                id = product.id,
+                title = product.title,
+                imageRes = product.images.first(),
+                linePrice = product.price * entry.quantity,
+                quantity = entry.quantity,
+            )
+        }
+    }
     CartScreen(
-        state = state,
+        state = CartUiState(
+            items = if (lines.isEmpty()) LoadState.Empty else LoadState.Content(lines),
+            totalPrice = lines.sumOf { it.linePrice },
+        ),
         onBack = onBack,
-        onIncrement = viewModel::onIncrement,
-        onDecrement = viewModel::onDecrement,
-        onRemove = viewModel::onRemove,
+        onIncrement = { store.changeQuantity(it, delta = 1) },
+        onDecrement = { store.changeQuantity(it, delta = -1) },
+        onRemove = store::removeFromCart,
         onSearch = {},
         onOpenCart = {},
         onCheckOut = {},
-        onRetry = viewModel::onRetry,
+        onRetry = {},
         modifier = modifier,
     )
 }

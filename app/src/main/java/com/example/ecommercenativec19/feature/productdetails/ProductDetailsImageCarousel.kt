@@ -28,11 +28,11 @@ import com.example.ecommercenativec19.core.ui.ProductImage
 /**
  * Bordered 300dp image carousel with the favorite circle (top-end) and page indicators (bottom-center): the active
  * page is a 30 x 7 primary pill, the others are 7dp white dots with a primary outline. The page is UI-local
- * (pager state): swiping does not touch the ViewModel, so only this carousel recomposes.
+ * (pager state): swiping does not touch the screen state, so only this carousel recomposes.
  */
 @Composable
 internal fun ProductDetailsImageCarousel(
-    images: List<String>,
+    images: List<Int>,
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -48,7 +48,7 @@ internal fun ProductDetailsImageCarousel(
     ) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
             ProductImage(
-                url = images[page],
+                imageRes = images[page],
                 contentDescription = stringResource(R.string.details_image_description, page + 1, images.size),
                 modifier = Modifier.fillMaxSize(),
             )

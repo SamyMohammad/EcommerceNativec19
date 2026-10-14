@@ -1,5 +1,7 @@
 package com.example.ecommercenativec19.feature.home
 
+import androidx.annotation.DrawableRes
+
 import com.example.ecommercenativec19.core.common.LoadState
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
@@ -7,12 +9,12 @@ import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 data class HomeCategoryUi(
     val id: String,
     val name: String,
-    val imageUrl: String?,
+    @param:DrawableRes val imageRes: Int?,
 )
 
 /**
- * The product rows below the categories, in display order. The API has no "home feed" endpoint, so each row is the
- * same product list under a different ranking (see docs/api/home.md).
+ * The product rows below the categories, in display order. Each row is the same fake product list under a
+ * different ranking.
  */
 enum class HomeSection { BestSellers, NewArrival, TopRated }
 

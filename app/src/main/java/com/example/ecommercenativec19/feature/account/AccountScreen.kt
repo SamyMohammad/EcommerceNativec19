@@ -24,8 +24,6 @@ import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.AppLogoBar
 import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.feature.account.domain.Profile
-import com.example.ecommercenativec19.feature.auth.ui.message
 import com.example.ecommercenativec19.feature.auth.ui.toMessageRes
 
 /**
@@ -127,14 +125,6 @@ private fun ProfileContent(
                     onFinishEditing = onFinishEditing,
                     onValueChange = onValueChange,
                     errorText = if (isEditing) state.fieldError?.let { stringResource(it.toMessageRes()) } else null,
-                    enabled = !state.isSaving,
-                )
-            }
-            state.saveError?.let { error ->
-                Text(
-                    text = error.message(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
                 )
             }
             AppButton(

@@ -18,8 +18,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        buildConfigField("String", "BASE_URL", "\"https://ecommerce.routemisr.com/\"")
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -50,7 +48,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
@@ -62,24 +59,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
     testImplementation(libs.junit)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.androidx.test.core)

@@ -42,13 +42,11 @@ import com.example.ecommercenativec19.core.ui.AppButtonStyle
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.AppLogo
 import com.example.ecommercenativec19.core.ui.AppLogoStyle
-import com.example.ecommercenativec19.core.ui.AuthErrorText
 import com.example.ecommercenativec19.core.ui.AuthTextField
 import com.example.ecommercenativec19.core.ui.LightStatusBarIconsEffect
 import com.example.ecommercenativec19.core.ui.PasswordVisibilityToggle
 import com.example.ecommercenativec19.core.ui.textLineBox
-import com.example.ecommercenativec19.feature.auth.domain.AuthField
-import com.example.ecommercenativec19.feature.auth.ui.message
+import com.example.ecommercenativec19.feature.auth.AuthField
 import com.example.ecommercenativec19.feature.auth.ui.messageFor
 import com.example.ecommercenativec19.ui.theme.extendedTypography
 
@@ -133,15 +131,10 @@ fun SignInScreen(
             modifier = Modifier.fillMaxWidth().textLineBox(MaterialTheme.extendedTypography.inlineLink),
         )
         Spacer(Modifier.height(ForgotToButtonGap))
-        state.submitError?.let {
-            AuthErrorText(it.message())
-            Spacer(Modifier.height(SubmitErrorGap))
-        }
         AppButton(
             text = stringResource(R.string.signin_login),
             onClick = onSignIn,
             style = AppButtonStyle.OnPrimary,
-            enabled = !state.isSubmitting,
             // The design places the Login button at x = 17 (one px right of the 16 margin), same 398 width.
             modifier = Modifier.fillMaxWidth().offset(x = LoginButtonOffsetX),
         )
@@ -188,9 +181,6 @@ private val PasswordToForgotGap = 16.dp
 
 /** "Forgot password" bottom 611 -> Login top 667. */
 private val ForgotToButtonGap = 56.dp
-
-/** Space between the submit error and the Login button. */
-private val SubmitErrorGap = 12.dp
 
 /** Login bottom 731 -> link text top 763. */
 private val ButtonToLinkGap = 32.dp

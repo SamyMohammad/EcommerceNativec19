@@ -88,7 +88,7 @@ internal fun HomeCategoriesGrid(
                 column.forEachIndexed { index, category ->
                     CategoryTile(
                         label = category.name,
-                        image = { ProductImage(url = category.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
+                        image = { ProductImage(imageRes = category.imageRes, contentDescription = null, modifier = Modifier.fillMaxSize()) },
                         // Names take two lines in the design; keep both rows aligned across columns.
                         modifier = if (index == 0) Modifier.heightIn(min = TopTileMinHeight) else Modifier,
                         style = CategoryTileStyle.Circle,
@@ -125,7 +125,7 @@ internal fun HomeProductRow(
                 onFavoriteClick = { onFavoriteClick(product.id) },
                 onAddClick = { onAddClick(product.id) },
                 onClick = { onProductClick(product.id) },
-                image = { ProductImage(url = product.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize()) },
+                image = { ProductImage(imageRes = product.imageRes, contentDescription = null, modifier = Modifier.fillMaxSize()) },
                 // Any API product may be discounted, so every card gets the taller (old price) design height.
                 modifier = Modifier.width(CardWidth).heightIn(min = HomeCardHeight),
                 size = ProductCardSize.Compact,

@@ -13,23 +13,20 @@ import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.feature.productlist.ProductListUiState
 import com.example.ecommercenativec19.feature.wishlist.WishlistUiState
 
-/**
- * Screenshot fixtures for the product screens. Image URLs are fake; the capture test maps each one to a bundled
- * drawable through Coil's preview handler, so the PNGs show pictures without any network access.
- */
+/** Screenshot fixtures for the product screens. Pictures are the bundled drawables, so no loader is needed. */
 internal object ProductFixtures {
     private const val Title = "Nike Air Jordon - Nike shoes flexible for women"
 
     private val coverDrawables = listOf(
-        "fixture://product-1" to R.drawable.img_frame68_80e9b516,
-        "fixture://product-2" to R.drawable.img_frame73_b6c21927,
-        "fixture://product-3" to R.drawable.img_frame69_80e90f22,
-        "fixture://product-4" to R.drawable.img_frame71_25193b09,
-        "fixture://product-5" to R.drawable.img_frame70_3f7a88e3,
-        "fixture://product-6" to R.drawable.img_frame72_d0f73343,
+        R.drawable.img_frame68_80e9b516,
+        R.drawable.img_frame73_b6c21927,
+        R.drawable.img_frame69_80e90f22,
+        R.drawable.img_frame71_25193b09,
+        R.drawable.img_frame70_3f7a88e3,
+        R.drawable.img_frame72_d0f73343,
     )
-    private const val DetailsImage = "fixture://details"
-    private const val CartImage = "fixture://cart-1"
+    private val detailsImage = R.drawable.img_property1default1_995b0786
+    private val cartImage = R.drawable.img_frame69_80e90f22
 
     private val categoryDrawables = listOf(
         "Women's Fashion" to R.drawable.img_ellipse14_74a31094,
@@ -54,28 +51,15 @@ internal object ProductFixtures {
         Triple("GUESS Women’s", 1200 to 1500, R.drawable.img_frame67_70608138),
     )
 
-    private fun wishlistUrl(index: Int) = "fixture://wishlist-$index"
-    private fun categoryUrl(name: String) = "fixture://category/$name"
-    private fun homeCardUrl(index: Int) = "fixture://home-card-$index"
-
-    private val drawables: Map<String, Int> =
-        coverDrawables.toMap() + (DetailsImage to R.drawable.img_property1default1_995b0786) +
-            (CartImage to R.drawable.img_frame69_80e90f22) +
-            categoryDrawables.associate { (name, drawable) -> categoryUrl(name) to drawable } +
-            homeCardDrawables.mapIndexed { index, drawable -> homeCardUrl(index) to drawable } +
-            wishlistRows.mapIndexed { index, (_, _, drawable) -> wishlistUrl(index) to drawable }
-
-    fun drawableFor(url: String): Int = drawables.getValue(url)
-
     private val prices = listOf(1200 to 2000, 1100 to 1500, 1000 to 1300, 1500 to 2000, 1800 to 2100, 1900 to 2500)
     private val ratings = listOf(4.6, 4.5, 4.8, 4.8, 4.2, 3.8)
 
     val productList = ProductListUiState(
         products = LoadState.Content(
-            coverDrawables.mapIndexed { index, (url, _) ->
+            coverDrawables.mapIndexed { index, drawable ->
                 ProductCardUi(
                     id = "product-${index + 1}",
-                    imageUrl = url,
+                    imageRes = drawable,
                     title = Title,
                     price = prices[index].first,
                     oldPrice = prices[index].second,
@@ -96,7 +80,7 @@ internal object ProductFixtures {
                 ratingCount = 7500,
                 description = "Nike is a multinational corporation that designs, develops, and sells athletic footwear " +
                     ",apparel, and accessories......",
-                images = List(3) { DetailsImage },
+                images = List(3) { detailsImage },
             ),
         ),
     )
@@ -104,7 +88,7 @@ internal object ProductFixtures {
     /** Three rows of three cards; the last row is discounted like the design's smart watches. */
     val home = HomeUiState(
         categories = LoadState.Content(
-            categoryDrawables.mapIndexed { index, (name, _) -> HomeCategoryUi("category-$index", name, categoryUrl(name)) },
+            categoryDrawables.mapIndexed { index, (name, drawable) -> HomeCategoryUi("category-$index", name, drawable) },
         ),
         sections = HomeSection.entries.mapIndexed { row, section ->
             section to LoadState.Content(
@@ -112,7 +96,7 @@ internal object ProductFixtures {
                     val index = row * 3 + column
                     ProductCardUi(
                         id = "home-$index",
-                        imageUrl = homeCardUrl(index),
+                        imageRes = homeCardDrawables[index],
                         title = "Home product ${index + 1}",
                         price = 1000 + index * 500,
                         oldPrice = if (row == 2) 2000 else null,
@@ -123,20 +107,20 @@ internal object ProductFixtures {
         }.toMap(),
     )
 
-    /** The design's single row; the total is what the server would send for it. */
+    /** The design's single row. */
     val cart = CartUiState(
         items = LoadState.Content(
-            listOf(CartLineUi(id = "cart-1", title = "Nike Air Jordon", imageUrl = CartImage, linePrice = 3500, quantity = 1)),
+            listOf(CartLineUi(id = "cart-1", title = "Nike Air Jordon", imageRes = cartImage, linePrice = 3500, quantity = 1)),
         ),
         totalPrice = 3500,
     )
 
     val wishlist = WishlistUiState(
         items = LoadState.Content(
-            wishlistRows.mapIndexed { index, (title, prices, _) ->
+            wishlistRows.mapIndexed { index, (title, prices, drawable) ->
                 ProductCardUi(
                     id = "wishlist-$index",
-                    imageUrl = wishlistUrl(index),
+                    imageRes = drawable,
                     title = title,
                     price = prices.first,
                     oldPrice = prices.second,

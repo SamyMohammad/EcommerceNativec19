@@ -2,7 +2,7 @@ package com.example.ecommercenativec19.feature.categories
 
 import com.example.ecommercenativec19.core.common.LoadState
 
-/** Static content for @Preview and screenshot tests; the running app loads real data from the API. */
+/** Static content for @Preview and screenshot tests; the running app builds its state from FakeData. */
 internal object CategoriesSampleData {
     val rail = listOf(
         RailCategory("mens_fashion", "Men’s Fashion", isSelected = true),
