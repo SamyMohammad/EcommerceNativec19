@@ -54,7 +54,7 @@ data → domain → presentation, with tests.
 | Presentation | `ViewModel` + immutable `UiState` + `StateFlow` | Collected with `collectAsStateWithLifecycle` |
 | Async | Kotlin coroutines and Flow | |
 | Navigation | Navigation 3 (1.2.0) | App-owned per-tab back stacks in `navigation/AppNavigator.kt`, `NavDisplay` in `navigation/AppNavDisplay.kt`, entry-scoped ViewModels |
-| DI | Koin 4.1.1 | Chosen over Hilt for simplicity and a future KMP path. All ViewModels come from per-feature Koin modules, checked by `KoinModulesTest`. 4.1.x because 4.2.x requires Kotlin 2.3 |
+| DI | Hilt 2.60.1 via KSP 2.3.12 | Android-standard DI for teaching; compile-time graph validation. Routes use `hiltViewModel()` from AndroidX Hilt 1.4.0 |
 | Networking | Retrofit 3, OkHttp 5, kotlinx.serialization 1.9 | Compile-time serialization, no reflection |
 | Session storage | Preferences DataStore 1.2.1, Android Keystore (AES-256/GCM) | The token is encrypted with a non-exportable Keystore key before it is written; `androidx.security:security-crypto` is deprecated, so the small `AndroidKeystoreTokenCipher` uses the platform API directly |
 | Images | Coil 3.3.0 (`coil-compose`, `coil-network-okhttp`) | Loader built in `EcommerceApp` on the app's OkHttpClient; no screen loads remote images yet. 3.3.x because 3.4+ requires Kotlin 2.3 |
@@ -108,8 +108,7 @@ For the reasoning behind these choices and the planned refactor roadmap, see
 
 ```
 app/src/main/java/com/example/ecommercenativec19/
-├── EcommerceApp.kt              # Application: starts Koin, builds the Coil image loader
-├── di/                          # appModules: the single production Koin module list
+├── EcommerceApp.kt              # Hilt application: eagerly starts shared caches, builds the Coil image loader
 ├── MainActivity.kt              # Single activity, hosts the Compose tree
 ├── core/
 │   ├── common/                  # AppResult / AppError (pure Kotlin)
@@ -120,7 +119,7 @@ app/src/main/java/com/example/ecommercenativec19/
 │   ├── categories/              # First slice wired to the API
 │   │   ├── data/                # CategoriesApi, DTOs, mapper, repository impl
 │   │   ├── domain/              # Models, repository interface, use cases
-│   │   ├── di/                  # Koin module
+│   │   ├── di/                  # Hilt module
 │   │   └── Categories*.kt       # Route, Screen, ViewModel, UiState
 │   ├── auth/                    # Sign-in / sign-up data + domain (AuthApi, repository, validation, use cases)
 │   ├── account/                 # Profile, edit, change password: data + domain and the Account screen
@@ -205,7 +204,7 @@ network.
 
 | Path | What it holds |
 |---|---|
-| [`docs/architecture.md`](docs/architecture.md) | Architecture rationale (layers, state, errors, Koin, navigation) and refactor roadmap |
+| [`docs/architecture.md`](docs/architecture.md) | Architecture rationale (layers, state, errors, Hilt, navigation) and refactor roadmap |
 | [`docs/api/`](docs/api/) | Request and response shapes captured from the live API, plus known quirks |
 | [`docs/design-decisions/`](docs/design-decisions/README.md) | Per-screen Figma → Compose decisions, deviations and visual-check results |
 | [`design/figma/`](design/figma/) | Figma reference frames, compose config and asset import tools |
