@@ -10,13 +10,14 @@ import com.example.ecommercenativec19.feature.account.domain.AccountResult
 import com.example.ecommercenativec19.feature.account.domain.Profile
 import com.example.ecommercenativec19.feature.account.domain.ProfileChanges
 import com.example.ecommercenativec19.feature.auth.domain.AuthError
+import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import retrofit2.Response
 
-class AccountRepositoryImpl(
+class AccountRepositoryImpl @Inject constructor(
     private val api: AccountApi,
     private val sessions: SessionRepository,
     private val json: Json,

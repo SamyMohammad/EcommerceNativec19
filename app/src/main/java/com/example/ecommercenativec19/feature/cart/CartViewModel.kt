@@ -3,12 +3,14 @@ package com.example.ecommercenativec19.feature.cart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.cart.domain.CartLine
 import com.example.ecommercenativec19.feature.cart.domain.ObserveCartUseCase
 import com.example.ecommercenativec19.feature.cart.domain.RefreshCartUseCase
 import com.example.ecommercenativec19.feature.cart.domain.RemoveFromCartUseCase
 import com.example.ecommercenativec19.feature.cart.domain.UpdateCartItemCountUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +25,8 @@ import kotlinx.coroutines.launch
  * Count changes go through the repository, which updates the cache optimistically and rolls back on failure, so this
  * ViewModel has no state of its own for them.
  */
-class CartViewModel(
+@HiltViewModel
+class CartViewModel @Inject constructor(
     private val observeCart: ObserveCartUseCase,
     private val refreshCart: RefreshCartUseCase,
     private val updateCount: UpdateCartItemCountUseCase,
@@ -32,14 +35,14 @@ class CartViewModel(
     private val cartFlow = observeCart()
 
     /** Outcome of the latest refresh; only consulted while no cart is cached. */
-    private val loadStatus = MutableStateFlow<LoadState<Unit>>(LoadState.Loading)
+    private val loadStatus = MutableStateFlow<UiState<Unit>>(UiState.Loading)
     private var loadJob: Job? = null
 
     val state: StateFlow<CartUiState> = combine(cartFlow, loadStatus) { cart, status ->
         when {
-            cart == null -> CartUiState(items = if (status is LoadState.Error) status else LoadState.Loading)
-            cart.items.isEmpty() -> CartUiState(items = LoadState.Empty)
-            else -> CartUiState(items = LoadState.Content(cart.items.map { it.toUi() }), totalPrice = cart.totalPrice)
+            cart == null -> CartUiState(items = if (status is UiState.Error) status else UiState.Loading)
+            cart.items.isEmpty() -> CartUiState(items = UiState.Empty)
+            else -> CartUiState(items = UiState.Success(cart.items.map { it.toUi() }), totalPrice = cart.totalPrice)
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), CartUiState())
 
@@ -47,8 +50,8 @@ class CartViewModel(
     fun onEnter() = load()
 
     fun onRetry() {
-        if (loadStatus.value is LoadState.Error) {
-            loadStatus.value = LoadState.Loading
+        if (loadStatus.value is UiState.Error) {
+            loadStatus.value = UiState.Loading
             load()
         }
     }
@@ -72,8 +75,8 @@ class CartViewModel(
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             loadStatus.value = when (val result = refreshCart()) {
-                is AppResult.Failure -> LoadState.Error(result.error)
-                is AppResult.Success -> LoadState.Content(Unit)
+                is AppResult.Failure -> UiState.Error(result.error)
+                is AppResult.Success -> UiState.Success(Unit)
             }
         }
     }

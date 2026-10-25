@@ -3,13 +3,15 @@ package com.example.ecommercenativec19.feature.wishlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.feature.products.ui.toCardUi
 import com.example.ecommercenativec19.feature.wishlist.domain.GetWishlistUseCase
 import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
 import com.example.ecommercenativec19.feature.wishlist.domain.ToggleFavoriteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,14 +26,15 @@ import kotlinx.coroutines.launch
  * free: the id leaves the set the moment the user taps, the row disappears, and if the request fails the repository
  * puts the id back and the row reappears. The search text is UI-only (no search endpoint is used).
  */
-class WishlistViewModel(
+@HiltViewModel
+class WishlistViewModel @Inject constructor(
     private val getWishlist: GetWishlistUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
     observeFavoriteIds: ObserveFavoriteIdsUseCase,
     private val addToCart: AddToCartUseCase,
 ) : ViewModel() {
     private val query = MutableStateFlow("")
-    private val loaded = MutableStateFlow<LoadState<List<ProductCardUi>>>(LoadState.Loading)
+    private val loaded = MutableStateFlow<UiState<List<ProductCardUi>>>(UiState.Loading)
     private var loadJob: Job? = null
 
     val state: StateFlow<WishlistUiState> = combine(query, loaded, observeFavoriteIds()) { query, loaded, favoriteIds ->
@@ -49,7 +52,7 @@ class WishlistViewModel(
     fun onEnter() = load(keepContent = true)
 
     fun onRetry() {
-        if (loaded.value is LoadState.Error) load(keepContent = false)
+        if (loaded.value is UiState.Error) load(keepContent = false)
     }
 
     fun onToggleFavorite(productId: String) {
@@ -65,13 +68,13 @@ class WishlistViewModel(
     private fun load(keepContent: Boolean) {
         loadJob?.cancel()
         val previous = loaded.value
-        if (!(keepContent && previous is LoadState.Content)) loaded.value = LoadState.Loading
+        if (!(keepContent && previous is UiState.Success)) loaded.value = UiState.Loading
         loadJob = viewModelScope.launch {
             when (val result = getWishlist()) {
                 is AppResult.Failure ->
-                    if (!(keepContent && previous is LoadState.Content)) loaded.value = LoadState.Error(result.error)
+                    if (!(keepContent && previous is UiState.Success)) loaded.value = UiState.Error(result.error)
                 is AppResult.Success -> loaded.update {
-                    LoadState.Content(result.data.map { it.toCardUi() }.distinctBy { it.id })
+                    UiState.Success(result.data.map { it.toCardUi() }.distinctBy { it.id })
                 }
             }
         }
@@ -82,8 +85,8 @@ class WishlistViewModel(
     }
 }
 
-private fun LoadState<List<ProductCardUi>>.onlyFavorites(favoriteIds: Set<String>): LoadState<List<ProductCardUi>> {
-    if (this !is LoadState.Content) return this
+private fun UiState<List<ProductCardUi>>.onlyFavorites(favoriteIds: Set<String>): UiState<List<ProductCardUi>> {
+    if (this !is UiState.Success) return this
     val visible = data.filter { it.id in favoriteIds }
-    return if (visible.isEmpty()) LoadState.Empty else LoadState.Content(visible)
+    return if (visible.isEmpty()) UiState.Empty else UiState.Success(visible)
 }

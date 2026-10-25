@@ -3,7 +3,7 @@ package com.example.ecommercenativec19.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.categories.domain.GetCategoriesUseCase
 import com.example.ecommercenativec19.feature.products.domain.GetProductsUseCase
@@ -11,6 +11,8 @@ import com.example.ecommercenativec19.feature.products.domain.ProductSort
 import com.example.ecommercenativec19.feature.products.ui.toCardUi
 import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
 import com.example.ecommercenativec19.feature.wishlist.domain.ToggleFavoriteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,11 +22,12 @@ import kotlinx.coroutines.launch
 
 /**
  * Home composes existing use cases: one request for the categories grid plus one per product row. Each region is its
- * own coroutine (so they load in parallel) and has its own [LoadState] (so one failure stays local). The search text
+ * own coroutine (so they load in parallel) and has its own [UiState] (so one failure stays local). The search text
  * is UI-only (no search endpoint is used). Hearts mirror the shared wishlist cache; a failed toggle is rolled back
  * there, so the heart simply returns to its previous state. The card "+" adds one unit to the shared cart.
  */
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val getCategories: GetCategoriesUseCase,
     private val getProducts: GetProductsUseCase,
     private val observeFavoriteIds: ObserveFavoriteIdsUseCase,
@@ -59,20 +62,20 @@ class HomeViewModel(
     }
 
     fun onRetryCategories() {
-        if (_uiState.value.categories is LoadState.Error) loadCategories()
+        if (_uiState.value.categories is UiState.Error) loadCategories()
     }
 
     fun onRetrySection(section: HomeSection) {
-        if (_uiState.value.sections[section] is LoadState.Error) loadSection(section)
+        if (_uiState.value.sections[section] is UiState.Error) loadSection(section)
     }
 
     private fun loadCategories() {
         categoriesJob?.cancel()
-        _uiState.update { it.copy(categories = LoadState.Loading) }
+        _uiState.update { it.copy(categories = UiState.Loading) }
         categoriesJob = viewModelScope.launch {
             val categories = when (val result = getCategories()) {
-                is AppResult.Failure -> LoadState.Error(result.error)
-                is AppResult.Success -> result.data.map { HomeCategoryUi(it.id, it.name, it.imageUrl) }.toLoadState()
+                is AppResult.Failure -> UiState.Error(result.error)
+                is AppResult.Success -> result.data.map { HomeCategoryUi(it.id, it.name, it.imageUrl) }.toUiState()
             }
             _uiState.update { it.copy(categories = categories) }
         }
@@ -80,11 +83,11 @@ class HomeViewModel(
 
     private fun loadSection(section: HomeSection) {
         sectionJobs[section]?.cancel()
-        _uiState.update { it.copy(sections = it.sections + (section to LoadState.Loading)) }
+        _uiState.update { it.copy(sections = it.sections + (section to UiState.Loading)) }
         sectionJobs[section] = viewModelScope.launch {
             val products = when (val result = getProducts(sort = section.sort())) {
-                is AppResult.Failure -> LoadState.Error(result.error)
-                is AppResult.Success -> result.data.items.take(ROW_SIZE).map { it.toCardUi() }.distinctBy { it.id }.toLoadState()
+                is AppResult.Failure -> UiState.Error(result.error)
+                is AppResult.Success -> result.data.items.take(ROW_SIZE).map { it.toCardUi() }.distinctBy { it.id }.toUiState()
             }
             _uiState.update { it.copy(sections = it.sections + (section to products)) }
         }
@@ -102,4 +105,4 @@ private fun HomeSection.sort() = when (this) {
     HomeSection.TopRated -> ProductSort.TopRated
 }
 
-private fun <T> List<T>.toLoadState(): LoadState<List<T>> = if (isEmpty()) LoadState.Empty else LoadState.Content(this)
+private fun <T> List<T>.toUiState(): UiState<List<T>> = if (isEmpty()) UiState.Empty else UiState.Success(this)

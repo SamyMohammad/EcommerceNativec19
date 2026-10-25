@@ -2,7 +2,7 @@ package com.example.ecommercenativec19.feature.categories
 
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.categories.domain.CategoriesRepository
 import com.example.ecommercenativec19.feature.categories.domain.Category
 import com.example.ecommercenativec19.feature.categories.domain.GetCategoriesUseCase
@@ -72,16 +72,16 @@ class CategoriesViewModelTest {
     private fun viewModel() =
         CategoriesViewModel(GetCategoriesUseCase(fakeRepository), GetSubCategoriesUseCase(fakeRepository))
 
-    private fun CategoriesUiState.rail(): List<RailCategory> = (categories as LoadState.Content).data
+    private fun CategoriesUiState.rail(): List<Category> = (categories as UiState.Success).data
 
-    private fun CategoriesUiState.subs(): List<SubCategoryItem> = (subCategories as LoadState.Content).data
+    private fun CategoriesUiState.subs(): List<SubCategory> = (subCategories as UiState.Success).data
 
     @Test
     fun `rail and content start Loading before the init load is advanced`() = runTest(testDispatcher) {
         val viewModel = viewModel()
 
-        assertEquals(LoadState.Loading, viewModel.uiState.value.categories)
-        assertEquals(LoadState.Loading, viewModel.uiState.value.subCategories)
+        assertEquals(UiState.Loading, viewModel.uiState.value.categories)
+        assertEquals(UiState.Loading, viewModel.uiState.value.subCategories)
     }
 
     @Test
@@ -91,7 +91,7 @@ class CategoriesViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(listOf("c1"), state.rail().filter { it.isSelected }.map { it.id })
+        assertEquals("c1", state.selectedCategoryId)
         assertEquals("Men", state.selectedTitle)
         assertEquals(listOf("s-c1"), state.subs().map { it.id })
     }
@@ -104,8 +104,8 @@ class CategoriesViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(LoadState.Error(AppError.Network), state.categories)
-        assertEquals(LoadState.Error(AppError.Network), state.subCategories)
+        assertEquals(UiState.Error(AppError.Network), state.categories)
+        assertEquals(UiState.Error(AppError.Network), state.subCategories)
     }
 
     @Test
@@ -115,7 +115,7 @@ class CategoriesViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Error(AppError.Server(503)), viewModel.uiState.value.categories)
+        assertEquals(UiState.Error(AppError.Server(503)), viewModel.uiState.value.categories)
     }
 
     @Test
@@ -125,7 +125,7 @@ class CategoriesViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Error(AppError.Parsing), viewModel.uiState.value.subCategories)
+        assertEquals(UiState.Error(AppError.Parsing), viewModel.uiState.value.subCategories)
     }
 
     @Test
@@ -154,7 +154,7 @@ class CategoriesViewModelTest {
 
         // One call for the init load, one for the first retry; the second retry saw Loading and did nothing.
         assertEquals(2, fakeRepository.categoriesCalls)
-        assertEquals(LoadState.Loading, viewModel.uiState.value.categories)
+        assertEquals(UiState.Loading, viewModel.uiState.value.categories)
     }
 
     @Test
@@ -165,8 +165,8 @@ class CategoriesViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(LoadState.Empty, state.categories)
-        assertEquals(LoadState.Empty, state.subCategories)
+        assertEquals(UiState.Empty, state.categories)
+        assertEquals(UiState.Empty, state.subCategories)
     }
 
     @Test
@@ -180,7 +180,7 @@ class CategoriesViewModelTest {
             advanceUntilIdle()
 
             val state = viewModel.uiState.value
-            assertEquals(listOf("c2"), state.rail().filter { it.isSelected }.map { it.id })
+            assertEquals("c2", state.selectedCategoryId)
             assertEquals("Women", state.selectedTitle)
             assertEquals(listOf("c2"), fakeRepository.requestedSubCategoryIds)
             assertEquals(listOf("s-c2"), state.subs().map { it.id })
@@ -193,7 +193,7 @@ class CategoriesViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Empty, viewModel.uiState.value.subCategories)
+        assertEquals(UiState.Empty, viewModel.uiState.value.subCategories)
     }
 
     @Test
@@ -202,7 +202,7 @@ class CategoriesViewModelTest {
             fakeRepository.subCategoriesResults["c1"] = AppResult.Failure(AppError.Network)
             val viewModel = viewModel()
             advanceUntilIdle()
-            assertEquals(LoadState.Error(AppError.Network), viewModel.uiState.value.subCategories)
+            assertEquals(UiState.Error(AppError.Network), viewModel.uiState.value.subCategories)
 
             fakeRepository.subCategoriesResults["c1"] = AppResult.Success(listOf(SubCategory("s-c1", "Sub of c1")))
             viewModel.onRetry()
@@ -218,13 +218,13 @@ class CategoriesViewModelTest {
             fakeRepository.subCategoriesGates["c1"] = CompletableDeferred()
             val viewModel = viewModel()
             advanceUntilIdle()
-            assertEquals(LoadState.Loading, viewModel.uiState.value.subCategories)
+            assertEquals(UiState.Loading, viewModel.uiState.value.subCategories)
 
             viewModel.onCategorySelected("c2")
             advanceUntilIdle()
 
             val state = viewModel.uiState.value
-            assertEquals("c2", state.rail().first { it.isSelected }.id)
+            assertEquals("c2", state.selectedCategoryId)
             assertEquals(listOf("s-c2"), state.subs().map { it.id })
         }
 
@@ -238,7 +238,7 @@ class CategoriesViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(listOf("c1"), state.rail().filter { it.isSelected }.map { it.id })
+        assertEquals("c1", state.selectedCategoryId)
         assertEquals("Men", state.selectedTitle)
         assertEquals(emptyList<String>(), fakeRepository.requestedSubCategoryIds)
     }

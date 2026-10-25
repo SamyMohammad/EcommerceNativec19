@@ -7,8 +7,9 @@ import com.example.ecommercenativec19.feature.products.domain.Product
 import com.example.ecommercenativec19.feature.products.domain.ProductPage
 import com.example.ecommercenativec19.feature.products.domain.ProductSort
 import com.example.ecommercenativec19.feature.products.domain.ProductsRepository
+import javax.inject.Inject
 
-class ProductsRepositoryImpl(private val api: ProductsApi) : ProductsRepository {
+class ProductsRepositoryImpl @Inject constructor(private val api: ProductsApi) : ProductsRepository {
     override suspend fun getProducts(
         categoryId: String?,
         subCategoryId: String?,

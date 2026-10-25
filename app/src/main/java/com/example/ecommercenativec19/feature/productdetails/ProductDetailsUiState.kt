@@ -1,6 +1,6 @@
 package com.example.ecommercenativec19.feature.productdetails
 
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 
 /** What the details screen shows of a loaded product. Prices are whole EGP; the UI formats them. */
 data class ProductDetailsUi(
@@ -19,10 +19,10 @@ data class ProductDetailsUi(
  * Everything Product details renders. [quantity] is UI-only until "Add to cart" sends it; [isFavorite] mirrors the shared wishlist cache.
  */
 data class ProductDetailsUiState(
-    val product: LoadState<ProductDetailsUi> = LoadState.Loading,
+    val product: UiState<ProductDetailsUi> = UiState.Loading,
     val quantity: Int = 1,
     val isFavorite: Boolean = false,
 ) {
     /** Unit price times quantity; 0 while there is no product. */
-    val totalPrice: Int get() = ((product as? LoadState.Content)?.data?.unitPrice ?: 0) * quantity
+    val totalPrice: Int get() = ((product as? UiState.Success)?.data?.unitPrice ?: 0) * quantity
 }

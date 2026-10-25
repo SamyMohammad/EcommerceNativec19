@@ -1,6 +1,6 @@
 package com.example.ecommercenativec19.feature.wishlist
 
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
 /**
@@ -9,5 +9,5 @@ import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
  */
 data class WishlistUiState(
     val query: String = "",
-    val items: LoadState<List<ProductCardUi>> = LoadState.Loading,
+    val items: UiState<List<ProductCardUi>> = UiState.Loading,
 )

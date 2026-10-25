@@ -22,15 +22,17 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.textLineBox
+import com.example.ecommercenativec19.feature.categories.domain.Category
 
 /** Left category rail: the API's categories, or a spinner / retry / empty note while they are not available. */
 @Composable
 internal fun CategoriesRail(
-    state: LoadState<List<RailCategory>>,
+    state: UiState<List<Category>>,
+    selectedCategoryId: String?,
     onCategorySelected: (String) -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
@@ -48,10 +50,10 @@ internal fun CategoriesRail(
     ) { categories ->
         LazyColumn(modifier = Modifier.selectableGroup()) {
             items(categories, key = { it.id }) { category ->
-                if (category.isSelected) {
-                    SelectedRailItem(category.label, onClick = { onCategorySelected(category.id) })
+                if (category.id == selectedCategoryId) {
+                    SelectedRailItem(category.name, onClick = { onCategorySelected(category.id) })
                 } else {
-                    RailItem(category.label, onClick = { onCategorySelected(category.id) })
+                    RailItem(category.name, onClick = { onCategorySelected(category.id) })
                 }
             }
         }

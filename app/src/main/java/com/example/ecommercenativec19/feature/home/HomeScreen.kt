@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppDimens
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.core.ui.SearchHeader
 import com.example.ecommercenativec19.core.ui.StatusPane
 
@@ -68,7 +68,7 @@ fun HomeScreen(
                 ) { categories -> HomeCategoriesGrid(categories, onOpenCategories) }
             }
             // A section that loaded but has no products is dropped entirely, header included.
-            state.sections.filterValues { it != LoadState.Empty }.entries.forEachIndexed { index, (section, products) ->
+            state.sections.filterValues { it != UiState.Empty }.entries.forEachIndexed { index, (section, products) ->
                 item(key = "${section.name}-header", contentType = "header") { HomeSectionHeader(stringResource(section.title())) }
                 item(key = section.name, contentType = "products") {
                     StatusPane(

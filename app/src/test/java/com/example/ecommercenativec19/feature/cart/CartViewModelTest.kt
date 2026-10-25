@@ -2,7 +2,7 @@ package com.example.ecommercenativec19.feature.cart
 
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.cart.domain.CartLine
 import com.example.ecommercenativec19.feature.cart.domain.ObserveCartUseCase
 import com.example.ecommercenativec19.feature.cart.domain.RefreshCartUseCase
@@ -53,14 +53,14 @@ class CartViewModelTest {
 
     private fun line(id: String, count: Int = 1, unitPrice: Int = 100) = CartLine(id, "Product $id", "img-$id", unitPrice, count)
 
-    private fun CartUiState.rows(): List<CartLineUi> = (items as LoadState.Content<List<CartLineUi>>).data
+    private fun CartUiState.rows(): List<CartLineUi> = (items as UiState.Success<List<CartLineUi>>).data
 
     @Test
     fun `starts Loading while no cart is cached`() = runTest(testDispatcher) {
         val viewModel = subscribed(viewModel())
         advanceUntilIdle()
 
-        assertEquals(LoadState.Loading, viewModel.state.value.items)
+        assertEquals(UiState.Loading, viewModel.state.value.items)
     }
 
     @Test
@@ -82,7 +82,7 @@ class CartViewModelTest {
         val viewModel = subscribed(viewModel())
         advanceUntilIdle()
 
-        assertEquals(LoadState.Empty, viewModel.state.value.items)
+        assertEquals(UiState.Empty, viewModel.state.value.items)
     }
 
     @Test
@@ -91,7 +91,7 @@ class CartViewModelTest {
         val viewModel = subscribed(viewModel())
         viewModel.onEnter()
         advanceUntilIdle()
-        assertEquals(LoadState.Error(AppError.Network), viewModel.state.value.items)
+        assertEquals(UiState.Error(AppError.Network), viewModel.state.value.items)
 
         cart.refreshResult = AppResult.Success(Unit)
         cart.setCart(line("a"))
@@ -149,7 +149,7 @@ class CartViewModelTest {
 
         assertEquals(listOf("a"), cart.removeCalls)
         assertEquals(emptyList<Pair<String, Int>>(), cart.updateCalls)
-        assertEquals(LoadState.Empty, viewModel.state.value.items)
+        assertEquals(UiState.Empty, viewModel.state.value.items)
     }
 
     @Test
@@ -186,6 +186,6 @@ class CartViewModelTest {
         cart.clear()
         advanceUntilIdle()
 
-        assertEquals(LoadState.Loading, viewModel.state.value.items)
+        assertEquals(UiState.Loading, viewModel.state.value.items)
     }
 }

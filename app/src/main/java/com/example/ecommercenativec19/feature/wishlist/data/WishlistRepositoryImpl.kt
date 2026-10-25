@@ -1,12 +1,14 @@
 package com.example.ecommercenativec19.feature.wishlist.data
 
 import com.example.ecommercenativec19.core.common.AppResult
+import com.example.ecommercenativec19.core.di.ApplicationScope
 import com.example.ecommercenativec19.core.network.safeApiCall
 import com.example.ecommercenativec19.core.session.SessionRepository
 import com.example.ecommercenativec19.core.session.SessionState
 import com.example.ecommercenativec19.feature.products.data.toDomain
 import com.example.ecommercenativec19.feature.products.domain.Product
 import com.example.ecommercenativec19.feature.wishlist.domain.WishlistRepository
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,10 +28,10 @@ import kotlinx.coroutines.withContext
  * asks) and wiped on sign-out (so the next account never sees the previous one's favorites). A failed background
  * load stays silent: hearts show empty and the Wishlist screen's own load repopulates them.
  */
-class WishlistRepositoryImpl(
+class WishlistRepositoryImpl @Inject constructor(
     private val api: WishlistApi,
     private val session: SessionRepository,
-    scope: CoroutineScope,
+    @ApplicationScope scope: CoroutineScope,
 ) : WishlistRepository {
     private val _favoriteIds = MutableStateFlow<Set<String>>(emptySet())
     override val favoriteIds: StateFlow<Set<String>> = _favoriteIds.asStateFlow()

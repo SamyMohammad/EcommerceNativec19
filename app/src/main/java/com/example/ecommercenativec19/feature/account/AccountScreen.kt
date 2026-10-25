@@ -30,7 +30,7 @@ import com.example.ecommercenativec19.feature.auth.ui.toMessageRes
 
 /**
  * Stateless Account: logo, welcome header, the five profile fields, a sign-out button (not in the design, see
- * docs/design-decisions/account.md), bottom bar (Account tab selected). The profile region follows [LoadState].
+ * docs/design-decisions/account.md), bottom bar (Account tab selected). The profile region follows [com.example.ecommercenativec19.core.common.UiState].
  */
 @Composable
 fun AccountScreen(

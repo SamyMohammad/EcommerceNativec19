@@ -15,7 +15,7 @@
 #
 # Already covered by consumer rules shipped inside the libraries, so NOT repeated here:
 #   kotlinx.serialization (Companion/serializer()/$$serializer for @Serializable DTOs), Retrofit 3
-#   (service interfaces + suspend/generic signatures), OkHttp, Coil, Koin, DataStore.
+#   (service interfaces + suspend/generic signatures), OkHttp, Coil, Hilt, DataStore.
 
 # Navigation 3 restores the back stack by serializing each NavKey polymorphically and re-resolving
 # its class by NAME with reflection after process death / rotation. If R8 renames or removes a

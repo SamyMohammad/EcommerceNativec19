@@ -9,11 +9,12 @@ import com.example.ecommercenativec19.feature.auth.domain.AuthError
 import com.example.ecommercenativec19.feature.auth.domain.AuthRepository
 import com.example.ecommercenativec19.feature.auth.domain.AuthResult
 import com.example.ecommercenativec19.feature.auth.domain.SignUpData
+import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.serialization.json.Json
 import retrofit2.Response
 
-class AuthRepositoryImpl(
+class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
     private val sessions: SessionRepository,
     private val json: Json,

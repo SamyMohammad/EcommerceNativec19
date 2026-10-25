@@ -5,7 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.ecommercenativec19.core.di.ApplicationScope
 import java.io.IOException
+import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,10 +25,10 @@ import kotlinx.coroutines.launch
  * A blob that cannot be decrypted (key lost after a restore or a Keystore reset) is treated as signed out and
  * removed, so the user lands on Sign in instead of looping on 401s.
  */
-class DataStoreSessionRepository(
+class DataStoreSessionRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val cipher: TokenCipher,
-    private val scope: CoroutineScope,
+    @param:ApplicationScope private val scope: CoroutineScope,
 ) : SessionRepository {
 
     private sealed interface Stored {

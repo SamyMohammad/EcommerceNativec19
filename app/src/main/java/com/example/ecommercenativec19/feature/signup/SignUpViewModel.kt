@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.feature.auth.domain.AuthField
 import com.example.ecommercenativec19.feature.auth.domain.AuthOutcome
 import com.example.ecommercenativec19.feature.auth.domain.SignUpUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SignUpViewModel(private val signUp: SignUpUseCase) : ViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(private val signUp: SignUpUseCase) : ViewModel() {
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
 

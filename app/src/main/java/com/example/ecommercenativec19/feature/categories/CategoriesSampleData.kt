@@ -1,35 +1,38 @@
 package com.example.ecommercenativec19.feature.categories
 
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
+import com.example.ecommercenativec19.feature.categories.domain.Category
+import com.example.ecommercenativec19.feature.categories.domain.SubCategory
 
 /** Static content for @Preview and screenshot tests; the running app loads real data from the API. */
 internal object CategoriesSampleData {
     val rail = listOf(
-        RailCategory("mens_fashion", "Men’s Fashion", isSelected = true),
-        RailCategory("womens_fashion", "Women’s Fashion"),
-        RailCategory("skincare", "Skincare"),
-        RailCategory("beauty", "Beauty"),
-        RailCategory("cameras", "Cameras"),
-        RailCategory("laptops", "Laptops & Electronics"),
-        RailCategory("baby_toys", "Baby & Toys"),
+        Category("mens_fashion", "Men’s Fashion", imageUrl = null),
+        Category("womens_fashion", "Women’s Fashion", imageUrl = null),
+        Category("skincare", "Skincare", imageUrl = null),
+        Category("beauty", "Beauty", imageUrl = null),
+        Category("cameras", "Cameras", imageUrl = null),
+        Category("laptops", "Laptops & Electronics", imageUrl = null),
+        Category("baby_toys", "Baby & Toys", imageUrl = null),
     )
 
     /** Row-major, three per row. */
     val subCategories = listOf(
-        SubCategoryItem("tshirts", "T-shirts"),
-        SubCategoryItem("shorts", "Shorts"),
-        SubCategoryItem("jeans", "Jeans"),
-        SubCategoryItem("pants", "Pants"),
-        SubCategoryItem("footwear", "Footwear"),
-        SubCategoryItem("suits", "Suits"),
-        SubCategoryItem("watches", "Watches"),
-        SubCategoryItem("bags", "Bags"),
-        SubCategoryItem("eyewears", "Eyewears"),
+        SubCategory("tshirts", "T-shirts"),
+        SubCategory("shorts", "Shorts"),
+        SubCategory("jeans", "Jeans"),
+        SubCategory("pants", "Pants"),
+        SubCategory("footwear", "Footwear"),
+        SubCategory("suits", "Suits"),
+        SubCategory("watches", "Watches"),
+        SubCategory("bags", "Bags"),
+        SubCategory("eyewears", "Eyewears"),
     )
 
     val state = CategoriesUiState(
-        categories = LoadState.Content(rail),
+        categories = UiState.Success(rail),
+        selectedCategoryId = "mens_fashion",
         selectedTitle = "Men’s Fashion",
-        subCategories = LoadState.Content(subCategories),
+        subCategories = UiState.Success(subCategories),
     )
 }

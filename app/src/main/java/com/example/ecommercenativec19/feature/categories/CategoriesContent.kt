@@ -26,17 +26,18 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.core.ui.CoverImage
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.core.ui.CategoryTile
 import com.example.ecommercenativec19.core.ui.CategoryTileStyle
 import com.example.ecommercenativec19.core.ui.LineBoxText
 import com.example.ecommercenativec19.core.ui.StatusPane
 import com.example.ecommercenativec19.core.ui.textLineBox
+import com.example.ecommercenativec19.feature.categories.domain.SubCategory
 
 /** Right-hand side: selected category title, its promo banner and the three-column sub-category grid. */
 @Composable
 internal fun CategoriesContent(
-    state: LoadState<List<SubCategoryItem>>,
+    state: UiState<List<SubCategory>>,
     title: String?,
     onOpenProductList: (subCategoryId: String) -> Unit,
     onRetry: () -> Unit,
@@ -76,7 +77,7 @@ internal fun CategoriesContent(
                     ),
                 ) {
                     CategoryTile(
-                        label = sub.label,
+                        label = sub.name,
                         image = { TilePlaceholder() },
                         style = CategoryTileStyle.Square,
                         onClick = { onOpenProductList(sub.id) },

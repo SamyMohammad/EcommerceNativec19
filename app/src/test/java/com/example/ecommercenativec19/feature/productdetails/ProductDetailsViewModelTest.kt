@@ -4,7 +4,7 @@ import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.cart.FakeCartRepository
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.products.FakeProductsRepository
 import com.example.ecommercenativec19.feature.products.domain.GetProductDetailsUseCase
 import com.example.ecommercenativec19.feature.products.product
@@ -54,13 +54,13 @@ class ProductDetailsViewModelTest {
             AddToCartUseCase(cart),
         )
 
-    private fun ProductDetailsUiState.loaded(): ProductDetailsUi = (product as LoadState.Content).data
+    private fun ProductDetailsUiState.loaded(): ProductDetailsUi = (product as UiState.Success).data
 
     @Test
     fun `starts Loading before the product is advanced`() = runTest(testDispatcher) {
         val viewModel = viewModel()
 
-        assertEquals(LoadState.Loading, viewModel.uiState.value.product)
+        assertEquals(UiState.Loading, viewModel.uiState.value.product)
     }
 
     @Test
@@ -102,7 +102,7 @@ class ProductDetailsViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Error(AppError.Server(404)), viewModel.uiState.value.product)
+        assertEquals(UiState.Error(AppError.Server(404)), viewModel.uiState.value.product)
     }
 
     @Test
@@ -115,7 +115,7 @@ class ProductDetailsViewModelTest {
         viewModel.onRetry()
         advanceUntilIdle()
 
-        assertTrue(viewModel.uiState.value.product is LoadState.Content)
+        assertTrue(viewModel.uiState.value.product is UiState.Success)
     }
 
     @Test

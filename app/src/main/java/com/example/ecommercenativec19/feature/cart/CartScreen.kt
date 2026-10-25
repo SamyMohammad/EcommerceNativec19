@@ -27,7 +27,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.core.ui.AppButton
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.core.ui.AppDimens
 import com.example.ecommercenativec19.core.ui.ProductImage
 import com.example.ecommercenativec19.core.ui.ProductRowCard
@@ -75,7 +75,7 @@ fun CartScreen(
                 }
             }
         }
-        if (state.items is LoadState.Content) {
+        if (state.items is UiState.Success) {
             CartFooter(state.totalPrice, onCheckOut)
         }
     }

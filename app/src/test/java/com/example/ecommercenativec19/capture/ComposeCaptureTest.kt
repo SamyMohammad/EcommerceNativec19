@@ -25,7 +25,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.core.ui.AppTab
 import com.example.ecommercenativec19.feature.account.AccountScreen
 import com.example.ecommercenativec19.feature.account.AccountUiState
@@ -84,7 +84,7 @@ private enum class Scene(val variant: String, val nodeId: String, val containsTe
 
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-// Plain Application: avoids EcommerceApp.startKoin running once per Robolectric test (it would throw on the second).
+// Plain Application: avoids creating the Hilt application graph for stateless screen captures.
 @Config(sdk = [36], application = Application::class, qualifiers = "en-ldltr-w430dp-h932dp-notnight-mdpi")
 class ComposeCaptureTest {
     @get:Rule val compose = createComposeRule()
@@ -115,7 +115,7 @@ class ComposeCaptureTest {
 
     @Composable
     private fun SceneBody(scene: Scene) {
-        // Stateless screens with sample state, not the Routes: Routes resolve ViewModels through Koin, which is not
+        // Stateless screens with sample state, not the Routes: Routes resolve ViewModels through Hilt, which is not
         // started in this capture test.
         when (scene) {
             Scene.Splash -> SplashScreen()
@@ -132,7 +132,7 @@ class ComposeCaptureTest {
             Scene.Cart -> WithFixtureImages { CartScreen(ProductFixtures.cart, {}, {}, {}, {}, {}, {}, {}, {}) }
             Scene.Wishlist -> WithFixtureImages { WishlistScreen(ProductFixtures.wishlist, {}, {}, {}, {}, {}, {}) }
             Scene.Account -> AccountScreen(
-                AccountUiState(profile = LoadState.Content(AccountFixtures.profile)),
+                AccountUiState(profile = UiState.Success(AccountFixtures.profile)),
                 {}, {}, {}, {}, {}, {}, {}, {}, {},
             )
         }
