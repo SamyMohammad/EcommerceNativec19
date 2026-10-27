@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -34,48 +35,9 @@ import com.example.ecommercenativec19.feature.splash.SplashRoute
 import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
 
 /**
- * Navigation root of the ten screens. Start destination: [Splash]. Every screen entry point is a
- * `XxxRoute(...)` composable in `feature/<name>/`; this file only wires the prototype transitions
- * (design/figma/source-evidence/interactions.json, restricted to these ten screens). Back stacks live in
- * [AppNavigator]; see docs/architecture.md section 6.
- *
- * ## Callback contract (what a screen may call, and where it leads)
- *
- * | Entry point | Callbacks | Prototype transition |
- * |---|---|---|
- * | `SplashRoute` | `onSignedIn()`, `onSignedOut()` | AFTER_TIMEOUT 0.4s -> Sign in, or Home when a session is stored (Splash is removed from the back stack) |
- * | `SignInRoute` | `onSignedIn()`, `onCreateAccount()` | Login succeeded -> Home; "Create Account" -> Sign up |
- * | `SignUpRoute` | `onSignedUp()` | Sign up succeeded (the API signs the user in) -> Home |
- * | `HomeRoute` | `onOpenCart()`, `onOpenCategories()`, `onOpenProduct(productId)` | cart icon -> Cart; any category circle -> Categories; product card -> Product details |
- * | `CategoriesRoute` | `onOpenCart()`, `onOpenProductList(subCategoryId)` | cart icon -> Cart; any sub-category tile -> Product list of that sub-category |
- * | `ProductListRoute` | `subCategoryId`, `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; product card -> Product details |
- * | `ProductDetailsRoute` | `productId`, `onBack()`, `onOpenCart()`, `onAddToCart()` | back arrow -> Product list; cart icon and "Add to cart" -> Cart |
- * | `CartRoute` | `onBack()` | back arrow -> previous screen (deviation: the prototype always leads to Home) |
- * | `WishlistRoute` | `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; row -> Product details |
- * | `AccountRoute` | none | - |
- *
- * The bottom bar is shared ([AppScaffold]) and calls [AppNavigator.selectTab]; Product list highlights the
- * Categories tab.
- *
- * Prototype reactions that are not navigation, and therefore NOT routed here: favorite heart
- * toggles (Home, Product list, Details, Wishlist: they call the wishlist API, not navigation), card "+" buttons (cart API), quantity plus/minus (Details, Cart), the details image
- * carousel drag. Reactions whose destination is not one of the ten screens (Women's fashion -> 564:542,
- * Categories "Women's Fashion" tab -> 562:469) are intentionally not wired.
- *
- * ## Session
- * The design has no auth contract; the Route API's sign-in / sign-up (docs/api/auth.md) is wired behind the
- * screens. When the session turns signed-out while a tab is showing (sign-out, or a 401 on an authenticated
- * request), [AppNavigator.signOut] returns to Sign in.
- *
- * ## Missing contracts (nothing is invented here)
- * - "Check Out" (Cart) and search have no behavior (payments are out of scope). "Add to cart" (Details) adds the
- *   selected quantity through the cart API and then follows the prototype's transition to Cart; the "+" on Home and
- *   Product list and the Wishlist row button add one unit and stay on their screen.
- * - Product and sub-category ids are opaque strings from the API.
- *
- * ## Transitions
- * The prototype uses SMART_ANIMATE (matching layers morph). Compose cannot reproduce that, so screens cross-fade:
- * Splash -> Sign in 400 ms linear; everything else 300 ms ease-out (durations/easings from interactions.json).
+ * Navigation root of the ten screens. Start destination: [Splash]. Maps every key to its `XxxRoute(...)`
+ * composable and turns screen callbacks into [AppNavigator] calls; back stacks live in [AppNavigator].
+ * Callback contract, prototype transitions and what is intentionally not wired: docs/architecture.md section 6.
  */
 @Composable
 fun AppNavDisplay(
@@ -106,54 +68,64 @@ fun AppNavDisplay(
             popTransitionSpec = { fade(ScreenFadeMillis, EaseOut) },
             predictivePopTransitionSpec = { fade(ScreenFadeMillis, EaseOut) },
             entryProvider = entryProvider<NavKey> {
-                entry<Splash> {
-                    SplashRoute(onSignedIn = navigator::completeAuth, onSignedOut = navigator::finishSplash)
-                }
-                entry<SignIn>(
-                    metadata = NavDisplay.transitionSpec { fade(SplashFadeMillis, LinearEasing) },
-                ) {
-                    SignInRoute(onSignedIn = navigator::completeAuth, onCreateAccount = { navigator.push(SignUp) })
-                }
-                entry<SignUp> { SignUpRoute(onSignedUp = navigator::completeAuth) }
-                entry<Home> {
-                    HomeRoute(
-                        onOpenCart = { navigator.push(Cart) },
-                        onOpenCategories = { navigator.selectTab(AppTab.Categories) },
-                        onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
-                    )
-                }
-                entry<Categories> {
-                    CategoriesRoute(
-                        onOpenCart = { navigator.push(Cart) },
-                        onOpenProductList = { subCategoryId -> navigator.push(ProductList(subCategoryId)) },
-                    )
-                }
-                entry<ProductList> { key ->
-                    ProductListRoute(
-                        subCategoryId = key.subCategoryId,
-                        onOpenCart = { navigator.push(Cart) },
-                        onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
-                    )
-                }
-                entry<ProductDetails> { key ->
-                    ProductDetailsRoute(
-                        productId = key.productId,
-                        onBack = { navigator.back() },
-                        onOpenCart = { navigator.push(Cart) },
-                        onAddToCart = { navigator.push(Cart) },
-                    )
-                }
-                entry<Cart> { CartRoute(onBack = { navigator.back() }) }
-                entry<Wishlist> {
-                    WishlistRoute(
-                        onOpenCart = { navigator.push(Cart) },
-                        onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
-                    )
-                }
-                entry<Account> { AccountRoute() }
+                authEntries(navigator)
+                mainEntries(navigator)
             },
         )
     }
+}
+
+/** Signed-out screens: Splash, Sign in, Sign up. */
+private fun EntryProviderScope<NavKey>.authEntries(navigator: AppNavigator) {
+    entry<Splash> {
+        SplashRoute(onSignedIn = navigator::completeAuth, onSignedOut = navigator::finishSplash)
+    }
+    entry<SignIn>(
+        metadata = NavDisplay.transitionSpec { fade(SplashFadeMillis, LinearEasing) },
+    ) {
+        SignInRoute(onSignedIn = navigator::completeAuth, onCreateAccount = { navigator.push(SignUp) })
+    }
+    entry<SignUp> { SignUpRoute(onSignedUp = navigator::completeAuth) }
+}
+
+/** Signed-in screens: the four tab roots and the screens pushed on top of them. */
+private fun EntryProviderScope<NavKey>.mainEntries(navigator: AppNavigator) {
+    entry<Home> {
+        HomeRoute(
+            onOpenCart = { navigator.push(Cart) },
+            onOpenCategories = { navigator.selectTab(AppTab.Categories) },
+            onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
+        )
+    }
+    entry<Categories> {
+        CategoriesRoute(
+            onOpenCart = { navigator.push(Cart) },
+            onOpenProductList = { subCategoryId -> navigator.push(ProductList(subCategoryId)) },
+        )
+    }
+    entry<ProductList> { key ->
+        ProductListRoute(
+            subCategoryId = key.subCategoryId,
+            onOpenCart = { navigator.push(Cart) },
+            onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
+        )
+    }
+    entry<ProductDetails> { key ->
+        ProductDetailsRoute(
+            productId = key.productId,
+            onBack = { navigator.back() },
+            onOpenCart = { navigator.push(Cart) },
+            onAddToCart = { navigator.push(Cart) },
+        )
+    }
+    entry<Cart> { CartRoute(onBack = { navigator.back() }) }
+    entry<Wishlist> {
+        WishlistRoute(
+            onOpenCart = { navigator.push(Cart) },
+            onOpenProduct = { productId -> navigator.push(ProductDetails(productId)) },
+        )
+    }
+    entry<Account> { AccountRoute() }
 }
 
 private fun fade(millis: Int, easing: Easing): ContentTransform =

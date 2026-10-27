@@ -100,6 +100,38 @@ app-owned state, not a framework object you query.
 - **Shared shell** (`navigation/AppScaffold.kt`): one `BottomNavigationBar`, shown only while the top key belongs to
   a tab (Product list highlights Categories). Tab screens no longer know about the bar.
 
+### Screen callback contract
+
+Every screen entry point is a `XxxRoute(...)` composable in `feature/<name>/`. Screens only expose callbacks;
+`AppNavDisplay` decides where each one leads (prototype transitions from
+`design/figma/source-evidence/interactions.json`, restricted to the ten screens).
+
+| Entry point | Callbacks | Prototype transition |
+|---|---|---|
+| `SplashRoute` | `onSignedIn()`, `onSignedOut()` | AFTER_TIMEOUT 0.4s -> Sign in, or Home when a session is stored (Splash is removed from the back stack) |
+| `SignInRoute` | `onSignedIn()`, `onCreateAccount()` | Login succeeded -> Home; "Create Account" -> Sign up |
+| `SignUpRoute` | `onSignedUp()` | Sign up succeeded (the API signs the user in) -> Home |
+| `HomeRoute` | `onOpenCart()`, `onOpenCategories()`, `onOpenProduct(productId)` | cart icon -> Cart; any category circle -> Categories; product card -> Product details |
+| `CategoriesRoute` | `onOpenCart()`, `onOpenProductList(subCategoryId)` | cart icon -> Cart; any sub-category tile -> Product list of that sub-category |
+| `ProductListRoute` | `subCategoryId`, `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; product card -> Product details |
+| `ProductDetailsRoute` | `productId`, `onBack()`, `onOpenCart()`, `onAddToCart()` | back arrow -> Product list; cart icon and "Add to cart" -> Cart |
+| `CartRoute` | `onBack()` | back arrow -> previous screen (deviation: the prototype always leads to Home) |
+| `WishlistRoute` | `onOpenCart()`, `onOpenProduct(productId)` | cart icon -> Cart; row -> Product details |
+| `AccountRoute` | none | - |
+
+- **Not navigation, so not routed:** favorite heart toggles (Home, Product list, Details, Wishlist: wishlist API), card "+" buttons (cart API), quantity
+  plus/minus (Details, Cart), the details image carousel drag. Reactions whose destination is not one of the ten
+  screens (Women's fashion -> 564:542, Categories "Women's Fashion" tab -> 562:469) are intentionally not wired.
+- **Session:** the design has no auth contract; the Route API's sign-in / sign-up (docs/api/auth.md) is wired behind
+  the screens. When the session turns signed-out while a tab is showing (sign-out, or a 401), `AppNavigator.signOut()`
+  returns to Sign in.
+- **Missing contracts (nothing invented):** "Check Out" (Cart) and search have no behavior (payments are out of
+  scope). "Add to cart" (Details) adds the selected quantity through the cart API, then follows the prototype to
+  Cart; the "+" on Home / Product list and the Wishlist row button add one unit and stay. Product and sub-category
+  ids are opaque API strings.
+- **Transitions:** the prototype uses SMART_ANIMATE (layers morph), which Compose cannot reproduce, so screens
+  cross-fade: Splash -> Sign in 400 ms linear, everything else 300 ms ease-out (values from `interactions.json`).
+
 **Tradeoffs:** Nav3 is new and has no built-in multi-stack or tab helper, so `AppNavigator` is ours to maintain.
 The Android `rememberNavBackStack` restores keys through reflection (`Class.forName`), so the release build keeps the
 key classes (section 13). Predictive back preview at a tab root shows the flattened stack's previous entry
