@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
@@ -70,6 +71,11 @@ fun SignInScreen(
     modifier: Modifier = Modifier,
 ) {
     LightStatusBarIconsEffect()
+    val focusManager = LocalFocusManager.current
+    val submit = {
+        focusManager.clearFocus()
+        onSignIn()
+    }
     val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     Column(
         modifier = modifier
@@ -102,6 +108,7 @@ fun SignInScreen(
             label = stringResource(R.string.signin_email_label),
             value = state.email,
             onValueChange = onEmailChange,
+            enabled = !state.isSubmitting,
             placeholder = stringResource(R.string.signin_email_placeholder),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
             errorText = state.fieldErrors.messageFor(AuthField.Email),
@@ -111,9 +118,10 @@ fun SignInScreen(
             label = stringResource(R.string.signin_password_label),
             value = state.password,
             onValueChange = onPasswordChange,
+            enabled = !state.isSubmitting,
             placeholder = stringResource(R.string.signin_password_placeholder),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { onSignIn() }),
+            keyboardActions = KeyboardActions(onDone = { submit() }),
             errorText = state.fieldErrors.messageFor(AuthField.Password),
             visualTransformation = if (state.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -139,9 +147,9 @@ fun SignInScreen(
         }
         AppButton(
             text = stringResource(R.string.signin_login),
-            onClick = onSignIn,
+            onClick = submit,
             style = AppButtonStyle.OnPrimary,
-            enabled = !state.isSubmitting,
+            loading = state.isSubmitting,
             // The design places the Login button at x = 17 (one px right of the 16 margin), same 398 width.
             modifier = Modifier.fillMaxWidth().offset(x = LoginButtonOffsetX),
         )
@@ -151,7 +159,7 @@ fun SignInScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = AppDimens.MinTouchTarget)
-                .clickable(role = Role.Button, onClick = onCreateAccount),
+                .clickable(enabled = !state.isSubmitting, role = Role.Button, onClick = onCreateAccount),
             contentAlignment = Alignment.Center,
         ) {
             Text(
