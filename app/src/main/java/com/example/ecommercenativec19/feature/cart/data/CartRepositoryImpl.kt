@@ -2,12 +2,14 @@ package com.example.ecommercenativec19.feature.cart.data
 
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
+import com.example.ecommercenativec19.core.di.ApplicationScope
 import com.example.ecommercenativec19.core.network.safeApiCall
 import com.example.ecommercenativec19.core.session.SessionRepository
 import com.example.ecommercenativec19.core.session.SessionState
 import com.example.ecommercenativec19.feature.cart.domain.Cart
 import com.example.ecommercenativec19.feature.cart.domain.CartRepository
 import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,10 +36,10 @@ import kotlinx.coroutines.withContext
  * ambiguous; a quantity tap is "one more", so ten quick taps mean 10 and dropping would lose nine of them. One worker
  * per product sends the latest wanted count, then checks whether the user asked for something newer meanwhile.
  */
-class CartRepositoryImpl(
+class CartRepositoryImpl @Inject constructor(
     private val api: CartApi,
     private val session: SessionRepository,
-    private val scope: CoroutineScope,
+    @param:ApplicationScope private val scope: CoroutineScope,
 ) : CartRepository {
     private val _cart = MutableStateFlow<Cart?>(null)
     override val cart: StateFlow<Cart?> = _cart.asStateFlow()

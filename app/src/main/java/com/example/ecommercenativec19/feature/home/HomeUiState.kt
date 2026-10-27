@@ -1,6 +1,6 @@
 package com.example.ecommercenativec19.feature.home
 
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 
 /** A circular tile of the Home categories grid. */
@@ -22,8 +22,8 @@ enum class HomeSection { BestSellers, NewArrival, TopRated }
  */
 data class HomeUiState(
     val searchQuery: String = "",
-    val categories: LoadState<List<HomeCategoryUi>> = LoadState.Loading,
-    val sections: Map<HomeSection, LoadState<List<ProductCardUi>>> = HomeSection.entries.associateWith { LoadState.Loading },
+    val categories: UiState<List<HomeCategoryUi>> = UiState.Loading,
+    val sections: Map<HomeSection, UiState<List<ProductCardUi>>> = HomeSection.entries.associateWith { UiState.Loading },
     /** Mirror of the shared wishlist cache; kept apart from [sections] so reloads do not wipe the hearts. */
     val favoriteIds: Set<String> = emptySet(),
 )

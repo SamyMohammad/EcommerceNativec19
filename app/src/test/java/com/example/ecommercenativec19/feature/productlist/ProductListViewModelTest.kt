@@ -4,7 +4,7 @@ import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.cart.FakeCartRepository
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.feature.products.FakeProductsRepository
 import com.example.ecommercenativec19.feature.products.domain.GetProductsUseCase
@@ -55,7 +55,7 @@ class ProductListViewModelTest {
             AddToCartUseCase(cart),
         )
 
-    private fun ProductListUiState.cards(): List<ProductCardUi> = (products as LoadState.Content).data
+    private fun ProductListUiState.cards(): List<ProductCardUi> = (products as UiState.Success).data
 
     private fun page(vararg ids: String, nextPage: Int? = null) =
         AppResult.Success(ProductPage(ids.map { product(it) }, nextPage))
@@ -64,7 +64,7 @@ class ProductListViewModelTest {
     fun `starts Loading before the first page is advanced`() = runTest(testDispatcher) {
         val viewModel = viewModel()
 
-        assertEquals(LoadState.Loading, viewModel.uiState.value.products)
+        assertEquals(UiState.Loading, viewModel.uiState.value.products)
     }
 
     @Test
@@ -119,7 +119,7 @@ class ProductListViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Empty, viewModel.uiState.value.products)
+        assertEquals(UiState.Empty, viewModel.uiState.value.products)
     }
 
     @Test
@@ -129,7 +129,7 @@ class ProductListViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Error(AppError.Server(503)), viewModel.uiState.value.products)
+        assertEquals(UiState.Error(AppError.Server(503)), viewModel.uiState.value.products)
     }
 
     @Test

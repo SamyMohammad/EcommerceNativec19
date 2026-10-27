@@ -63,7 +63,7 @@ When introducing capabilities, prefer:
 - **Presentation pattern:** ViewModel + immutable UiState + unidirectional data flow (UDF)
 - **UI:** Jetpack Compose, Material 3
 - **Async:** Kotlin coroutines, Flow / StateFlow / SharedFlow
-- **DI:** Koin (chosen over Hilt for simplicity + KMP path; see docs/architecture.md §5)
+- **DI:** Hilt (Android-standard; chosen for teaching DI; see docs/architecture.md §5)
 - **Network:** Retrofit / OkHttp (when networking is introduced)
 - **Local DB:** Room 2.x stable (when persistence is introduced)
 - **Preferences:** DataStore (when preferences are introduced)

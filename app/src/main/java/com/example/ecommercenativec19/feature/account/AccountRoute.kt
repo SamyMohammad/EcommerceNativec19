@@ -3,8 +3,8 @@ package com.example.ecommercenativec19.feature.account
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.koinViewModel
 
 /**
  * Account entry point (Account tab selected). Signing out needs no callback here: AppNavDisplay reacts to the
@@ -12,7 +12,7 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun AccountRoute(modifier: Modifier = Modifier) {
-    val viewModel: AccountViewModel = koinViewModel()
+    val viewModel: AccountViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     AccountScreen(
         state = state,

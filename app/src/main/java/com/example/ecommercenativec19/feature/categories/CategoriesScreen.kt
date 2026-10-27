@@ -47,6 +47,7 @@ fun CategoriesScreen(
         ) {
             CategoriesRail(
                 state = state.categories,
+                selectedCategoryId = state.selectedCategoryId,
                 onCategorySelected = onCategorySelected,
                 onRetry = onRetry,
                 modifier = Modifier.width(RailWidth).fillMaxHeight().overflowBottom(RailUnderBarOverlap),

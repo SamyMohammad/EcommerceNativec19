@@ -5,8 +5,9 @@ import com.example.ecommercenativec19.core.network.safeApiCall
 import com.example.ecommercenativec19.feature.categories.domain.CategoriesRepository
 import com.example.ecommercenativec19.feature.categories.domain.Category
 import com.example.ecommercenativec19.feature.categories.domain.SubCategory
+import javax.inject.Inject
 
-class CategoriesRepositoryImpl(private val api: CategoriesApi) : CategoriesRepository {
+class CategoriesRepositoryImpl @Inject constructor(private val api: CategoriesApi) : CategoriesRepository {
     override suspend fun getCategories(): AppResult<List<Category>> = safeApiCall {
         api.getCategories().data.map { it.toDomain() }
     }

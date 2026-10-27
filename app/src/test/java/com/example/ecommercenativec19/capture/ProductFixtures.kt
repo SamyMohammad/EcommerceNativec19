@@ -1,7 +1,7 @@
 package com.example.ecommercenativec19.capture
 
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.cart.CartLineUi
 import com.example.ecommercenativec19.feature.cart.CartUiState
 import com.example.ecommercenativec19.feature.home.HomeCategoryUi
@@ -71,7 +71,7 @@ internal object ProductFixtures {
     private val ratings = listOf(4.6, 4.5, 4.8, 4.8, 4.2, 3.8)
 
     val productList = ProductListUiState(
-        products = LoadState.Content(
+        products = UiState.Success(
             coverDrawables.mapIndexed { index, (url, _) ->
                 ProductCardUi(
                     id = "product-${index + 1}",
@@ -86,7 +86,7 @@ internal object ProductFixtures {
     )
 
     val productDetails = ProductDetailsUiState(
-        product = LoadState.Content(
+        product = UiState.Success(
             ProductDetailsUi(
                 id = "product-1",
                 title = "Nike Air Jordon",
@@ -103,11 +103,11 @@ internal object ProductFixtures {
 
     /** Three rows of three cards; the last row is discounted like the design's smart watches. */
     val home = HomeUiState(
-        categories = LoadState.Content(
+        categories = UiState.Success(
             categoryDrawables.mapIndexed { index, (name, _) -> HomeCategoryUi("category-$index", name, categoryUrl(name)) },
         ),
         sections = HomeSection.entries.mapIndexed { row, section ->
-            section to LoadState.Content(
+            section to UiState.Success(
                 List(3) { column ->
                     val index = row * 3 + column
                     ProductCardUi(
@@ -125,14 +125,14 @@ internal object ProductFixtures {
 
     /** The design's single row; the total is what the server would send for it. */
     val cart = CartUiState(
-        items = LoadState.Content(
+        items = UiState.Success(
             listOf(CartLineUi(id = "cart-1", title = "Nike Air Jordon", imageUrl = CartImage, linePrice = 3500, quantity = 1)),
         ),
         totalPrice = 3500,
     )
 
     val wishlist = WishlistUiState(
-        items = LoadState.Content(
+        items = UiState.Success(
             wishlistRows.mapIndexed { index, (title, prices, _) ->
                 ProductCardUi(
                     id = "wishlist-$index",

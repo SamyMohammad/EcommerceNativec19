@@ -1,6 +1,6 @@
 package com.example.ecommercenativec19.feature.cart
 
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 
 /** One cart row. Prices are whole EGP; the UI formats them. */
 data class CartLineUi(
@@ -17,6 +17,6 @@ data class CartLineUi(
  * [totalPrice] is the server's total (0 while there is nothing to show).
  */
 data class CartUiState(
-    val items: LoadState<List<CartLineUi>> = LoadState.Loading,
+    val items: UiState<List<CartLineUi>> = UiState.Loading,
     val totalPrice: Int = 0,
 )

@@ -1,8 +1,9 @@
 package com.example.ecommercenativec19.feature.products.domain
 
 import com.example.ecommercenativec19.core.common.AppResult
+import javax.inject.Inject
 
-class GetProductsUseCase(private val repository: ProductsRepository) {
+class GetProductsUseCase @Inject constructor(private val repository: ProductsRepository) {
     suspend operator fun invoke(
         categoryId: String? = null,
         subCategoryId: String? = null,

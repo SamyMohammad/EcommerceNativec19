@@ -30,7 +30,7 @@ The layout mirrors the module boundaries we would extract later, so splitting is
 - The screen is stateless: it renders state and emits events upward.
 - Compose collects with `collectAsStateWithLifecycle`, so collection stops when the UI is not visible.
 - Loading, error, empty and content are explicit states, never nullable "maybe loading" flags. Each independently
-  loading region holds one `LoadState<T>` (`Loading | Content(data) | Empty | Error(AppError)`), so contradictory
+  loading region holds one `UiState<T>` (`Loading | Success(data) | Empty | Error(AppError)`), so contradictory
   combinations cannot be represented.
 
 ## 4. Error handling
@@ -44,29 +44,37 @@ Retrofit call -> safeApiCall -> AppResult.Success(data) | AppResult.Failure(AppE
 `safeApiCall` maps `IOException` to `AppError.Network`, `HttpException` to `AppError.Server(code)`,
 `SerializationException` to `AppError.Parsing` and anything else to `AppError.Unknown`, and rethrows
 `CancellationException` so structured concurrency keeps working. ViewModels only ever see `AppResult`, never
-exceptions, and keep the specific `AppError` in `LoadState.Error`. The UI turns it into copy with
+exceptions, and keep the specific `AppError` in `UiState.Error`. The UI turns it into copy with
 `AppError.toMessageRes()` (`core/ui`), so the lower layers stay free of Android resources.
 
-## 5. Dependency injection: Koin
+## 5. Dependency injection: Hilt
 
-**Choice:** Koin 4.1.1.
+**Choice:** Hilt 2.60.1 through KSP 2.3.12, with `androidx.hilt:hilt-lifecycle-viewmodel-compose` 1.4.0.
+KSP is required because kapt is incompatible with AGP 9 built-in Kotlin; existing Kotlin, AGP and Compose versions
+stay unchanged.
 
-**Why Koin over Hilt:**
+**Why:** this teaching project uses Android-standard DI so students learn constructor injection, scopes and a
+compile-time dependency graph. Hilt's compile-time graph validation replaces the former `KoinModulesTest`;
+`./gradlew assembleDebug` now checks that the production graph compiles.
 
-- **Simplicity.** Modules are plain Kotlin (`module { single { ... } }`), with no component or scope boilerplate to
-  learn before the first screen works.
-- **No annotation processing.** Hilt needs KSP/kapt and generates code, which adds build time and one more
-  toolchain to keep compatible with Kotlin and AGP. Koin has none.
-- **KMP path.** Koin supports Kotlin Multiplatform, so the DI setup would survive a move of the domain and data
-  layers to shared code. Hilt is Android-only.
+Repositories and use cases use `@Inject constructor`. Per-feature `di/` modules bind repository interfaces with
+`@Binds @Singleton` and provide Retrofit APIs with `@Provides @Singleton`. Third-party core types live in
+`NetworkModule` and `SessionModule`, installed in `SingletonComponent`. Features that only inject ViewModels
+(home, signin, signup, splash, productdetails and productlist) need no DI module file.
 
-**Tradeoff:** Koin resolves dependencies at runtime, so a missing binding fails when first requested, not at
-compile time. Hilt gives compile-time graph validation. We accept that for a small app; a Koin module-graph
-verification test closes most of that gap. Every ViewModel is created by Koin from a per-feature `di/` module, and
-`KoinModulesTest` verifies the full production list (`appModules`).
+ViewModels use `@HiltViewModel` and Routes resolve them through `hiltViewModel()`. Product details and Product list
+use assisted factories for the opaque id from the Nav3 key, retaining `key = productId` / `key = subCategoryId` so
+each id keeps its own state. After process death, the restored Nav3 key supplies that id again. `MainActivity`
+injects `ObserveSessionUseCase` and passes it to `AppNavDisplay`.
 
-**Why 4.1.x:** it is the newest Koin line built on Kotlin 2.2. Koin 4.2.x requires Kotlin 2.3, and bumping Kotlin
-drags AGP and Compose compatibility with it. Revisit when the Kotlin upgrade is done on its own merits.
+`@ApplicationScope` qualifies one singleton `CoroutineScope(SupervisorJob() + Dispatchers.Default)`, shared by
+DataStore, session loading, cart/wishlist observation and 401 handling. `EcommerceApp` field-injects
+`SessionRepository`, `CartRepository` and `WishlistRepository` only to create them at launch: the session begins
+loading and the cart/favorites caches begin observing before screens ask. Coil receives a `dagger.Lazy<OkHttpClient>`
+that resolves the same shared client.
+
+**Tradeoff:** KSP annotation processing generates code and adds build time and a toolchain compatibility concern.
+Hilt is Android-only, so moving domain/data into Kotlin Multiplatform would require rethinking the DI boundary.
 
 ## 6. Navigation
 
@@ -86,10 +94,9 @@ app-owned state, not a framework object you query.
   state. Duplicate keys across stacks would collide, which the flow rules out (Cart and Product details have no
   bottom bar, so they are always the top of their stack).
 - **Entry-scoped ViewModels:** `rememberSaveableStateHolderNavEntryDecorator()` and
-  `rememberViewModelStoreNavEntryDecorator()` give every entry its own `ViewModelStore`, so `koinViewModel()` inside
-  an entry is scoped to that entry and cleared when it is popped. Koin's own Nav3 integration
-  (`koin-compose-navigation3`) is not used: it needs Koin 4.2 (Kotlin 2.3) and is experimental; the AndroidX
-  decorators are enough because Koin only needs `LocalViewModelStoreOwner`.
+  `rememberViewModelStoreNavEntryDecorator()` give every entry its own `ViewModelStore`, so `hiltViewModel()` inside
+  an entry is scoped to that entry and cleared when it is popped. The AndroidX decorators supply its
+  `LocalViewModelStoreOwner`; assisted factories receive the id from the navigation key.
 - **Shared shell** (`navigation/AppScaffold.kt`): one `BottomNavigationBar`, shown only while the top key belongs to
   a tab (Product list highlights Categories). Tab screens no longer know about the bar.
 
@@ -115,7 +122,7 @@ rather than "Home".
   token must not end a newer session). Sign-in and sign-up never carry the token, so their 401 ("wrong password")
   cannot sign anyone out.
 - `Json { ignoreUnknownKeys = true }` and nullable DTO fields for anything the API does not guarantee.
-- Image loading: Coil 3 (`SingletonImageLoader.Factory` on `EcommerceApp`) fetches through the same Koin-provided
+- Image loading: Coil 3 (`SingletonImageLoader.Factory` on `EcommerceApp`) fetches through the same Hilt-provided
   `OkHttpClient`, so image requests share the API client's timeouts, logging and connection pool. Screens adopt
   `AsyncImage` as the API slices bring real image URLs; bundled artwork stays in `drawable-nodpi` as WebP, sized to
   at most 3x its largest displayed size.
@@ -199,8 +206,8 @@ so a heart tapped on Details was empty again on Home. Now `WishlistRepository.fa
 the only owner. Home, Product list, Details and the Wishlist screen observe it through `ObserveFavoriteIdsUseCase` and
 change it through `ToggleFavoriteUseCase`; none of them keeps a favorite flag of its own.
 
-- **Scope.** `WishlistRepositoryImpl` is an app-scoped singleton (`createdAtStart`, using the process-wide
-  `CoroutineScope` from `sessionModule`). A ViewModel-scoped cache would start empty on every screen.
+- **Scope.** `WishlistRepositoryImpl` is an app-scoped singleton (created at launch by `EcommerceApp` injection, using the process-wide
+  `@ApplicationScope` `CoroutineScope` from `SessionModule`). A ViewModel-scoped cache would start empty on every screen.
 - **Lifecycle follows the session.** The repository observes `SessionRepository.state`: becoming `SignedIn` triggers one
   `GET /wishlist` (so hearts are right before any screen asks); `SignedOut` clears the cache so the next account never
   sees the previous one's favorites. A failed background load is silent; the Wishlist screen reloads on every visit.
@@ -222,7 +229,7 @@ Details of the endpoints: [`docs/api/wishlist.md`](api/wishlist.md).
 Home, Product list and Wishlist put products in through `AddToCartUseCase`; the Cart screen observes it
 (`ObserveCartUseCase`), refreshes on every visit (`RefreshCartUseCase`) and changes it through
 `UpdateCartItemCountUseCase` (a count below 1 means remove) and `RemoveFromCartUseCase`. Same scope and session
-lifecycle as the wishlist (section 10): app-scoped, `createdAtStart`, loaded on sign-in, wiped on sign-out.
+lifecycle as the wishlist (section 10): app-scoped, created at launch, loaded on sign-in, wiped on sign-out.
 
 - **The server owns the numbers.** Every endpoint answers with the whole cart, and that answer replaces the cache. The
   app sums prices itself only while a tap is unconfirmed.
@@ -282,7 +289,7 @@ project rule in `rules.keep` is:
 
 Everything else is covered by consumer rules that ship inside the libraries, so we deliberately add nothing for them:
 kotlinx.serialization keeps `Companion` / `serializer()` / `$$serializer` of `@Serializable` DTOs, and Retrofit keeps
-service interfaces with their generic and annotation metadata. Koin definitions are lambdas, so there is no reflection.
+service interfaces with their generic and annotation metadata. Hilt ships its own consumer keep rules.
 After changing dependencies, rebuild with `./gradlew assembleRelease` and check `app/build/outputs/mapping/release/`
 (`mapping.txt`, `usage.txt`, `configuration.txt`).
 

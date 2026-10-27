@@ -2,7 +2,7 @@ package com.example.ecommercenativec19.feature.account
 
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.core.session.FakeSessionRepository
 import com.example.ecommercenativec19.core.session.SessionState
 import com.example.ecommercenativec19.feature.account.domain.AccountField
@@ -63,11 +63,11 @@ class AccountViewModelTest {
     @Test
     fun `starts loading, then shows the profile`() = runTest(dispatcher) {
         val vm = viewModel()
-        assertEquals(LoadState.Loading, vm.state.value.profile)
+        assertEquals(UiState.Loading, vm.state.value.profile)
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Content(profile), vm.state.value.profile)
+        assertEquals(UiState.Success(profile), vm.state.value.profile)
     }
 
     @Test
@@ -75,13 +75,13 @@ class AccountViewModelTest {
         repository.profileResult = AppResult.Failure(AppError.Network)
         val vm = viewModel()
         advanceUntilIdle()
-        assertEquals(LoadState.Error(AppError.Network), vm.state.value.profile)
+        assertEquals(UiState.Error(AppError.Network), vm.state.value.profile)
 
         repository.profileResult = AppResult.Success(profile)
         vm.onRetry()
         advanceUntilIdle()
 
-        assertEquals(LoadState.Content(profile), vm.state.value.profile)
+        assertEquals(UiState.Success(profile), vm.state.value.profile)
         assertEquals(2, repository.getProfileCalls)
     }
 
@@ -111,7 +111,7 @@ class AccountViewModelTest {
         idle()
 
         val state = vm.state.value
-        assertEquals(LoadState.Content(profile.copy(name = "Janet Doe")), state.profile)
+        assertEquals(UiState.Success(profile.copy(name = "Janet Doe")), state.profile)
         assertNull(state.editing)
         assertEquals(false, state.isSaving)
         assertEquals("Janet Doe", repository.lastChanges?.name)
@@ -155,7 +155,7 @@ class AccountViewModelTest {
         val state = vm.state.value
         assertEquals(error, state.saveError)
         assertEquals(AccountFieldType.Email, state.editing)
-        assertEquals(LoadState.Content(profile), state.profile)
+        assertEquals(UiState.Success(profile), state.profile)
     }
 
     @Test

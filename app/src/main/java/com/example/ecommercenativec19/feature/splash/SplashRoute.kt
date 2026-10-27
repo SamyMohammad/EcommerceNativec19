@@ -5,8 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
 
 /**
  * Splash entry point. The prototype (interactions.json, node 1:2) navigates to Sign in AFTER_TIMEOUT 0.4s; with a
@@ -18,7 +18,7 @@ fun SplashRoute(
     onSignedIn: () -> Unit,
     onSignedOut: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SplashViewModel = koinViewModel(),
+    viewModel: SplashViewModel = hiltViewModel(),
 ) {
     val currentOnSignedIn by rememberUpdatedState(onSignedIn)
     val currentOnSignedOut by rememberUpdatedState(onSignedOut)

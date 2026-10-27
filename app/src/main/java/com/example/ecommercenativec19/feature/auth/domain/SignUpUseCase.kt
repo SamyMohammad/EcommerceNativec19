@@ -1,6 +1,8 @@
 package com.example.ecommercenativec19.feature.auth.domain
 
-class SignUpUseCase(private val repository: AuthRepository) {
+import javax.inject.Inject
+
+class SignUpUseCase @Inject constructor(private val repository: AuthRepository) {
     suspend operator fun invoke(name: String, phone: String, email: String, password: String): AuthOutcome {
         val errors = buildMap {
             AuthValidation.name(name)?.let { put(AuthField.Name, it) }

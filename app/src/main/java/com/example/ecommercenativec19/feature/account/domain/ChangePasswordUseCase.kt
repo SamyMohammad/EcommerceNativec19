@@ -1,8 +1,9 @@
 package com.example.ecommercenativec19.feature.account.domain
 
 import com.example.ecommercenativec19.feature.auth.domain.AuthValidation
+import javax.inject.Inject
 
-class ChangePasswordUseCase(private val repository: AccountRepository) {
+class ChangePasswordUseCase @Inject constructor(private val repository: AccountRepository) {
 
     /**
      * The new-password rule is checked here because the server does not enforce it on this endpoint (it accepted a

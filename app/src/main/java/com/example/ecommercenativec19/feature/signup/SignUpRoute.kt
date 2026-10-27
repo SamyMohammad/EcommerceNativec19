@@ -5,8 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.koinViewModel
 
 /**
  * Sign up entry point. The API signs the new user in, so [onSignedUp] fires once the token is stored
@@ -16,7 +16,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SignUpRoute(
     onSignedUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = koinViewModel(),
+    viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val currentOnSignedUp by rememberUpdatedState(onSignedUp)

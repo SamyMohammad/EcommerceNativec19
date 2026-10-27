@@ -1,19 +1,26 @@
 package com.example.ecommercenativec19.feature.categories.di
 
-import com.example.ecommercenativec19.feature.categories.CategoriesViewModel
 import com.example.ecommercenativec19.feature.categories.data.CategoriesApi
 import com.example.ecommercenativec19.feature.categories.data.CategoriesRepositoryImpl
 import com.example.ecommercenativec19.feature.categories.domain.CategoriesRepository
-import com.example.ecommercenativec19.feature.categories.domain.GetCategoriesUseCase
-import com.example.ecommercenativec19.feature.categories.domain.GetSubCategoriesUseCase
-import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.module
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import retrofit2.Retrofit
 
-val categoriesModule = module {
-    single<CategoriesApi> { get<Retrofit>().create(CategoriesApi::class.java) }
-    single<CategoriesRepository> { CategoriesRepositoryImpl(get()) }
-    factory { GetCategoriesUseCase(get()) }
-    factory { GetSubCategoriesUseCase(get()) }
-    viewModelOf(::CategoriesViewModel)
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class CategoriesModule {
+    @Binds
+    @Singleton
+    abstract fun bindCategoriesRepository(impl: CategoriesRepositoryImpl): CategoriesRepository
+
+    companion object {
+        @Provides
+        @Singleton
+        fun provideCategoriesApi(retrofit: Retrofit): CategoriesApi = retrofit.create(CategoriesApi::class.java)
+    }
 }

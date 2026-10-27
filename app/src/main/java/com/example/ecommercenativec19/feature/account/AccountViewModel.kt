@@ -3,12 +3,14 @@ package com.example.ecommercenativec19.feature.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.account.domain.AccountOutcome
 import com.example.ecommercenativec19.feature.account.domain.ChangePasswordUseCase
 import com.example.ecommercenativec19.feature.account.domain.GetProfileUseCase
 import com.example.ecommercenativec19.feature.account.domain.UpdateProfileUseCase
 import com.example.ecommercenativec19.feature.auth.domain.SignOutUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +21,8 @@ import kotlinx.coroutines.launch
  * Loads the profile and saves one inline edit at a time. The profile is held only here (no cache), so it disappears
  * with the screen; signing out also removes this screen (navigation resets on the signed-out session).
  */
-class AccountViewModel(
+@HiltViewModel
+class AccountViewModel @Inject constructor(
     private val getProfile: GetProfileUseCase,
     private val updateProfile: UpdateProfileUseCase,
     private val changePassword: ChangePasswordUseCase,
@@ -33,12 +36,12 @@ class AccountViewModel(
     }
 
     fun onRetry() {
-        if (_state.value.profile is LoadState.Error) load()
+        if (_state.value.profile is UiState.Error) load()
     }
 
     fun onStartEditing(type: AccountFieldType) {
         val s = _state.value
-        val profile = (s.profile as? LoadState.Content)?.data ?: return
+        val profile = (s.profile as? UiState.Success)?.data ?: return
         if (s.isSaving) return
         if (type.isPassword) {
             _state.update { it.copy(editing = null, draft = "", fieldError = null, saveError = null, passwordForm = PasswordFormUi()) }
@@ -55,7 +58,7 @@ class AccountViewModel(
     fun onFinishEditing() {
         val s = _state.value
         val type = s.editing ?: return
-        val profile = (s.profile as? LoadState.Content)?.data ?: return
+        val profile = (s.profile as? UiState.Success)?.data ?: return
         if (s.isSaving) return
         _state.update { it.copy(isSaving = true, fieldError = null, saveError = null) }
         viewModelScope.launch {
@@ -69,7 +72,7 @@ class AccountViewModel(
             _state.update {
                 when (outcome) {
                     is AccountOutcome.Success ->
-                        it.copy(profile = LoadState.Content(outcome.data), editing = null, draft = "", isSaving = false)
+                        it.copy(profile = UiState.Success(outcome.data), editing = null, draft = "", isSaving = false)
                     is AccountOutcome.Invalid ->
                         it.copy(isSaving = false, fieldError = outcome.errors.values.firstOrNull())
                     is AccountOutcome.Failed -> it.copy(isSaving = false, saveError = outcome.error)
@@ -115,14 +118,14 @@ class AccountViewModel(
         _state.update { s -> s.copy(passwordForm = s.passwordForm?.let(transform)) }
 
     private fun load() {
-        _state.update { it.copy(profile = LoadState.Loading) }
+        _state.update { it.copy(profile = UiState.Loading) }
         viewModelScope.launch {
             val result = getProfile()
             _state.update {
                 it.copy(
                     profile = when (result) {
-                        is AppResult.Success -> LoadState.Content(result.data)
-                        is AppResult.Failure -> LoadState.Error(result.error)
+                        is AppResult.Success -> UiState.Success(result.data)
+                        is AppResult.Failure -> UiState.Error(result.error)
                     },
                 )
             }

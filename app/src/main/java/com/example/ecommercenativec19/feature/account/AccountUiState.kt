@@ -2,7 +2,7 @@ package com.example.ecommercenativec19.feature.account
 
 import androidx.annotation.StringRes
 import com.example.ecommercenativec19.R
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.account.domain.AccountField
 import com.example.ecommercenativec19.feature.account.domain.Profile
 import com.example.ecommercenativec19.feature.auth.domain.AuthError
@@ -30,7 +30,7 @@ internal const val PASSWORD_MASK = "**********************"
  * [saveError] is a failed save of that edit. [passwordForm] is non-null while the change-password dialog is open.
  */
 data class AccountUiState(
-    val profile: LoadState<Profile> = LoadState.Loading,
+    val profile: UiState<Profile> = UiState.Loading,
     val editing: AccountFieldType? = null,
     val draft: String = "",
     val fieldError: FieldError? = null,

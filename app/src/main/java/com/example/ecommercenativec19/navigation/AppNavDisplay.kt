@@ -32,7 +32,6 @@ import com.example.ecommercenativec19.feature.signin.SignInRoute
 import com.example.ecommercenativec19.feature.signup.SignUpRoute
 import com.example.ecommercenativec19.feature.splash.SplashRoute
 import com.example.ecommercenativec19.feature.wishlist.WishlistRoute
-import org.koin.compose.koinInject
 
 /**
  * Navigation root of the ten screens. Start destination: [Splash]. Every screen entry point is a
@@ -80,11 +79,12 @@ import org.koin.compose.koinInject
  */
 @Composable
 fun AppNavDisplay(
+    observeSession: ObserveSessionUseCase,
     modifier: Modifier = Modifier,
     navigator: AppNavigator = rememberAppNavigator(),
 ) {
     val activity = LocalActivity.current
-    val sessionState by koinInject<ObserveSessionUseCase>()().collectAsStateWithLifecycle()
+    val sessionState by observeSession().collectAsStateWithLifecycle()
     // Only react once past the auth screens: Splash and Sign in are already the signed-out UI.
     LaunchedEffect(sessionState) {
         if (sessionState == SessionState.SignedOut && navigator.isSignedIn) navigator.signOut()
@@ -97,7 +97,7 @@ fun AppNavDisplay(
         NavDisplay(
             backStack = navigator.displayStack,
             onBack = { if (!navigator.back()) activity?.finish() },
-            // Per-entry ViewModelStore: koinViewModel() resolves LocalViewModelStoreOwner to the entry.
+            // Per-entry ViewModelStore: hiltViewModel() resolves LocalViewModelStoreOwner to the entry.
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator(),

@@ -5,8 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.koinViewModel
 
 /**
  * Sign in entry point. [onSignedIn] fires once the token is stored (see [SignInUiState.signedIn]);
@@ -17,7 +17,7 @@ fun SignInRoute(
     onSignedIn: () -> Unit,
     onCreateAccount: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignInViewModel = koinViewModel(),
+    viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val currentOnSignedIn by rememberUpdatedState(onSignedIn)

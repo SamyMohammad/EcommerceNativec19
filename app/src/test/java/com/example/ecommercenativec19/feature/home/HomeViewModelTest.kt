@@ -4,7 +4,7 @@ import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.cart.FakeCartRepository
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.categories.domain.CategoriesRepository
 import com.example.ecommercenativec19.feature.categories.domain.Category
 import com.example.ecommercenativec19.feature.categories.domain.GetCategoriesUseCase
@@ -81,16 +81,16 @@ class HomeViewModelTest {
     private fun page(vararg ids: String) = AppResult.Success(ProductPage(ids.map { product(it) }, nextPage = null))
 
     private fun HomeUiState.cards(section: HomeSection): List<ProductCardUi> =
-        (sections.getValue(section) as LoadState.Content).data
+        (sections.getValue(section) as UiState.Success).data
 
     @Test
     fun `every region starts Loading before the loads are advanced`() = runTest(testDispatcher) {
         val state = viewModel().uiState.value
 
         assertEquals("", state.searchQuery)
-        assertEquals(LoadState.Loading, state.categories)
+        assertEquals(UiState.Loading, state.categories)
         assertEquals(HomeSection.entries.toSet(), state.sections.keys)
-        assertTrue(state.sections.values.all { it == LoadState.Loading })
+        assertTrue(state.sections.values.all { it == UiState.Loading })
         assertTrue(state.favoriteIds.isEmpty())
     }
 
@@ -101,7 +101,7 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         val expected = listOf(HomeCategoryUi("c1", "Men", "img1"), HomeCategoryUi("c2", "Women", null))
-        assertEquals(LoadState.Content(expected), viewModel.uiState.value.categories)
+        assertEquals(UiState.Success(expected), viewModel.uiState.value.categories)
     }
 
     @Test
@@ -111,7 +111,7 @@ class HomeViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Empty, viewModel.uiState.value.categories)
+        assertEquals(UiState.Empty, viewModel.uiState.value.categories)
     }
 
     @Test
@@ -144,7 +144,7 @@ class HomeViewModelTest {
 
         advanceUntilIdle()
 
-        assertEquals(LoadState.Empty, viewModel.uiState.value.sections[HomeSection.NewArrival])
+        assertEquals(UiState.Empty, viewModel.uiState.value.sections[HomeSection.NewArrival])
     }
 
     @Test
@@ -156,8 +156,8 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(LoadState.Error(AppError.Network), state.categories)
-        assertEquals(LoadState.Error(AppError.Server(500)), state.sections[HomeSection.TopRated])
+        assertEquals(UiState.Error(AppError.Network), state.categories)
+        assertEquals(UiState.Error(AppError.Server(500)), state.sections[HomeSection.TopRated])
         assertEquals(2, state.cards(HomeSection.BestSellers).size)
         assertEquals(2, state.cards(HomeSection.NewArrival).size)
     }
@@ -171,7 +171,7 @@ class HomeViewModelTest {
         products.sortResults[ProductSort.TopRated] = page("again")
 
         viewModel.onRetrySection(HomeSection.TopRated)
-        assertEquals(LoadState.Loading, viewModel.uiState.value.sections[HomeSection.TopRated])
+        assertEquals(UiState.Loading, viewModel.uiState.value.sections[HomeSection.TopRated])
         advanceUntilIdle()
 
         assertEquals(listOf("again"), viewModel.uiState.value.cards(HomeSection.TopRated).map { it.id })
@@ -191,7 +191,7 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         assertEquals(
-            LoadState.Content(listOf(HomeCategoryUi("c9", "Books", "img"))),
+            UiState.Success(listOf(HomeCategoryUi("c9", "Books", "img"))),
             viewModel.uiState.value.categories,
         )
         assertEquals(productCalls, products.listCalls.size)

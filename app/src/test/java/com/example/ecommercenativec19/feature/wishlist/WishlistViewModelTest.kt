@@ -4,7 +4,7 @@ import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.cart.FakeCartRepository
 import com.example.ecommercenativec19.core.common.AppError
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.products.ui.ProductCardUi
 import com.example.ecommercenativec19.feature.products.product
 import com.example.ecommercenativec19.feature.wishlist.domain.GetWishlistUseCase
@@ -55,7 +55,7 @@ class WishlistViewModelTest {
         return viewModel
     }
 
-    private fun WishlistUiState.ids(): List<String> = (items as LoadState.Content<List<ProductCardUi>>).data.map { it.id }
+    private fun WishlistUiState.ids(): List<String> = (items as UiState.Success<List<ProductCardUi>>).data.map { it.id }
 
     private fun givenWishlist(vararg ids: String) {
         wishlist.refreshResult = AppResult.Success(ids.map { product(it) })
@@ -66,7 +66,7 @@ class WishlistViewModelTest {
         val viewModel = subscribed(viewModel())
         advanceUntilIdle()
 
-        assertEquals(LoadState.Loading, viewModel.state.value.items)
+        assertEquals(UiState.Loading, viewModel.state.value.items)
     }
 
     @Test
@@ -87,7 +87,7 @@ class WishlistViewModelTest {
         viewModel.onEnter()
         advanceUntilIdle()
 
-        assertEquals(LoadState.Empty, viewModel.state.value.items)
+        assertEquals(UiState.Empty, viewModel.state.value.items)
     }
 
     @Test
@@ -96,7 +96,7 @@ class WishlistViewModelTest {
         val viewModel = subscribed(viewModel())
         viewModel.onEnter()
         advanceUntilIdle()
-        assertEquals(LoadState.Error(AppError.Network), viewModel.state.value.items)
+        assertEquals(UiState.Error(AppError.Network), viewModel.state.value.items)
 
         givenWishlist("a")
         viewModel.onRetry()
@@ -129,7 +129,7 @@ class WishlistViewModelTest {
         viewModel.onToggleFavorite("a")
         advanceUntilIdle()
 
-        assertEquals(LoadState.Empty, viewModel.state.value.items)
+        assertEquals(UiState.Empty, viewModel.state.value.items)
     }
 
     @Test

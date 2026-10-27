@@ -2,8 +2,9 @@ package com.example.ecommercenativec19.feature.account.domain
 
 import com.example.ecommercenativec19.feature.auth.domain.AuthValidation
 import com.example.ecommercenativec19.feature.auth.domain.FieldError
+import javax.inject.Inject
 
-class UpdateProfileUseCase(private val repository: AccountRepository) {
+class UpdateProfileUseCase @Inject constructor(private val repository: AccountRepository) {
 
     /**
      * Compares each edited value with [current] and validates and sends only what changed:

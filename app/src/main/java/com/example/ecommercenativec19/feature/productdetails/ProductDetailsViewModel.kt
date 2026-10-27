@@ -3,12 +3,16 @@ package com.example.ecommercenativec19.feature.productdetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommercenativec19.core.common.AppResult
-import com.example.ecommercenativec19.core.common.LoadState
+import com.example.ecommercenativec19.core.common.UiState
 import com.example.ecommercenativec19.feature.cart.domain.AddToCartUseCase
 import com.example.ecommercenativec19.feature.products.domain.GetProductDetailsUseCase
 import com.example.ecommercenativec19.feature.products.domain.Product
 import com.example.ecommercenativec19.feature.wishlist.domain.ObserveFavoriteIdsUseCase
 import com.example.ecommercenativec19.feature.wishlist.domain.ToggleFavoriteUseCase
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,13 +24,19 @@ import kotlinx.coroutines.launch
  * Loads one product by id. Quantity is UI-only state; the heart mirrors the shared wishlist cache, and a failed toggle
  * is rolled back there.
  */
-class ProductDetailsViewModel(
-    private val productId: String,
+@HiltViewModel(assistedFactory = ProductDetailsViewModel.Factory::class)
+class ProductDetailsViewModel @AssistedInject constructor(
+    @Assisted private val productId: String,
     private val getProductDetails: GetProductDetailsUseCase,
     private val observeFavoriteIds: ObserveFavoriteIdsUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
     private val addToCart: AddToCartUseCase,
 ) : ViewModel() {
+    @AssistedFactory
+    interface Factory {
+        fun create(productId: String): ProductDetailsViewModel
+    }
+
     private val _uiState = MutableStateFlow(ProductDetailsUiState())
     val uiState: StateFlow<ProductDetailsUiState> = _uiState.asStateFlow()
 
@@ -40,7 +50,7 @@ class ProductDetailsViewModel(
     }
 
     fun onRetry() {
-        if (_uiState.value.product is LoadState.Error) load()
+        if (_uiState.value.product is UiState.Error) load()
     }
 
     fun onToggleFavorite() {
@@ -61,11 +71,11 @@ class ProductDetailsViewModel(
 
     private fun load() {
         loadJob?.cancel()
-        _uiState.update { it.copy(product = LoadState.Loading) }
+        _uiState.update { it.copy(product = UiState.Loading) }
         loadJob = viewModelScope.launch {
             when (val result = getProductDetails(productId)) {
-                is AppResult.Failure -> _uiState.update { it.copy(product = LoadState.Error(result.error)) }
-                is AppResult.Success -> _uiState.update { it.copy(product = LoadState.Content(result.data.toUi())) }
+                is AppResult.Failure -> _uiState.update { it.copy(product = UiState.Error(result.error)) }
+                is AppResult.Success -> _uiState.update { it.copy(product = UiState.Success(result.data.toUi())) }
             }
         }
     }
