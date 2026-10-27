@@ -21,6 +21,7 @@
     <string name="core_quantity_decrease">Decrease quantity</string>
     <string name="core_password_show">Show password</string>
     <string name="core_password_hide">Hide password</string>
+    <string name="core_loading">Loading</string>
     <string name="error_network">No internet connection. Check your network and try again.</string>
     <string name="error_server">The server had a problem. Please try again later.</string>
     <string name="error_parsing">We received unexpected data. Please try again later.</string>

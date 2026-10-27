@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -60,6 +61,11 @@ fun SignUpScreen(
     modifier: Modifier = Modifier,
 ) {
     LightStatusBarIconsEffect()
+    val focusManager = LocalFocusManager.current
+    val submit = {
+        focusManager.clearFocus()
+        onSignUp()
+    }
     val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     Column(
         modifier = modifier
@@ -78,6 +84,7 @@ fun SignUpScreen(
             label = stringResource(R.string.signup_full_name_label),
             value = state.fullName,
             onValueChange = onFullNameChange,
+            enabled = !state.isSubmitting,
             placeholder = stringResource(R.string.signup_full_name_placeholder),
             errorText = state.fieldErrors.messageFor(AuthField.Name),
             keyboardOptions = KeyboardOptions(
@@ -91,6 +98,7 @@ fun SignUpScreen(
             label = stringResource(R.string.signup_mobile_label),
             value = state.mobileNumber,
             onValueChange = onMobileNumberChange,
+            enabled = !state.isSubmitting,
             placeholder = stringResource(R.string.signup_mobile_placeholder),
             errorText = state.fieldErrors.messageFor(AuthField.Phone),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
@@ -100,6 +108,7 @@ fun SignUpScreen(
             label = stringResource(R.string.signup_email_label),
             value = state.email,
             onValueChange = onEmailChange,
+            enabled = !state.isSubmitting,
             placeholder = stringResource(R.string.signup_email_placeholder),
             errorText = state.fieldErrors.messageFor(AuthField.Email),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
@@ -109,9 +118,10 @@ fun SignUpScreen(
             label = stringResource(R.string.signup_password_label),
             value = state.password,
             onValueChange = onPasswordChange,
+            enabled = !state.isSubmitting,
             placeholder = stringResource(R.string.signup_password_placeholder),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { onSignUp() }),
+            keyboardActions = KeyboardActions(onDone = { submit() }),
             errorText = state.fieldErrors.messageFor(AuthField.Password),
             visualTransformation = if (state.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -128,9 +138,9 @@ fun SignUpScreen(
         }
         AppButton(
             text = stringResource(R.string.signup_submit),
-            onClick = onSignUp,
+            onClick = submit,
             style = AppButtonStyle.OnPrimary,
-            enabled = !state.isSubmitting,
+            loading = state.isSubmitting,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(Modifier.height(AppDimens.ScreenHorizontal))

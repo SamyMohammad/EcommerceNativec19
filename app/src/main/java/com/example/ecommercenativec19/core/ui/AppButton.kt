@@ -1,5 +1,6 @@
 package com.example.ecommercenativec19.core.ui
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,21 +8,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.ecommercenativec19.R
 import com.example.ecommercenativec19.ui.theme.extendedTypography
 
 /**
@@ -77,7 +85,8 @@ private fun AppButtonStyle.textStyle(): TextStyle = when (this) {
 /**
  * Stateless button. The label is centered; [leadingIcon] / [trailingIcon] (24dp, decorative) are pinned to the
  * start/end edge at the style's icon inset, as in "Add to cart" (cart icon) and "Check Out" (arrow icon).
- * A disabled button (for example while a request is in flight) ignores taps and is dimmed.
+ * A disabled button ignores taps and is dimmed. A [loading] button ignores taps without dimming; its label and
+ * icons remain laid out under the progress indicator to preserve the button's size and accessible label.
  */
 @Composable
 fun AppButton(
@@ -88,47 +97,62 @@ fun AppButton(
     leadingIcon: Painter? = null,
     trailingIcon: Painter? = null,
     enabled: Boolean = true,
+    loading: Boolean = false,
 ) {
+    val progressAlpha by animateFloatAsState(if (loading) 1f else 0f, label = "AppButtonLoading")
+    val loadingDescription = stringResource(R.string.core_loading)
     Surface(
         onClick = onClick,
-        enabled = enabled,
-        modifier = modifier.height(style.height).alpha(if (enabled) 1f else DisabledAlpha),
+        enabled = enabled && !loading,
+        modifier = modifier
+            .height(style.height)
+            .alpha(if (enabled) 1f else DisabledAlpha)
+            .semantics { if (loading) stateDescription = loadingDescription },
         shape = style.shape(),
         color = style.container(),
         contentColor = style.content(),
     ) {
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Text(
-                text = text,
-                style = style.textStyle(),
-                color = style.content(),
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = if (leadingIcon != null || trailingIcon != null) {
-                    Modifier.padding(horizontal = style.iconInset + AppDimens.IconSize)
-                } else {
-                    Modifier
-                },
-            )
-            if (leadingIcon != null) {
-                Image(
-                    painter = leadingIcon,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = style.iconInset)
-                        .size(AppDimens.IconSize),
+            Box(Modifier.fillMaxWidth().alpha(1f - progressAlpha), contentAlignment = Alignment.Center) {
+                Text(
+                    text = text,
+                    style = style.textStyle(),
+                    color = style.content(),
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = if (leadingIcon != null || trailingIcon != null) {
+                        Modifier.padding(horizontal = style.iconInset + AppDimens.IconSize)
+                    } else {
+                        Modifier
+                    },
                 )
+                if (leadingIcon != null) {
+                    Image(
+                        painter = leadingIcon,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = style.iconInset)
+                            .size(AppDimens.IconSize),
+                    )
+                }
+                if (trailingIcon != null) {
+                    Image(
+                        painter = trailingIcon,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = style.iconInset)
+                            .size(AppDimens.IconSize),
+                    )
+                }
             }
-            if (trailingIcon != null) {
-                Image(
-                    painter = trailingIcon,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = style.iconInset)
-                        .size(AppDimens.IconSize),
+            if (loading || progressAlpha > 0f) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp).alpha(progressAlpha).testTag("AppButtonProgress"),
+                    color = style.content(),
+                    strokeWidth = 2.5.dp,
                 )
             }
         }

@@ -60,6 +60,7 @@ fun AuthTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: (@Composable () -> Unit)? = null,
     errorText: String? = null,
+    enabled: Boolean = true,
 ) {
     val shape = MaterialTheme.shapes.medium
     Column(modifier) {
@@ -74,6 +75,7 @@ fun AuthTextField(
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
+            enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(AppDimens.AuthFieldHeight)
