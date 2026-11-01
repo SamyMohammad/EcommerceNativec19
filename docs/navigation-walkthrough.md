@@ -743,10 +743,15 @@ flowchart TD
 <div dir="ltr" align="left">
 
 ```kotlin
-108 entryProvider = entryProvider<NavKey> {
-109     entry<Splash> {
-110         SplashRoute(onSignedIn = navigator::completeAuth, onSignedOut = navigator::finishSplash)
-111     }
+70 entryProvider = entryProvider<NavKey> {
+71     authEntries(navigator)
+72     mainEntries(navigator)
+73 },
+...
+79 private fun EntryProviderScope<NavKey>.authEntries(navigator: AppNavigator) {
+80     entry<Splash> {
+81         SplashRoute(onSignedIn = navigator::completeAuth, onSignedOut = navigator::finishSplash)
+82     }
 ```
 
 </div>
@@ -755,8 +760,8 @@ flowchart TD
 
 - الـ DSL ده هو بديل <code dir="ltr">NavHost { composable(...) }</code>. بيقول: "لما تلاقي key من النوع ده، اعرض الشاشة دي".
 - التقسيم: الـ <code dir="ltr">entryProvider</code> دلوقتي فيه سطرين بس، <code dir="ltr">authEntries(navigator)</code> و <code dir="ltr">mainEntries(navigator)</code>. كل واحدة extension function على <code dir="ltr">EntryProviderScope&lt;NavKey&gt;</code>، وده نفس أسلوب الـ migration guide الرسمي لـ Nav3 (بديل الـ <code dir="ltr">NavGraphBuilder</code> extensions القديمة). الأولى فيها Splash و Sign in و Sign up، والتانية فيها التابات والشاشات اللي فوقها.
-- السطر 109: كلمة <code dir="ltr">entry&lt;Splash&gt;</code> معناها "أي key نوعه <code dir="ltr">Splash</code>".
-- السطر 110: الـ Splash بيقرر بنفسه (عن طريق <code dir="ltr">SplashViewModel</code> اللي بيستنى الـ session):
+- السطر 80: كلمة <code dir="ltr">entry&lt;Splash&gt;</code> معناها "أي key نوعه <code dir="ltr">Splash</code>".
+- السطر 81: الـ Splash بيقرر بنفسه (عن طريق <code dir="ltr">SplashViewModel</code> اللي بيستنى الـ session):
   - لو فيه session ← <code dir="ltr">completeAuth()</code> ← Home على طول (من غير ما يعدي على Sign in).
   - لو مفيش ← <code dir="ltr">finishSplash()</code> ← Sign in.
 

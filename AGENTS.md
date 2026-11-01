@@ -1,5 +1,7 @@
 # AGENTS.md
 
+> Mirror of `CLAUDE.md` for Codex. Edit both files together when the project rules change.
+
 ---
 # Section A — Role & Learning Contract
 
