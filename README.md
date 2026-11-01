@@ -205,6 +205,10 @@ network.
 | Path | What it holds |
 |---|---|
 | [`docs/architecture.md`](docs/architecture.md) | Architecture rationale (layers, state, errors, Hilt, navigation) and refactor roadmap |
+| [`docs/navigation-walkthrough.md`](docs/navigation-walkthrough.md) | Detailed Arabic guide: Navigation 3 files, per-tab stacks, AppScaffold insets, lifecycle, scenarios and test boundaries |
+| [`docs/session-walkthrough.md`](docs/session-walkthrough.md) | Detailed Arabic guide: encrypted session storage, Flow, Hilt, token rejection/rotation, cache integration and current limitations |
+| [`docs/auth-teaching-walkthrough.md`](docs/auth-teaching-walkthrough.md) | Arabic teaching guide: user actions, presentation/domain/data round trip, session token storage/cache timing, demos and tests |
+| [`docs/auth-interceptor-walkthrough.md`](docs/auth-interceptor-walkthrough.md) | Arabic line-by-line guide: `AuthInterceptor`'s `token` header (not `Bearer`), the rejected-token flow, `NetworkModule` wiring and tests |
 | [`docs/api/`](docs/api/) | Request and response shapes captured from the live API, plus known quirks |
 | [`docs/design-decisions/`](docs/design-decisions/README.md) | Per-screen Figma → Compose decisions, deviations and visual-check results |
 | [`design/figma/`](design/figma/) | Figma reference frames, compose config and asset import tools |
